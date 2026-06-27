@@ -10,6 +10,7 @@ The project currently includes:
 - RC circuit charging
 - Newton's Law of Cooling
 - Mass-spring-damper free vibration
+- First-order control system step response
 
 ## RC Circuit Charging
 
@@ -123,6 +124,39 @@ zeta = c / (2*sqrt(m*k))
 These values help describe how quickly the system oscillates and how strongly
 the motion decays over time.
 
+## First-Order Control System Step Response
+
+This model shows how a first-order control system responds to a step input.
+It is useful for visualizing gain, lag, and settling behavior.
+
+The governing equation is:
+
+```text
+tau * dy/dt + y = K*u(t)
+```
+
+For `solve_ivp`, it is written as:
+
+```text
+dy/dt = (K*u(t) - y) / tau
+```
+
+For a constant step input with amplitude `A`, the analytical response is:
+
+```text
+y(t) = K*A + (y0 - K*A) * exp(-t/tau)
+```
+
+The steady-state value is:
+
+```text
+y_ss = K*A
+```
+
+Where `tau` is the time constant, `K` is the system gain, `u(t)` is the input,
+and `y` is the output. The example also prints practical response metrics:
+rise time and settling time.
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:
@@ -188,6 +222,25 @@ python examples\run_mass_spring_damper.py
 
 This prints the natural frequency and damping ratio, then plots displacement
 over time.
+
+## Run the First-Order Control Example
+
+The example simulates a step response with:
+
+- `tau = 1.5` seconds
+- `K = 2.0`
+- input amplitude `A = 1.0`
+- `y0 = 0.0`
+- time from `0` to `10` seconds
+
+Run it with:
+
+```powershell
+python examples\run_first_order_control.py
+```
+
+This prints gain, time constant, steady-state value, rise time, and settling
+time, then plots the numerical and analytical step responses.
 
 ## Run Tests
 

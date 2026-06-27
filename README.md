@@ -9,6 +9,7 @@ The project currently includes:
 
 - RC circuit charging
 - Newton's Law of Cooling
+- Mass-spring-damper free vibration
 
 ## RC Circuit Charging
 
@@ -76,6 +77,52 @@ The time constant `tau` describes how quickly the object approaches the
 environment temperature. After one time constant, the remaining temperature
 difference is about `exp(-1)`, or 36.8%, of the initial difference.
 
+## Mass-Spring-Damper Free Vibration
+
+A mass-spring-damper system models the motion of a mass attached to a spring
+and damper. It is a common mechanical engineering model for vibration,
+oscillation, and energy dissipation.
+
+The governing equation is:
+
+```text
+m*x'' + c*x' + k*x = F(t)
+```
+
+For numerical simulation, the second-order equation is converted into a
+first-order system:
+
+```text
+x' = v
+v' = (F(t) - c*v - k*x) / m
+```
+
+Where:
+
+- `m` is the mass in kilograms.
+- `c` is the damping coefficient in newton-seconds per meter.
+- `k` is the spring stiffness in newtons per meter.
+- `x` is displacement in meters.
+- `v` is velocity in meters per second.
+- `F(t)` is the external force in newtons as a function of time.
+
+For free vibration, there is no external force, so `F(t) = 0`.
+
+The undamped natural frequency is:
+
+```text
+omega_n = sqrt(k/m)
+```
+
+The damping ratio is:
+
+```text
+zeta = c / (2*sqrt(m*k))
+```
+
+These values help describe how quickly the system oscillates and how strongly
+the motion decays over time.
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:
@@ -122,6 +169,26 @@ python examples\run_cooling.py
 
 This plots the numerical and analytical temperature curves on the same graph.
 
+## Run the Mass-Spring-Damper Example
+
+The example simulates free vibration with:
+
+- `m = 1` kilogram
+- `c = 0.4` newton-seconds per meter
+- `k = 4` newtons per meter
+- `x0 = 1` meter
+- `v0 = 0` meters per second
+- time from `0` to `20` seconds
+
+Run it with:
+
+```powershell
+python examples\run_mass_spring_damper.py
+```
+
+This prints the natural frequency and damping ratio, then plots displacement
+over time.
+
 ## Run Tests
 
 Run the test suite with:
@@ -130,5 +197,5 @@ Run the test suite with:
 pytest
 ```
 
-The current tests cover both implemented models, including initial conditions,
-long-term behavior, and one-time-constant behavior.
+The current tests cover all implemented models, including initial conditions,
+long-term behavior, one-time-constant behavior, and mechanical energy behavior.

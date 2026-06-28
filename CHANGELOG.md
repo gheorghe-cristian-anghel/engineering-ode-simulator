@@ -28,6 +28,7 @@ All notable changes to this project will be documented here.
 
 - DC motor open-loop speed response
 - Closed-loop PI motor speed control with voltage saturation
+- Load disturbance response example for PI motor speed control
 
 #### Analysis Utilities
 

@@ -19,6 +19,7 @@ The project currently includes:
 - DC motor speed response
 - DC motor PI speed control
 - PI motor gain sweep analysis
+- DC motor PI load disturbance response
 
 ## RC Circuit Charging
 
@@ -475,6 +476,16 @@ Run it with:
 
 ```powershell
 python examples\run_pi_gain_sweep.py
+```
+
+## Run the Motor Load Disturbance Example
+
+The example shows PI speed control recovering after a load torque step.
+
+Run it with:
+
+```powershell
+python examples\run_motor_load_disturbance.py
 ```
 
 ## Run Tests

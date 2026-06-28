@@ -221,6 +221,9 @@ J domega/dt + b omega = Kt i - TL
 domega/dt = (Kt i - b omega - TL)/J
 ```
 
+`TL` is the external load torque. A positive `TL` opposes motor torque and can
+be used to model a step load disturbance.
+
 State variables:
 
 - `i`: armature current

@@ -42,6 +42,22 @@ def zero_load_torque(t):
     return 0.0
 
 
+def load_torque_step(
+    t: float,
+    step_time: float = 12.0,
+    initial_torque: float = 0.0,
+    final_torque: float = 0.03,
+) -> float:
+    """Return a step load torque disturbance."""
+    if step_time < 0:
+        raise ValueError("step_time must be nonnegative")
+
+    if t < step_time:
+        return initial_torque
+
+    return final_torque
+
+
 def pi_raw_control_voltage(error, integral_error, Kp, Ki):
     """Return the unsaturated PI control voltage."""
     validate_pi_parameters(Kp, Ki)

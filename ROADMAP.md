@@ -12,6 +12,7 @@
 - [x] Second-order control system
 - [x] DC motor open-loop response
 - [x] PI motor speed control
+- [x] Load disturbance response for DC motor
 - [x] Step response metrics
 - [x] Parameter sweeps for PI motor speed-control gains
 
@@ -21,7 +22,6 @@
 
 ## Next Short-Term Features
 
-- Load disturbance response for DC motor
 - True discrete PID controller
 - Export simulation results to CSV
 - Add screenshots folder for selected plots

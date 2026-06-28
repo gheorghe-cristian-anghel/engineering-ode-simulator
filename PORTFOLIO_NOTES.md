@@ -42,7 +42,9 @@ Shows coupled electrical-mechanical dynamics.
 ### PI Motor Speed Control
 
 Shows closed-loop feedback control, reference tracking, voltage saturation, and
-motor speed regulation.
+motor speed regulation. The demo also includes load disturbance rejection,
+where the controller increases voltage and current to recover speed after a
+torque step.
 
 ## Freelance Relevance
 

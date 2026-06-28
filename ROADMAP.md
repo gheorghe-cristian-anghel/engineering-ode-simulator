@@ -13,6 +13,7 @@
 - [x] DC motor open-loop response
 - [x] PI motor speed control
 - [x] Step response metrics
+- [x] Parameter sweeps for PI motor speed-control gains
 
 ## In Progress
 
@@ -22,7 +23,6 @@
 
 - Load disturbance response for DC motor
 - True discrete PID controller
-- Parameter sweeps for `Kp`, `Ki`, and physical parameters
 - Export simulation results to CSV
 - Add screenshots folder for selected plots
 - Improve README with selected images

@@ -42,13 +42,31 @@ def zero_load_torque(t):
     return 0.0
 
 
+def pi_raw_control_voltage(error, integral_error, Kp, Ki):
+    """Return the unsaturated PI control voltage."""
+    validate_pi_parameters(Kp, Ki)
+
+    return Kp * error + Ki * integral_error
+
+
 def pi_control_voltage(error, integral_error, Kp, Ki, voltage_min, voltage_max):
     """Return saturated PI control voltage."""
     validate_pi_parameters(Kp, Ki)
     validate_voltage_limits(voltage_min, voltage_max)
 
-    raw_voltage = Kp * error + Ki * integral_error
+    raw_voltage = pi_raw_control_voltage(error, integral_error, Kp, Ki)
     return np.clip(raw_voltage, voltage_min, voltage_max)
+
+
+def anti_windup_integral_derivative(error, raw_voltage, voltage_min, voltage_max):
+    """Return integral-error derivative with simple saturation anti-windup."""
+    at_upper_limit = raw_voltage >= voltage_max and error > 0
+    at_lower_limit = raw_voltage <= voltage_min and error < 0
+
+    if at_upper_limit or at_lower_limit:
+        return 0.0
+
+    return error
 
 
 def closed_loop_motor_ode(
@@ -76,19 +94,18 @@ def closed_loop_motor_ode(
     integral_error = state[2]
 
     error = reference_func(t) - omega
-    voltage = pi_control_voltage(
-        error,
-        integral_error,
-        Kp,
-        Ki,
-        voltage_min,
-        voltage_max,
-    )
+    raw_voltage = pi_raw_control_voltage(error, integral_error, Kp, Ki)
+    voltage = np.clip(raw_voltage, voltage_min, voltage_max)
     load_torque = load_torque_func(t)
 
     di_dt = (voltage - R * current - Ke * omega) / L
     domega_dt = (Kt * current - b * omega - load_torque) / J
-    dintegral_error_dt = error
+    dintegral_error_dt = anti_windup_integral_derivative(
+        error,
+        raw_voltage,
+        voltage_min,
+        voltage_max,
+    )
 
     return [di_dt, domega_dt, dintegral_error_dt]
 

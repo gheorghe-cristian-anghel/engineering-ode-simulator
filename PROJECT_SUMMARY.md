@@ -64,6 +64,8 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 ## Analysis Tools
 
 Reusable step response metrics are implemented in `analysis/step_response.py`.
+PI motor controller gain sweeps are implemented in
+`analysis/parameter_sweep.py`.
 
 The tool estimates:
 
@@ -75,6 +77,16 @@ The tool estimates:
 - peak value
 - peak time
 - overshoot
+
+The parameter sweep tool compares PI controller gain choices using:
+
+- final value
+- final tracking error
+- peak value
+- overshoot
+- settling time
+- maximum control effort
+- maximum current
 
 ## Current Development Workflow
 
@@ -93,8 +105,8 @@ The tool estimates:
 
 The project can simulate first-order systems, second-order systems, nonlinear
 pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
-control. It also includes reusable step response metrics and pytest coverage
-for implemented models.
+control. It also includes reusable step response metrics, PI gain sweep
+analysis, and pytest coverage for implemented models.
 
 ## How Future AI Chats Should Use This File
 

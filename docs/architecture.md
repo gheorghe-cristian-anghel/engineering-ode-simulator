@@ -27,6 +27,7 @@ Reusable analysis tools independent of any one model.
 Current example:
 
 - step response metrics
+- parameter sweep utilities
 
 ### examples/
 
@@ -70,6 +71,5 @@ Possible improvements:
 - package installation with `pyproject.toml`
 - shared plotting utilities
 - shared validation utilities
-- parameter sweep module
 - Streamlit GUI
 - exporting results to CSV

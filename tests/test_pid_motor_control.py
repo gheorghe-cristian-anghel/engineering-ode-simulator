@@ -1,6 +1,7 @@
 import pytest
 
 from models.pid_motor_control import (
+    anti_windup_integral_derivative,
     pi_control_voltage,
     simulate_pi_motor_control,
 )
@@ -25,6 +26,30 @@ def test_pi_control_voltage_saturates_at_minimum():
     voltage = pi_control_voltage(-100, 0, Kp=1.0, Ki=1.0, voltage_min=0, voltage_max=24)
 
     assert voltage == pytest.approx(0)
+
+
+def test_anti_windup_stops_integrating_farther_into_upper_saturation():
+    """Integral error should stop growing when positive error causes saturation."""
+    derivative = anti_windup_integral_derivative(
+        error=10,
+        raw_voltage=30,
+        voltage_min=0,
+        voltage_max=24,
+    )
+
+    assert derivative == pytest.approx(0)
+
+
+def test_anti_windup_integrates_when_error_moves_out_of_upper_saturation():
+    """Integral error should be allowed to unwind from upper saturation."""
+    derivative = anti_windup_integral_derivative(
+        error=-10,
+        raw_voltage=30,
+        voltage_min=0,
+        voltage_max=24,
+    )
+
+    assert derivative == pytest.approx(-10)
 
 
 def test_simulation_initial_current_equals_i0():

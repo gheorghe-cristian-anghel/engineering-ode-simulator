@@ -157,6 +157,17 @@ Where `tau` is the time constant, `K` is the system gain, `u(t)` is the input,
 and `y` is the output. The example also prints practical response metrics:
 rise time and settling time.
 
+## Reusable Step Response Metrics
+
+The simulator also includes reusable step response analysis utilities in
+`analysis/step_response.py`. These can compute:
+
+- rise time
+- settling time
+- overshoot
+- peak value
+- peak time
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:

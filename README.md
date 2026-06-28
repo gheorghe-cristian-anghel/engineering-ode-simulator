@@ -11,6 +11,8 @@ The project currently includes:
 - Newton's Law of Cooling
 - Mass-spring-damper free vibration
 - First-order control system step response
+- Reusable step response metrics
+- RL circuit step response
 
 ## RC Circuit Charging
 
@@ -168,6 +170,30 @@ The simulator also includes reusable step response analysis utilities in
 - peak value
 - peak time
 
+## RL Circuit Step Response
+
+An RL circuit models the current through a resistor and inductor connected to a
+DC step input voltage.
+
+The governing equation is:
+
+```text
+L di/dt + R i = Vin
+```
+
+For `solve_ivp`, it is written as:
+
+```text
+di/dt = (Vin - R*i) / L
+```
+
+The time constant and steady-state current are:
+
+```text
+tau = L/R
+i_ss = Vin/R
+```
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:
@@ -252,6 +278,25 @@ python examples\run_first_order_control.py
 
 This prints gain, time constant, steady-state value, rise time, and settling
 time, then plots the numerical and analytical step responses.
+
+## Run the RL Circuit Example
+
+The example simulates an RL circuit with:
+
+- `R = 10` ohms
+- `L = 2` henries
+- `Vin = 5` volts
+- `i0 = 0` amps
+- time from `0` to `1.5` seconds
+
+Run it with:
+
+```powershell
+python examples\run_rl_circuit.py
+```
+
+This prints the time constant and steady-state current, then plots the
+numerical and analytical current responses.
 
 ## Run Tests
 

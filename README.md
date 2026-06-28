@@ -13,6 +13,7 @@ The project currently includes:
 - First-order control system step response
 - Reusable step response metrics
 - RL circuit step response
+- Series RLC circuit step response
 
 ## RC Circuit Charging
 
@@ -194,6 +195,32 @@ tau = L/R
 i_ss = Vin/R
 ```
 
+## Series RLC Circuit Step Response
+
+A series RLC circuit models capacitor voltage and current when a resistor,
+inductor, and capacitor are driven by a DC step input.
+
+The numerical model uses:
+
+```text
+dVc/dt = i/C
+di/dt = (Vin - R*i - Vc) / L
+```
+
+The natural frequency and damping ratio are:
+
+```text
+omega_n = 1/sqrt(L*C)
+zeta = (R/2)*sqrt(C/L)
+```
+
+For a DC input, the steady-state behavior is:
+
+```text
+Vc -> Vin
+i -> 0
+```
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:
@@ -297,6 +324,18 @@ python examples\run_rl_circuit.py
 
 This prints the time constant and steady-state current, then plots the
 numerical and analytical current responses.
+
+## Run the RLC Circuit Example
+
+The example simulates an underdamped series RLC circuit and uses the reusable
+step response metrics to estimate rise time, settling time, peak voltage, peak
+time, and overshoot.
+
+Run it with:
+
+```powershell
+python examples\run_rlc_circuit.py
+```
 
 ## Run Tests
 

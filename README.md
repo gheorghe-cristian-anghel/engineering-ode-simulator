@@ -14,6 +14,7 @@ The project currently includes:
 - Reusable step response metrics
 - RL circuit step response
 - Series RLC circuit step response
+- Simple pendulum nonlinear dynamics
 
 ## RC Circuit Charging
 
@@ -221,6 +222,31 @@ Vc -> Vin
 i -> 0
 ```
 
+## Simple Pendulum
+
+The simple pendulum model introduces nonlinear dynamics and compares the full
+pendulum equation with the small-angle approximation.
+
+The nonlinear equation is:
+
+```text
+theta'' + (g/L)sin(theta) = 0
+```
+
+The small-angle approximation is:
+
+```text
+theta'' + (g/L)theta = 0
+```
+
+The state variables are angle `theta` and angular velocity `omega`. The
+small-angle natural frequency and period are:
+
+```text
+omega_n = sqrt(g/L)
+T = 2*pi*sqrt(L/g)
+```
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:
@@ -335,6 +361,17 @@ Run it with:
 
 ```powershell
 python examples\run_rlc_circuit.py
+```
+
+## Run the Pendulum Example
+
+The example compares nonlinear pendulum motion with the linear small-angle
+approximation.
+
+Run it with:
+
+```powershell
+python examples\run_pendulum.py
 ```
 
 ## Run Tests

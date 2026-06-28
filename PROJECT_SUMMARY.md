@@ -61,6 +61,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | DC Motor | Electromechanical | Coupled first-order system | `models/dc_motor.py` | `examples/run_dc_motor.py` | `tests/test_dc_motor.py` | Implemented |
 | PI Motor Speed Control | Control / Electromechanical | Closed-loop system | `models/pid_motor_control.py` | `examples/run_pid_motor_control.py` | `tests/test_pid_motor_control.py` | Implemented |
 | PI Motor Load Disturbance | Control / Electromechanical | Disturbance response | `models/pid_motor_control.py` | `examples/run_motor_load_disturbance.py` | `tests/test_motor_load_disturbance.py` | Implemented |
+| Discrete PID Motor Speed Control | Control / Electromechanical | Sampled-data control | `models/discrete_pid.py` | `examples/run_discrete_pid_motor.py` | `tests/test_discrete_pid.py` | Implemented |
 
 ## Analysis Tools
 
@@ -106,8 +107,9 @@ The parameter sweep tool compares PI controller gain choices using:
 
 The project can simulate first-order systems, second-order systems, nonlinear
 pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
-control with disturbance rejection. It also includes reusable step response
-metrics, PI gain sweep analysis, and pytest coverage for implemented models.
+control with disturbance rejection. It also includes embedded-style discrete
+PID motor speed control, reusable step response metrics, PI gain sweep
+analysis, and pytest coverage for implemented models.
 
 ## How Future AI Chats Should Use This File
 

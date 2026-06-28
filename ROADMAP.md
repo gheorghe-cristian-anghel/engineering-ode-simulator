@@ -13,6 +13,7 @@
 - [x] DC motor open-loop response
 - [x] PI motor speed control
 - [x] Load disturbance response for DC motor
+- [x] True discrete PID controller
 - [x] Step response metrics
 - [x] Parameter sweeps for PI motor speed-control gains
 
@@ -22,7 +23,6 @@
 
 ## Next Short-Term Features
 
-- True discrete PID controller
 - Export simulation results to CSV
 - Add screenshots folder for selected plots
 - Improve README with selected images
@@ -35,6 +35,7 @@
 - State-space models
 - Transfer function utilities
 - PID tuning examples
+- Discrete PID disturbance response
 - RLC parameter sweeps
 - DC motor load disturbance rejection
 

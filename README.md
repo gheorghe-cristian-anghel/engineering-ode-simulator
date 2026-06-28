@@ -20,6 +20,7 @@ The project currently includes:
 - DC motor PI speed control
 - PI motor gain sweep analysis
 - DC motor PI load disturbance response
+- Discrete PID motor speed control
 
 ## RC Circuit Charging
 
@@ -486,6 +487,16 @@ Run it with:
 
 ```powershell
 python examples\run_motor_load_disturbance.py
+```
+
+## Run the Discrete PID Motor Example
+
+The example simulates embedded-style digital PID speed control for a DC motor.
+
+Run it with:
+
+```powershell
+python examples\run_discrete_pid_motor.py
 ```
 
 ## Run Tests

@@ -18,6 +18,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - differential equation modeling
 - control systems
 - electromechanical modeling
+- embedded-style digital PID control
 - parameter validation
 - documentation
 
@@ -46,6 +47,11 @@ motor speed regulation. The demo also includes load disturbance rejection,
 where the controller increases voltage and current to recover speed after a
 torque step.
 
+### Discrete PID Motor Control
+
+Shows embedded-style sampled control: fixed update time, held voltage commands,
+output saturation, anti-windup, and derivative-on-measurement.
+
 ## Freelance Relevance
 
 The project supports offers such as:
@@ -64,6 +70,7 @@ The project supports offers such as:
 - I added tests that check engineering behavior.
 - I implemented reusable step response metrics.
 - I modeled both open-loop and closed-loop systems.
+- I added an embedded-style discrete PID controller for motor speed control.
 - I documented the project for future extension.
 
 ## Future Portfolio Upgrades

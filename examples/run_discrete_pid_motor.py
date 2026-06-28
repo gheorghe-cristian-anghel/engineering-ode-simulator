@@ -10,6 +10,7 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
+from analysis.export_utils import export_simulation_to_csv
 from models.discrete_pid import DiscretePID, simulate_discrete_pid_motor_control
 
 
@@ -127,6 +128,18 @@ def main():
     print(f"Maximum overshoot: {overshoot_percent:.3f}%")
     print(f"Max voltage: {np.max(voltage):.3f} V")
     print(f"Max current: {np.max(current):.3f} A")
+
+    csv_path = export_simulation_to_csv(
+        PROJECT_ROOT / "outputs" / "discrete_pid_motor.csv",
+        {
+            "time_s": t,
+            "speed_rad_s": speed,
+            "voltage_v": voltage,
+            "current_a": current,
+            "error_rad_s": error,
+        },
+    )
+    print(f"Exported simulation data to {csv_path.relative_to(PROJECT_ROOT)}")
 
     _plot_response(t, current, speed, voltage, error, target_speed, output_min, output_max)
 

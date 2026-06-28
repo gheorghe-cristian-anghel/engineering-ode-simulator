@@ -5,4 +5,8 @@ __pycache__/
 .ruff_cache/
 .pytest_cache/
 examples/*_response.png
+outputs/*.csv
+!outputs/.gitkeep
 .DS_Store
+.pytest_tmp/
+.pytest_tmp_*/

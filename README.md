@@ -17,6 +17,7 @@ The project currently includes:
 - Series RLC circuit step response
 - Simple pendulum nonlinear dynamics
 - DC motor speed response
+- DC motor PI speed control
 
 ## RC Circuit Charging
 
@@ -291,6 +292,22 @@ J domega/dt + b omega = Kt i - TL
 The state variables are armature current `i` and angular speed `omega`. The
 example reports motor speed in both radians per second and rpm.
 
+## DC Motor PI Speed Control
+
+This closed-loop model tracks a target motor speed using a PI controller with a
+PID-compatible API. Derivative action is reserved for a future extension.
+
+The controller is:
+
+```text
+V = Kp*error + Ki*integral_error
+```
+
+The controller voltage is saturated between configured minimum and maximum
+limits. The motor plant uses the same coupled electrical-mechanical equations
+as the open-loop DC motor model, and the example shows speed tracking to a
+target reference.
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:
@@ -437,6 +454,16 @@ Run it with:
 
 ```powershell
 python examples\run_dc_motor.py
+```
+
+## Run the DC Motor PI Control Example
+
+The example simulates closed-loop speed tracking with voltage saturation.
+
+Run it with:
+
+```powershell
+python examples\run_pid_motor_control.py
 ```
 
 ## Run Tests

@@ -13,6 +13,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - NumPy
 - SciPy `solve_ivp`
 - Matplotlib visualization
+- CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
 - pytest testing
 - Git/GitHub workflow
 - differential equation modeling
@@ -53,6 +54,11 @@ Shows embedded-style sampled control: fixed update time, held voltage commands,
 output saturation, anti-windup, derivative-on-measurement, and DC motor speed
 tracking.
 
+### CSV Export
+
+Shows practical engineering workflow support by exporting simulation results
+for external analysis in Excel, MATLAB, LibreOffice Calc, or Python.
+
 ## Freelance Relevance
 
 The project supports offers such as:
@@ -70,6 +76,7 @@ The project supports offers such as:
 - I used SciPy `solve_ivp` for numerical integration.
 - I added tests that check engineering behavior.
 - I implemented reusable step response metrics.
+- I added CSV export so simulation data can be reused in external analysis tools.
 - I modeled both open-loop and closed-loop systems.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I documented the project for future extension.

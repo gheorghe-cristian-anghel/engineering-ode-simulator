@@ -35,6 +35,10 @@ All notable changes to this project will be documented here.
 #### Analysis Utilities
 
 - Reusable step response metrics
+- Generic CSV export utility for simulation results
+- CSV export from the discrete PID motor example
+- Output directory support for generated files
+- Tests for CSV export validation and file output
 - PI gain sweep utility for motor speed-control tuning
 - PI gain sweep example with speed and voltage comparison plots
 - pytest test coverage for implemented models

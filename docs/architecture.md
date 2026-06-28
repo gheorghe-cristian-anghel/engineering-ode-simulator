@@ -27,17 +27,19 @@ derivative-on-measurement.
 
 ### analysis/
 
-Reusable analysis tools independent of any one model.
+Reusable analysis and output tools independent of any one model.
 
 Current example:
 
 - step response metrics
 - parameter sweep utilities
+- CSV export utilities
 
 ### examples/
 
 Runnable scripts that demonstrate models, print important parameters, and
-generate plots.
+generate plots. Selected examples can also export simulation arrays to CSV
+files under `outputs/`.
 
 ### tests/
 

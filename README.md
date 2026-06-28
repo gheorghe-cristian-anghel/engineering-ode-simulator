@@ -21,6 +21,7 @@ The project currently includes:
 - PI motor gain sweep analysis
 - DC motor PI load disturbance response
 - Discrete PID motor speed control
+- CSV export for selected simulation results
 
 ## RC Circuit Charging
 
@@ -491,7 +492,9 @@ python examples\run_motor_load_disturbance.py
 
 ## Run the Discrete PID Motor Example
 
-The example simulates embedded-style digital PID speed control for a DC motor.
+The example simulates embedded-style digital PID speed control for a DC motor
+and exports data to `outputs/discrete_pid_motor.csv`. CSV files can be opened
+in Excel, MATLAB, LibreOffice Calc, or Python.
 
 Run it with:
 

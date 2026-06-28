@@ -74,6 +74,7 @@ derivative-on-measurement. The DC motor example is
 Reusable step response metrics are implemented in `analysis/step_response.py`.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
+CSV export helpers are implemented in `analysis/export_utils.py`.
 
 The tool estimates:
 
@@ -95,6 +96,10 @@ The parameter sweep tool compares PI controller gain choices using:
 - settling time
 - maximum control effort
 - maximum current
+
+The export utility validates column names, dimensions, and column lengths,
+creates missing output directories automatically, and writes simulation arrays
+to CSV files for later analysis in Excel, MATLAB, Python, or reports.
 
 ## Current Development Workflow
 

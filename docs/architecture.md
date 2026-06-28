@@ -1,0 +1,75 @@
+# Architecture
+
+## Overview
+
+Engineering ODE Simulator is organized into models, analysis tools, examples,
+tests, and documentation. Model modules focus on equations and numerical
+simulation. Examples demonstrate usage and plotting. Tests verify numerical and
+engineering behavior.
+
+## Folder Responsibilities
+
+### models/
+
+Physical and control-system models.
+
+Each model usually contains:
+
+- validation functions
+- ODE function
+- simulation function
+- helper formulas
+
+### analysis/
+
+Reusable analysis tools independent of any one model.
+
+Current example:
+
+- step response metrics
+
+### examples/
+
+Runnable scripts that demonstrate models, print important parameters, and
+generate plots.
+
+### tests/
+
+pytest tests for numerical correctness and engineering behavior.
+
+### docs/
+
+Longer documentation and project notes.
+
+## Model Pattern
+
+The usual model pattern is:
+
+1. Validate parameters.
+2. Define the ODE.
+3. Simulate with `solve_ivp`.
+4. Return NumPy arrays.
+5. Add an example script that plots results.
+6. Add tests that verify physical behavior.
+
+## Testing Philosophy
+
+Tests should check:
+
+- correct initial conditions
+- expected steady-state behavior
+- known formulas
+- numerical and analytical agreement where available
+- conservation laws where applicable
+- physically meaningful behavior such as overshoot, damping, or convergence
+
+## Future Architecture Improvements
+
+Possible improvements:
+
+- package installation with `pyproject.toml`
+- shared plotting utilities
+- shared validation utilities
+- parameter sweep module
+- Streamlit GUI
+- exporting results to CSV

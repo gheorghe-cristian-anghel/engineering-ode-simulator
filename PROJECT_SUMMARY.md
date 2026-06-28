@@ -1,0 +1,103 @@
+# Engineering ODE Simulator - Project Summary
+
+## Purpose
+
+Engineering ODE Simulator is a Python engineering simulation library for
+modeling physical and control systems governed by ordinary differential
+equations.
+
+The project goals are to:
+
+- learn scientific computing
+- learn differential equation modeling
+- learn numerical simulation
+- build a portfolio project
+- prepare for control systems, robotics, electrical engineering, and automation work
+
+## Technology Stack
+
+- Python
+- NumPy
+- SciPy
+- Matplotlib
+- pytest
+- Git/GitHub
+- VS Code
+
+Simulations use `scipy.integrate.solve_ivp` for numerical integration.
+
+## Project Structure
+
+- `models/`: engineering models and simulation functions
+- `analysis/`: reusable analysis tools independent of one specific model
+- `examples/`: runnable scripts that print parameters and plot results
+- `tests/`: pytest coverage for model behavior and helper formulas
+- `docs/`: longer documentation, equations, architecture notes, and future ideas
+
+## Coding Conventions
+
+- One model per module.
+- Each model has validation functions where appropriate.
+- Model modules usually include an ODE function and a `simulate_*` function.
+- Each model should have an example script and pytest tests.
+- Use docstrings and beginner-readable code.
+- Prefer clear engineering names over overly abstract names.
+- Use SI units unless stated otherwise.
+- Examples should print important parameters and plot results.
+- Tests should check physics and engineering behavior, not only syntax.
+
+## Implemented Models
+
+| Model | Domain | Type / Order | Main File | Example | Test File | Status |
+|---|---|---:|---|---|---|---|
+| RC Circuit | Electrical | First-order | `models/rc_circuit.py` | `examples/run_rc_circuit.py` | `tests/test_rc_circuit.py` | Implemented |
+| RL Circuit | Electrical | First-order | `models/rl_circuit.py` | `examples/run_rl_circuit.py` | `tests/test_rl_circuit.py` | Implemented |
+| RLC Circuit | Electrical | Second-order | `models/rlc_circuit.py` | `examples/run_rlc_circuit.py` | `tests/test_rlc_circuit.py` | Implemented |
+| Newton Cooling | Thermal | First-order | `models/cooling.py` | `examples/run_cooling.py` | `tests/test_cooling.py` | Implemented |
+| Mass-Spring-Damper | Mechanical | Second-order | `models/mass_spring_damper.py` | `examples/run_mass_spring_damper.py` | `tests/test_mass_spring_damper.py` | Implemented |
+| Pendulum | Mechanical | Nonlinear second-order | `models/pendulum.py` | `examples/run_pendulum.py` | `tests/test_pendulum.py` | Implemented |
+| First-Order Control System | Control | First-order | `models/first_order_control.py` | `examples/run_first_order_control.py` | `tests/test_first_order_control.py` | Implemented |
+| Second-Order Control System | Control | Second-order | `models/second_order_control.py` | `examples/run_second_order_control.py` | `tests/test_second_order_control.py` | Implemented |
+| DC Motor | Electromechanical | Coupled first-order system | `models/dc_motor.py` | `examples/run_dc_motor.py` | `tests/test_dc_motor.py` | Implemented |
+| PI Motor Speed Control | Control / Electromechanical | Closed-loop system | `models/pid_motor_control.py` | `examples/run_pid_motor_control.py` | `tests/test_pid_motor_control.py` | Implemented |
+
+## Analysis Tools
+
+Reusable step response metrics are implemented in `analysis/step_response.py`.
+
+The tool estimates:
+
+- initial value
+- final value
+- steady-state value
+- rise time
+- settling time
+- peak value
+- peak time
+- overshoot
+
+## Current Development Workflow
+
+1. Study the engineering concept.
+2. Derive the differential equation.
+3. Convert to a first-order system for `solve_ivp`.
+4. Implement the model module.
+5. Add an example script.
+6. Add tests.
+7. Run pytest.
+8. Run the example and inspect plots.
+9. Update README/docs.
+10. Commit and push to GitHub.
+
+## Current Status
+
+The project can simulate first-order systems, second-order systems, nonlinear
+pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
+control. It also includes reusable step response metrics and pytest coverage
+for implemented models.
+
+## How Future AI Chats Should Use This File
+
+Future ChatGPT/Codex chats should read `PROJECT_SUMMARY.md` and `ROADMAP.md`
+before implementing new features. These files provide the current project
+scope, coding style, implemented models, and planned direction.

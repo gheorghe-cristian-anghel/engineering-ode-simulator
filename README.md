@@ -11,6 +11,7 @@ The project currently includes:
 - Newton's Law of Cooling
 - Mass-spring-damper free vibration
 - First-order control system step response
+- Second-order control system step response
 - Reusable step response metrics
 - RL circuit step response
 - Series RLC circuit step response
@@ -160,6 +161,28 @@ y_ss = K*A
 Where `tau` is the time constant, `K` is the system gain, `u(t)` is the input,
 and `y` is the output. The example also prints practical response metrics:
 rise time and settling time.
+
+## Second-Order Control System Step Response
+
+This model simulates the standard second-order control system and compares
+theoretical response metrics with measured metrics from the numerical output.
+
+The transfer function is:
+
+```text
+omega_n^2 / (s^2 + 2*zeta*omega_n*s + omega_n^2)
+```
+
+The time-domain equation is:
+
+```text
+y'' + 2*zeta*omega_n*y' + omega_n^2*y = omega_n^2*u(t)
+```
+
+The state variables are output `y` and output velocity `y'`. The damping ratio
+describes the response type: underdamped, critically damped, or overdamped.
+The example prints theoretical overshoot, peak time, and approximate settling
+time, then uses the reusable step response metrics on the simulated output.
 
 ## Reusable Step Response Metrics
 
@@ -331,6 +354,17 @@ python examples\run_first_order_control.py
 
 This prints gain, time constant, steady-state value, rise time, and settling
 time, then plots the numerical and analytical step responses.
+
+## Run the Second-Order Control Example
+
+The example simulates an underdamped second-order step response and uses the
+reusable step response metrics.
+
+Run it with:
+
+```powershell
+python examples\run_second_order_control.py
+```
 
 ## Run the RL Circuit Example
 

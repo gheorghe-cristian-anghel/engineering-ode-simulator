@@ -32,6 +32,6 @@ All notable changes to this project will be documented here.
 #### Analysis Utilities
 
 - Reusable step response metrics
-- Reusable parameter sweep utility for PI motor speed-control gains
+- PI gain sweep utility for motor speed-control tuning
 - PI gain sweep example with speed and voltage comparison plots
 - pytest test coverage for implemented models

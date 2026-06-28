@@ -18,6 +18,7 @@ The project currently includes:
 - Simple pendulum nonlinear dynamics
 - DC motor speed response
 - DC motor PI speed control
+- PI motor gain sweep analysis
 
 ## RC Circuit Charging
 
@@ -464,6 +465,16 @@ Run it with:
 
 ```powershell
 python examples\run_pid_motor_control.py
+```
+
+## Run the PI Gain Sweep Example
+
+The example compares PI motor speed-control responses for several `Kp` values.
+
+Run it with:
+
+```powershell
+python examples\run_pi_gain_sweep.py
 ```
 
 ## Run Tests

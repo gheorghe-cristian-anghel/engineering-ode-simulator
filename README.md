@@ -16,6 +16,7 @@ The project currently includes:
 - RL circuit step response
 - Series RLC circuit step response
 - Simple pendulum nonlinear dynamics
+- DC motor speed response
 
 ## RC Circuit Charging
 
@@ -270,6 +271,26 @@ omega_n = sqrt(g/L)
 T = 2*pi*sqrt(L/g)
 ```
 
+## DC Motor Speed Response
+
+The DC motor model demonstrates coupled electrical-mechanical dynamics for a
+permanent-magnet motor.
+
+The electrical equation is:
+
+```text
+V = L di/dt + R i + Ke omega
+```
+
+The mechanical equation is:
+
+```text
+J domega/dt + b omega = Kt i - TL
+```
+
+The state variables are armature current `i` and angular speed `omega`. The
+example reports motor speed in both radians per second and rpm.
+
 ## Install Dependencies
 
 Create and activate a virtual environment, then install the dependencies:
@@ -406,6 +427,16 @@ Run it with:
 
 ```powershell
 python examples\run_pendulum.py
+```
+
+## Run the DC Motor Example
+
+The example simulates motor current and speed after a voltage step.
+
+Run it with:
+
+```powershell
+python examples\run_dc_motor.py
 ```
 
 ## Run Tests

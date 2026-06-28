@@ -20,6 +20,11 @@ Each model usually contains:
 - simulation function
 - helper formulas
 
+`models/discrete_pid.py` contains reusable controller logic, not only
+motor-specific code. Its `DiscretePID` class can be used for embedded-style
+digital control with fixed sample time, output saturation, anti-windup, and
+derivative-on-measurement.
+
 ### analysis/
 
 Reusable analysis tools independent of any one model.

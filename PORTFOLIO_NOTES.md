@@ -50,7 +50,8 @@ torque step.
 ### Discrete PID Motor Control
 
 Shows embedded-style sampled control: fixed update time, held voltage commands,
-output saturation, anti-windup, and derivative-on-measurement.
+output saturation, anti-windup, derivative-on-measurement, and DC motor speed
+tracking.
 
 ## Freelance Relevance
 

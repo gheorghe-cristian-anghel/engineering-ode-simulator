@@ -63,6 +63,12 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | PI Motor Load Disturbance | Control / Electromechanical | Disturbance response | `models/pid_motor_control.py` | `examples/run_motor_load_disturbance.py` | `tests/test_motor_load_disturbance.py` | Implemented |
 | Discrete PID Motor Speed Control | Control / Electromechanical | Sampled-data control | `models/discrete_pid.py` | `examples/run_discrete_pid_motor.py` | `tests/test_discrete_pid.py` | Implemented |
 
+Implemented control features include a reusable `DiscretePID` controller in
+`models/discrete_pid.py`. It models embedded-style digital control with fixed
+sample time `dt`, output saturation, anti-windup, and
+derivative-on-measurement. The DC motor example is
+`examples/run_discrete_pid_motor.py`, with tests in `tests/test_discrete_pid.py`.
+
 ## Analysis Tools
 
 Reusable step response metrics are implemented in `analysis/step_response.py`.

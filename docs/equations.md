@@ -263,12 +263,11 @@ output constant between updates.
 
 ```text
 error_k = setpoint_k - measurement_k
-I_k = I_{k-1} + error_k dt
+I_k = I_{k-1} + error_k * dt
 D_k = -(measurement_k - measurement_{k-1}) / dt
-u_k = Kp error_k + Ki I_k + Kd D_k
+u_k = Kp * error_k + Ki * I_k + Kd * D_k
 ```
 
 The derivative term uses derivative-on-measurement, which avoids a derivative
-kick when the setpoint changes suddenly. The controller output can be saturated
-between minimum and maximum limits, and anti-windup can stop the integral term
-from growing farther into saturation.
+kick when the setpoint changes suddenly. The controller output is clipped to
+voltage limits, and anti-windup prevents integral growth during saturation.

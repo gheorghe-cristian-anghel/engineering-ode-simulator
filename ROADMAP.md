@@ -31,7 +31,7 @@
 
 ## Medium-Term Features
 
-q- Frequency response
+- Frequency response
 - Bode plots
 - State-space models
 - Transfer function utilities

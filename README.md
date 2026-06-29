@@ -24,6 +24,35 @@ The project currently includes:
 - CSV export for selected simulation results
 - Saved screenshots for selected plots
 
+## Example Results
+
+### Discrete PID Motor Control
+
+![Discrete PID Motor Control](docs/screenshots/discrete_pid_motor.png)
+
+A discrete PID controller regulates DC motor speed with low steady-state error
+and controlled actuator voltage.
+
+### Load Disturbance Response
+
+![Load Disturbance Response](docs/screenshots/load_disturbance_response.png)
+
+The PI motor controller recovers speed after a load torque disturbance.
+
+### PI Gain Sweep
+
+![PI Gain Sweep](docs/screenshots/pi_gain_sweep.png)
+
+The gain sweep compares how different proportional gains affect motor speed
+tracking and control effort.
+
+### RLC Circuit Step Response
+
+![RLC Circuit Step Response](docs/screenshots/rlc_circuit.png)
+
+The RLC example shows underdamped second-order electrical dynamics with
+overshoot and settling behavior.
+
 ## RC Circuit Charging
 
 An RC circuit has a resistor and capacitor connected to an input voltage. When

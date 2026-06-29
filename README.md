@@ -377,9 +377,9 @@ transfer functions and Bode plot examples for common engineering systems.
 Run the examples with:
 
 ```powershell
-python examples\run_frequency_response_first_order.py
-python examples\run_frequency_response_second_order.py
-python examples\run_frequency_response_rlc.py
+python examples/run_frequency_response_first_order.py
+python examples/run_frequency_response_second_order.py
+python examples/run_frequency_response_rlc.py
 ```
 
 ## Run the RC Circuit Example

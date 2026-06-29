@@ -14,6 +14,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - SciPy `solve_ivp`
 - Matplotlib visualization
 - Streamlit browser UI for selected simulations
+- frequency response and Bode plot analysis
 - CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
 - saved plot screenshots for GitHub and README presentation
 - pytest testing
@@ -61,6 +62,11 @@ tracking.
 Shows selected simulations in a browser UI with interactive inputs and
 Matplotlib plots while reusing the tested model modules.
 
+### Frequency Response
+
+Shows Bode magnitude and phase plots for first-order, second-order, and RLC
+low-pass transfer functions.
+
 ### CSV Export
 
 Shows practical engineering workflow support by exporting simulation results
@@ -88,6 +94,7 @@ The project supports offers such as:
 - I used SciPy `solve_ivp` for numerical integration.
 - I added tests that check engineering behavior.
 - I implemented reusable step response metrics.
+- I added reusable frequency response utilities and Bode plot examples.
 - I added CSV export so simulation data can be reused in external analysis tools.
 - I modeled both open-loop and closed-loop systems.
 - I added an embedded-style discrete PID controller for motor speed control.

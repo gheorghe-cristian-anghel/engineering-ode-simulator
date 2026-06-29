@@ -22,6 +22,7 @@ The project currently includes:
 - DC motor PI load disturbance response
 - Discrete PID motor speed control
 - Interactive Streamlit GUI for selected simulations
+- Frequency response and Bode plot examples
 - CSV export for selected simulation results
 - Saved screenshots for selected plots
 
@@ -366,6 +367,19 @@ Install dependencies and run the app with:
 ```powershell
 pip install -r requirements.txt
 streamlit run streamlit_app.py
+```
+
+## Frequency Response and Bode Plots
+
+The project includes reusable frequency response helpers for continuous-time
+transfer functions and Bode plot examples for common engineering systems.
+
+Run the examples with:
+
+```powershell
+python examples\run_frequency_response_first_order.py
+python examples\run_frequency_response_second_order.py
+python examples\run_frequency_response_rlc.py
 ```
 
 ## Run the RC Circuit Example

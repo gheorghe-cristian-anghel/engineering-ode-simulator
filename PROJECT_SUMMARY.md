@@ -78,6 +78,8 @@ Reusable step response metrics are implemented in `analysis/step_response.py`.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
 CSV export helpers are implemented in `analysis/export_utils.py`.
+Frequency response and Bode plot helpers are implemented in
+`analysis/frequency_response.py`.
 
 The Streamlit MVP in `streamlit_app.py` provides an interactive browser UI for
 RC circuit charging, RLC circuit step response, and discrete PID motor speed
@@ -108,6 +110,9 @@ The export utility validates column names, dimensions, and column lengths,
 creates missing output directories automatically, and writes simulation arrays
 to CSV files for later analysis in Excel, MATLAB, Python, or reports.
 
+The frequency response utility computes continuous-time transfer-function
+magnitude and phase data and provides a reusable Matplotlib Bode plot helper.
+
 Selected examples also save plot screenshots in `docs/screenshots/` as
 documentation and portfolio presentation assets.
 
@@ -130,8 +135,8 @@ The project can simulate first-order systems, second-order systems, nonlinear
 pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
 control with disturbance rejection. It also includes embedded-style discrete
 PID motor speed control, a Streamlit GUI MVP for selected simulations,
-reusable step response metrics, PI gain sweep analysis, and pytest coverage
-for implemented models.
+reusable step response metrics, frequency response analysis, PI gain sweep
+analysis, and pytest coverage for implemented models.
 
 ## How Future AI Chats Should Use This File
 

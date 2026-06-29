@@ -41,6 +41,8 @@ All notable changes to this project will be documented here.
 - Tests for CSV export validation and file output
 - PI gain sweep utility for motor speed-control tuning
 - PI gain sweep example with speed and voltage comparison plots
+- Frequency response utility for continuous-time transfer functions
+- Bode plot examples for first-order, second-order, and RLC low-pass systems
 - pytest test coverage for implemented models
 
 #### Interactive App

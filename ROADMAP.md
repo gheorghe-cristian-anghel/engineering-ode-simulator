@@ -20,6 +20,7 @@
 - [x] Parameter sweeps for PI motor speed-control gains
 - [x] Improve README with selected images
 - [x] Streamlit GUI MVP for selected simulations
+- [x] Frequency response / Bode plots
 
 ## In Progress
 
@@ -31,8 +32,6 @@
 
 ## Medium-Term Features
 
-- Frequency response
-- Bode plots
 - State-space models
 - Transfer function utilities
 - PID tuning examples

@@ -35,6 +35,7 @@ Current example:
 
 - step response metrics
 - parameter sweep utilities
+- frequency response and Bode plot utilities
 - CSV export utilities
 
 ### examples/

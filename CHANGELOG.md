@@ -43,6 +43,11 @@ All notable changes to this project will be documented here.
 - PI gain sweep example with speed and voltage comparison plots
 - pytest test coverage for implemented models
 
+#### Interactive App
+
+- Streamlit GUI MVP for RC circuit charging, RLC circuit step response, and
+  discrete PID motor speed control
+
 #### Documentation and Portfolio Assets
 
 - Added `docs/screenshots` folder

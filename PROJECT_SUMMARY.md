@@ -20,6 +20,7 @@ The project goals are to:
 - NumPy
 - SciPy
 - Matplotlib
+- Streamlit
 - pytest
 - Git/GitHub
 - VS Code
@@ -31,6 +32,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 - `models/`: engineering models and simulation functions
 - `analysis/`: reusable analysis tools independent of one specific model
 - `examples/`: runnable scripts that print parameters and plot results
+- `streamlit_app.py`: browser UI for selected interactive simulations
 - `tests/`: pytest coverage for model behavior and helper formulas
 - `docs/`: longer documentation, equations, architecture notes, and future ideas
 - `docs/screenshots/`: selected generated plots for documentation and portfolio presentation
@@ -76,6 +78,10 @@ Reusable step response metrics are implemented in `analysis/step_response.py`.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
 CSV export helpers are implemented in `analysis/export_utils.py`.
+
+The Streamlit MVP in `streamlit_app.py` provides an interactive browser UI for
+RC circuit charging, RLC circuit step response, and discrete PID motor speed
+control while reusing the existing model and analysis modules.
 
 The tool estimates:
 
@@ -123,8 +129,9 @@ documentation and portfolio presentation assets.
 The project can simulate first-order systems, second-order systems, nonlinear
 pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
 control with disturbance rejection. It also includes embedded-style discrete
-PID motor speed control, reusable step response metrics, PI gain sweep
-analysis, and pytest coverage for implemented models.
+PID motor speed control, a Streamlit GUI MVP for selected simulations,
+reusable step response metrics, PI gain sweep analysis, and pytest coverage
+for implemented models.
 
 ## How Future AI Chats Should Use This File
 

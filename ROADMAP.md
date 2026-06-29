@@ -19,6 +19,7 @@
 - [x] Step response metrics
 - [x] Parameter sweeps for PI motor speed-control gains
 - [x] Improve README with selected images
+- [x] Streamlit GUI MVP for selected simulations
 
 ## In Progress
 
@@ -30,8 +31,7 @@
 
 ## Medium-Term Features
 
-- Streamlit GUI
-- Frequency response
+q- Frequency response
 - Bode plots
 - State-space models
 - Transfer function utilities

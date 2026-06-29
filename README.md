@@ -21,6 +21,7 @@ The project currently includes:
 - PI motor gain sweep analysis
 - DC motor PI load disturbance response
 - Discrete PID motor speed control
+- Interactive Streamlit GUI for selected simulations
 - CSV export for selected simulation results
 - Saved screenshots for selected plots
 
@@ -350,6 +351,21 @@ Create and activate a virtual environment, then install the dependencies:
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
+```
+
+## Interactive Streamlit App
+
+The project includes a simple browser UI for selected simulations:
+
+- RC circuit charging
+- RLC circuit step response
+- DC motor discrete PID speed control
+
+Install dependencies and run the app with:
+
+```powershell
+pip install -r requirements.txt
+streamlit run streamlit_app.py
 ```
 
 ## Run the RC Circuit Example

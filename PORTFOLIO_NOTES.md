@@ -13,6 +13,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - NumPy
 - SciPy `solve_ivp`
 - Matplotlib visualization
+- Streamlit browser UI for selected simulations
 - CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
 - saved plot screenshots for GitHub and README presentation
 - pytest testing
@@ -55,6 +56,11 @@ Shows embedded-style sampled control: fixed update time, held voltage commands,
 output saturation, anti-windup, derivative-on-measurement, and DC motor speed
 tracking.
 
+### Streamlit GUI
+
+Shows selected simulations in a browser UI with interactive inputs and
+Matplotlib plots while reusing the tested model modules.
+
 ### CSV Export
 
 Shows practical engineering workflow support by exporting simulation results
@@ -85,11 +91,12 @@ The project supports offers such as:
 - I added CSV export so simulation data can be reused in external analysis tools.
 - I modeled both open-loop and closed-loop systems.
 - I added an embedded-style discrete PID controller for motor speed control.
+- I added a Streamlit GUI MVP so selected simulations can be explored from a
+  browser.
 - I documented the project for future extension.
 
 ## Future Portfolio Upgrades
 
-- Streamlit GUI
 - screenshots
 - hosted demo
 - blog post series

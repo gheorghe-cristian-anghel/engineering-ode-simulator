@@ -5,7 +5,9 @@
 Engineering ODE Simulator is organized into models, analysis tools, examples,
 tests, and documentation. Model modules focus on equations and numerical
 simulation. Examples demonstrate usage and plotting. Tests verify numerical and
-engineering behavior.
+engineering behavior. The Streamlit app provides a small browser-based UI over
+selected existing simulations without moving equations into the presentation
+layer.
 
 ## Folder Responsibilities
 
@@ -40,6 +42,12 @@ Current example:
 Runnable scripts that demonstrate models, print important parameters, and
 generate plots. Selected examples can also export simulation arrays to CSV
 files under `outputs/`.
+
+### streamlit_app.py
+
+Interactive browser UI for selected simulations. It imports model and analysis
+functions, builds Streamlit controls, and displays Matplotlib figures with
+`st.pyplot`.
 
 ### tests/
 
@@ -81,5 +89,4 @@ Possible improvements:
 - package installation with `pyproject.toml`
 - shared plotting utilities
 - shared validation utilities
-- Streamlit GUI
 - exporting results to CSV

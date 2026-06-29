@@ -18,6 +18,7 @@
 - [x] Add screenshots folder for selected plots
 - [x] Step response metrics
 - [x] Parameter sweeps for PI motor speed-control gains
+- [x] Improve README with selected images
 
 ## In Progress
 
@@ -25,7 +26,7 @@
 
 ## Next Short-Term Features
 
-- Improve README with selected images
+- All originally planned short-term features have been completed.
 
 ## Medium-Term Features
 

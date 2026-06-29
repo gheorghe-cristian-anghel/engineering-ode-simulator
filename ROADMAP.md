@@ -21,6 +21,7 @@
 - [x] Improve README with selected images
 - [x] Streamlit GUI MVP for selected simulations
 - [x] Frequency response / Bode plots
+- [x] State-space system models
 
 ## In Progress
 
@@ -32,7 +33,6 @@
 
 ## Medium-Term Features
 
-- State-space models
 - Transfer function utilities
 - PID tuning examples
 - Discrete PID disturbance response

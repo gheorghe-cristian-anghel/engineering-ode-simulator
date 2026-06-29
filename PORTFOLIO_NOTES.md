@@ -15,6 +15,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Matplotlib visualization
 - Streamlit browser UI for selected simulations
 - frequency response and Bode plot analysis
+- state-space modeling for linear systems
 - CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
 - saved plot screenshots for GitHub and README presentation
 - pytest testing
@@ -67,6 +68,11 @@ Matplotlib plots while reusing the tested model modules.
 Shows Bode magnitude and phase plots for first-order, second-order, and RLC
 low-pass transfer functions.
 
+### State-Space Models
+
+Shows modern control-system modeling using `x_dot = A*x + B*u` and
+`y = C*x + D*u` for mechanical, electrical, and electromechanical systems.
+
 ### CSV Export
 
 Shows practical engineering workflow support by exporting simulation results
@@ -95,6 +101,7 @@ The project supports offers such as:
 - I added tests that check engineering behavior.
 - I implemented reusable step response metrics.
 - I added reusable frequency response utilities and Bode plot examples.
+- I added reusable state-space simulation utilities for linear systems.
 - I added CSV export so simulation data can be reused in external analysis tools.
 - I modeled both open-loop and closed-loop systems.
 - I added an embedded-style discrete PID controller for motor speed control.

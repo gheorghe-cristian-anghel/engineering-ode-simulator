@@ -23,6 +23,7 @@ The project currently includes:
 - Discrete PID motor speed control
 - Interactive Streamlit GUI for selected simulations
 - Frequency response and Bode plot examples
+- State-space model simulation examples
 - CSV export for selected simulation results
 - Saved screenshots for selected plots
 
@@ -380,6 +381,19 @@ Run the examples with:
 python examples/run_frequency_response_first_order.py
 python examples/run_frequency_response_second_order.py
 python examples/run_frequency_response_rlc.py
+```
+
+## State-Space Models
+
+The project includes reusable continuous-time state-space simulation utilities
+for linear engineering systems.
+
+Run the examples with:
+
+```powershell
+python examples/run_state_space_mass_spring_damper.py
+python examples/run_state_space_rlc.py
+python examples/run_state_space_dc_motor.py
 ```
 
 ## Run the RC Circuit Example

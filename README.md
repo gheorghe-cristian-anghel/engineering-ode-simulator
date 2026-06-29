@@ -23,7 +23,11 @@ The project currently includes:
 - Discrete PID motor speed control
 - Interactive Streamlit GUI for selected simulations
 - Frequency response and Bode plot examples
-- State-space model simulation examples
+- Continuous-time state-space modeling
+  - Generic `x_dot = A*x + B*u` simulation framework
+  - Mass-spring-damper state-space model
+  - RLC circuit state-space model
+  - DC motor state-space model
 - CSV export for selected simulation results
 - Saved screenshots for selected plots
 
@@ -387,6 +391,11 @@ python examples/run_frequency_response_rlc.py
 
 The project includes reusable continuous-time state-space simulation utilities
 for linear engineering systems.
+State-space models provide a modern representation of dynamic systems using
+matrices `A`, `B`, `C`, and `D`. They are widely used in control engineering
+because they naturally support multi-state systems and form the basis for
+advanced techniques such as controllability analysis, observers, Kalman
+filters, and LQR control.
 
 Run the examples with:
 

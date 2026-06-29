@@ -49,6 +49,9 @@ pytest tests for numerical correctness and engineering behavior.
 
 Longer documentation and project notes.
 
+`docs/screenshots/` stores selected generated plot images used for
+documentation and portfolio presentation.
+
 ## Model Pattern
 
 The usual model pattern is:

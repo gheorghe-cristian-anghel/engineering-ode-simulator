@@ -9,6 +9,8 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
+SCREENSHOT_DIR = PROJECT_ROOT / "docs" / "screenshots"
+SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 from analysis.export_utils import export_simulation_to_csv
 from models.discrete_pid import DiscretePID, simulate_discrete_pid_motor_control
@@ -17,15 +19,20 @@ from models.discrete_pid import DiscretePID, simulate_discrete_pid_motor_control
 def _plot_response(t, current, speed, voltage, error, target_speed, output_min, output_max):
     """Plot discrete PID motor response, falling back to saving if needed."""
     output_path = PROJECT_ROOT / "examples" / "discrete_pid_motor_response.png"
+    screenshot_path = SCREENSHOT_DIR / "discrete_pid_motor.png"
 
     try:
         _draw_plots(t, current, speed, voltage, error, target_speed, output_min, output_max)
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         plt.show()
     except TclError:
         plt.switch_backend("Agg")
         plt.close("all")
         _draw_plots(t, current, speed, voltage, error, target_speed, output_min, output_max)
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         print("Interactive Matplotlib window is unavailable in this environment.")
         print(f"Plot saved to: {output_path}")

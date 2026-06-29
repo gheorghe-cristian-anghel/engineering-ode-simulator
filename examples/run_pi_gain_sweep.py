@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
+SCREENSHOT_DIR = PROJECT_ROOT / "docs" / "screenshots"
+SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 from analysis.parameter_sweep import run_pi_motor_gain_sweep
 
@@ -48,15 +50,20 @@ def _print_results(results):
 def _plot_sweep(simulations, target_speed, voltage_min, voltage_max):
     """Plot speed and voltage responses for all sweep runs."""
     output_path = PROJECT_ROOT / "examples" / "pi_gain_sweep_response.png"
+    screenshot_path = SCREENSHOT_DIR / "pi_gain_sweep.png"
 
     try:
         _draw_plots(simulations, target_speed, voltage_min, voltage_max)
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         plt.show()
     except TclError:
         plt.switch_backend("Agg")
         plt.close("all")
         _draw_plots(simulations, target_speed, voltage_min, voltage_max)
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         print("Interactive Matplotlib window is unavailable in this environment.")
         print(f"Plot saved to: {output_path}")

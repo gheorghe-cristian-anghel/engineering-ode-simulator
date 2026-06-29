@@ -33,6 +33,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 - `examples/`: runnable scripts that print parameters and plot results
 - `tests/`: pytest coverage for model behavior and helper formulas
 - `docs/`: longer documentation, equations, architecture notes, and future ideas
+- `docs/screenshots/`: selected generated plots for documentation and portfolio presentation
 
 ## Coding Conventions
 
@@ -100,6 +101,9 @@ The parameter sweep tool compares PI controller gain choices using:
 The export utility validates column names, dimensions, and column lengths,
 creates missing output directories automatically, and writes simulation arrays
 to CSV files for later analysis in Excel, MATLAB, Python, or reports.
+
+Selected examples also save plot screenshots in `docs/screenshots/` as
+documentation and portfolio presentation assets.
 
 ## Current Development Workflow
 

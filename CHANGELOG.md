@@ -42,3 +42,8 @@ All notable changes to this project will be documented here.
 - PI gain sweep utility for motor speed-control tuning
 - PI gain sweep example with speed and voltage comparison plots
 - pytest test coverage for implemented models
+
+#### Documentation and Portfolio Assets
+
+- Added `docs/screenshots` folder
+- Selected examples now save plot screenshots for README and portfolio use

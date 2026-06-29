@@ -22,6 +22,7 @@ The project currently includes:
 - DC motor PI load disturbance response
 - Discrete PID motor speed control
 - CSV export for selected simulation results
+- Saved screenshots for selected plots
 
 ## RC Circuit Charging
 
@@ -509,6 +510,9 @@ Run the test suite with:
 ```powershell
 pytest
 ```
+
+Selected examples save plot screenshots to `docs/screenshots/` for portfolio
+and documentation use.
 
 The current tests cover all implemented models, including initial conditions,
 long-term behavior, one-time-constant behavior, and mechanical energy behavior.

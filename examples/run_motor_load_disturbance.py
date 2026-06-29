@@ -9,6 +9,8 @@ import numpy as np
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
+SCREENSHOT_DIR = PROJECT_ROOT / "docs" / "screenshots"
+SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 from models.pid_motor_control import (
     load_torque_step,
@@ -72,6 +74,7 @@ def _plot_response(
 ):
     """Plot disturbance response, falling back to saving if needed."""
     output_path = PROJECT_ROOT / "examples" / "motor_load_disturbance_response.png"
+    screenshot_path = SCREENSHOT_DIR / "load_disturbance_response.png"
 
     try:
         _draw_plots(
@@ -85,6 +88,8 @@ def _plot_response(
             voltage_min,
             voltage_max,
         )
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         plt.show()
     except TclError:
@@ -101,6 +106,8 @@ def _plot_response(
             voltage_min,
             voltage_max,
         )
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         print("Interactive Matplotlib window is unavailable in this environment.")
         print(f"Plot saved to: {output_path}")

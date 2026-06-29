@@ -8,6 +8,8 @@ import matplotlib.pyplot as plt
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
+SCREENSHOT_DIR = PROJECT_ROOT / "docs" / "screenshots"
+SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
 
 from analysis.step_response import calculate_step_info
 from models.rlc_circuit import (
@@ -40,15 +42,20 @@ def _format_optional_time(value):
 def _plot_response(t, capacitor_voltage, current, Vin):
     """Plot capacitor voltage and current, falling back to saving if needed."""
     output_path = PROJECT_ROOT / "examples" / "rlc_circuit_response.png"
+    screenshot_path = SCREENSHOT_DIR / "rlc_circuit.png"
 
     try:
         _draw_plots(t, capacitor_voltage, current, Vin)
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         plt.show()
     except TclError:
         plt.switch_backend("Agg")
         plt.close("all")
         _draw_plots(t, capacitor_voltage, current, Vin)
+        plt.savefig(screenshot_path, dpi=150, bbox_inches="tight")
+        print(f"Saved screenshot to {screenshot_path.relative_to(PROJECT_ROOT)}")
         plt.savefig(output_path, dpi=150)
         print("Interactive Matplotlib window is unavailable in this environment.")
         print(f"Plot saved to: {output_path}")

@@ -14,6 +14,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - SciPy `solve_ivp`
 - Matplotlib visualization
 - CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
+- saved plot screenshots for GitHub and README presentation
 - pytest testing
 - Git/GitHub workflow
 - differential equation modeling
@@ -58,6 +59,11 @@ tracking.
 
 Shows practical engineering workflow support by exporting simulation results
 for external analysis in Excel, MATLAB, LibreOffice Calc, or Python.
+
+### Plot Screenshots
+
+Selected simulation plots are saved as screenshots for GitHub, README, and
+portfolio presentation.
 
 ## Freelance Relevance
 

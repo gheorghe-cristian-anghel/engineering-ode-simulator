@@ -15,6 +15,7 @@
 - [x] Load disturbance response for DC motor
 - [x] True discrete PID controller
 - [x] Export simulation results to CSV
+- [x] Add screenshots folder for selected plots
 - [x] Step response metrics
 - [x] Parameter sweeps for PI motor speed-control gains
 
@@ -24,7 +25,6 @@
 
 ## Next Short-Term Features
 
-- Add screenshots folder for selected plots
 - Improve README with selected images
 
 ## Medium-Term Features

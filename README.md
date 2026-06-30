@@ -21,6 +21,7 @@ The project currently includes:
 - Linearized inverted pendulum upright state-space model
 - LQR stabilization for the inverted pendulum
 - Discrete Kalman filter state estimation examples
+- Extended Kalman Filter nonlinear pendulum state estimation
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -380,6 +381,13 @@ example estimates armature current and speed from noisy speed measurements.
 The RLC example estimates capacitor voltage and hidden current from noisy
 capacitor-voltage measurements.
 
+## Extended Kalman Filter / Nonlinear Observer
+
+The Extended Kalman Filter example estimates nonlinear pendulum angle and
+hidden angular velocity from noisy angle measurements. It uses the full
+nonlinear pendulum model for prediction and linearizes the model locally with
+Jacobians during each EKF step.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -681,6 +689,15 @@ Run them with:
 ```powershell
 python examples/run_kalman_dc_motor.py
 python examples/run_kalman_rlc.py
+```
+
+The nonlinear pendulum EKF example demonstrates nonlinear observer design by
+estimating angle and hidden angular velocity from noisy angle measurements.
+
+Run it with:
+
+```powershell
+python examples/run_ekf_pendulum.py
 ```
 
 ## Run the DC Motor Example

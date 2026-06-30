@@ -31,6 +31,7 @@
 - [x] LQR control for inverted pendulum
 - [x] Kalman filter / observer examples
 - [x] Animation of inverted pendulum
+- [x] Nonlinear observer examples
 
 ## In Progress
 
@@ -46,11 +47,11 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Nonlinear observer examples
 - Quadcopter altitude model
 - Quadcopter attitude model
-- Extended Kalman filter
-- Model predictive control
+- [ ] Unscented Kalman filter
+- [ ] Particle filter
+- [ ] MPC examples
 - Heat equation
 - Wave equation
 - Finite difference methods

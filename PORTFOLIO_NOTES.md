@@ -25,6 +25,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - control systems
 - optimal state-space feedback with LQR
 - Kalman filtering and noisy-measurement state estimation
+- Extended Kalman filtering for nonlinear observer design
 - nonlinear instability and linearization
 - electromechanical modeling
 - embedded-style digital PID control
@@ -71,6 +72,12 @@ Shows practical observer design by estimating hidden states from noisy sensor
 measurements. The DC motor example estimates current and speed from noisy
 speed measurements, while the RLC example reconstructs current from noisy
 capacitor-voltage measurements.
+
+### Extended Kalman Filter / Nonlinear Observer
+
+Shows nonlinear state estimation by using an Extended Kalman Filter to estimate
+pendulum angle and hidden angular velocity from noisy angle measurements. This
+demonstrates the observer idea beyond linear state-space models.
 
 ### DC Motor
 
@@ -166,6 +173,8 @@ The project supports offers such as:
   pendulum trajectories.
 - I added Kalman filter examples that estimate hidden states from noisy
   measurements.
+- I added an Extended Kalman Filter example for nonlinear pendulum state
+  estimation from noisy angle measurements.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

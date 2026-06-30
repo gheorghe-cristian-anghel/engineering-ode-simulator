@@ -103,6 +103,10 @@ Continuous-time state-space simulation helpers are implemented in
 Continuous-time LQR design helpers are implemented in `analysis/lqr.py`.
 Discrete-time Kalman filter helpers are implemented in
 `analysis/kalman_filter.py`.
+Extended Kalman Filter helpers for nonlinear state estimation are implemented
+in `analysis/extended_kalman_filter.py`, with a nonlinear pendulum EKF example
+that estimates angle and hidden angular velocity from noisy angle
+measurements.
 Reusable cart-pole animation helpers are implemented in
 `visualization/inverted_pendulum_animation.py`.
 
@@ -205,6 +209,7 @@ motor dynamics, and closed-loop PI motor speed control with disturbance
 rejection. It also includes embedded-style discrete PID motor speed control
 and discrete PID disturbance response, Kalman filter examples for noisy
 state estimation, a Streamlit GUI MVP for selected simulations,
+Extended Kalman Filter nonlinear observer examples,
 Matplotlib animation examples for inverted pendulum trajectories,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC

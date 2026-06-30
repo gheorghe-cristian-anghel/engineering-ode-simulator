@@ -29,6 +29,7 @@ All notable changes to this project will be documented here.
 - Matplotlib animation helper for inverted pendulum trajectories
 - Open-loop and LQR inverted pendulum animation examples
 - DC motor and RLC state-estimation examples with Kalman filtering
+- Nonlinear pendulum state-estimation example with an Extended Kalman Filter
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control
@@ -65,6 +66,7 @@ All notable changes to this project will be documented here.
 - Reusable continuous-time state-space simulation utilities
 - Reusable continuous-time LQR utility
 - Reusable linear discrete-time Kalman filter utility
+- Reusable Extended Kalman Filter utility for nonlinear state estimation
 - State-space examples for mass-spring-damper, RLC circuit, and DC motor
 - pytest test coverage for implemented models
 

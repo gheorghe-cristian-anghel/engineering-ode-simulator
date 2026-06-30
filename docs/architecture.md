@@ -54,6 +54,7 @@ Current example:
 - state-space simulation utilities
 - LQR optimal-control utilities
 - Kalman filter state-estimation utilities
+- Extended Kalman Filter nonlinear state-estimation utilities
 - CSV export utilities
 
 `analysis/transfer_function.py` provides reusable continuous-time transfer
@@ -68,6 +69,11 @@ Regulator infrastructure based on the continuous algebraic Riccati equation.
 
 `analysis/kalman_filter.py` provides reusable discrete-time linear Kalman
 filter infrastructure for estimating hidden states from noisy measurements.
+
+`analysis/extended_kalman_filter.py` provides reusable Extended Kalman Filter
+infrastructure for nonlinear state estimation. The pendulum EKF example uses
+nonlinear prediction plus local Jacobians to estimate angle and hidden angular
+velocity from noisy angle measurements.
 
 ### visualization/
 

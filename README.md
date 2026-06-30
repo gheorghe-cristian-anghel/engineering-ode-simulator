@@ -25,6 +25,7 @@ The project currently includes:
 - Quadcopter altitude dynamics
 - Quadcopter altitude PID control
 - Quadcopter attitude dynamics
+- Quadcopter attitude PID control
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -452,8 +453,26 @@ r_dot = tau_psi / Izz
 
 The inputs are body torques `[tau_phi, tau_theta, tau_psi]` in newton-meters.
 This model is intentionally limited to rotational attitude motion. It does not
-include translational 6-DOF dynamics, rotor dynamics, or attitude PID control
-yet.
+include translational 6-DOF dynamics, rotor dynamics, or position control.
+
+## Quadcopter Attitude PID Control
+
+The attitude PID control helper tracks target roll, pitch, and yaw angles by
+commanding independent body torques on each axis. The controller runs as a
+sampled discrete PID loop, holds torque commands during each integration step,
+and uses torque saturation with anti-windup.
+
+The control law per axis is:
+
+```text
+error = target_angle - measured_angle
+tau_axis = PID(error)
+```
+
+The examples show target attitude step tracking and rejection of a simple
+external roll disturbance torque. This feature stays within the simplified
+rotational model and does not add altitude-position coupling, trajectory
+control, or full 6-DOF dynamics.
 
 ## DC Motor Speed Response
 
@@ -785,13 +804,16 @@ python examples/run_quadcopter_altitude_pid_disturbance.py
 ## Run the Quadcopter Attitude Examples
 
 The quadcopter attitude examples show open-loop roll response to a constant
-body torque and a roll/pitch/yaw response to a torque step.
+body torque, a roll/pitch/yaw response to a torque step, PID attitude tracking,
+and rejection of a simple external disturbance torque.
 
 Run them with:
 
 ```powershell
 python examples/run_quadcopter_attitude_roll_torque.py
 python examples/run_quadcopter_attitude_torque_step.py
+python examples/run_quadcopter_attitude_pid.py
+python examples/run_quadcopter_attitude_pid_disturbance.py
 ```
 
 ## Run the DC Motor Example

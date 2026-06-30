@@ -35,6 +35,7 @@
 - [x] Quadcopter altitude model
 - [x] Quadcopter altitude PID control
 - [x] Quadcopter attitude model
+- [x] Quadcopter attitude PID control
 
 ## In Progress
 
@@ -50,7 +51,6 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Quadcopter attitude PID control
 - [ ] Full 6-DOF quadcopter model
 - [ ] Quadcopter trajectory tracking
 - [ ] Unscented Kalman filter

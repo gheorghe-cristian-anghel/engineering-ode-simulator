@@ -79,6 +79,13 @@ control logic built on `models/quadcopter_altitude.py`. It computes thrust
 commands around hover thrust with saturation and anti-windup, then integrates
 the vertical altitude plant over each held-thrust sample interval.
 
+`analysis/quadcopter_attitude_control.py` provides sampled PID attitude
+control logic built on `models/quadcopter_attitude.py`. It uses independent
+roll, pitch, and yaw PID loops to command body torques with saturation and
+anti-windup, then integrates the rotational plant over each held-torque sample
+interval. Optional external disturbance torque can be added without changing
+the attitude dynamics model.
+
 `analysis/lqr.py` provides reusable continuous-time Linear Quadratic
 Regulator infrastructure based on the continuous algebraic Riccati equation.
 
@@ -119,6 +126,10 @@ and shared disturbance metrics.
 The discrete PID disturbance response example demonstrates practical
 closed-loop rejection of a load torque step while keeping the motor equations
 and sampled controller logic in the model layer.
+
+The quadcopter attitude PID examples demonstrate roll, pitch, and yaw target
+tracking plus simple disturbance torque rejection while keeping the UAV scope
+limited to rotational attitude dynamics.
 
 ### streamlit_app.py
 

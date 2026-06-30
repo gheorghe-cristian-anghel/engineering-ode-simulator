@@ -36,6 +36,9 @@ All notable changes to this project will be documented here.
 - Altitude tracking metrics and thrust response plots
 - Simplified quadcopter attitude dynamics model
 - Quadcopter roll torque and torque-step attitude examples
+- PID attitude control example for the simplified quadcopter attitude model
+- Roll, pitch, and yaw tracking metrics and torque response plots
+- Quadcopter attitude PID disturbance torque rejection example
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control

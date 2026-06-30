@@ -48,6 +48,11 @@ model. It provides constant and step body torque commands, open-loop roll,
 pitch, and yaw attitude simulation, and a linear attitude state-space helper
 without introducing full 6-DOF translation or attitude PID control.
 
+`models/quadcopter_6dof.py` contains the full open-loop UAV rigid-body
+dynamics model. It combines inertial-frame translation, ZYX Euler-angle
+rotation, total thrust, body torques, gravity, and optional simple linear drag
+without introducing trajectory tracking, rotor mixing, or autopilot control.
+
 ### analysis/
 
 Reusable analysis and output tools independent of any one model.
@@ -130,6 +135,10 @@ and sampled controller logic in the model layer.
 The quadcopter attitude PID examples demonstrate roll, pitch, and yaw target
 tracking plus simple disturbance torque rejection while keeping the UAV scope
 limited to rotational attitude dynamics.
+
+The full 6-DOF quadcopter examples demonstrate hover, tilted thrust causing
+horizontal acceleration, and torque-driven attitude response using the
+standalone rigid-body plant model.
 
 ### streamlit_app.py
 

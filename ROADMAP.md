@@ -51,8 +51,10 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Full 6-DOF quadcopter model
+- [x] Full 6-DOF quadcopter model
 - [ ] Quadcopter trajectory tracking
+- [ ] Quadcopter waypoint following
+- [ ] Quadcopter animation
 - [ ] Unscented Kalman filter
 - [ ] Particle filter
 - [ ] MPC examples

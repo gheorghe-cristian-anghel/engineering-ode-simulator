@@ -26,6 +26,7 @@ The project currently includes:
 - Quadcopter altitude PID control
 - Quadcopter attitude dynamics
 - Quadcopter attitude PID control
+- Full 6-DOF quadcopter rigid-body dynamics
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -474,6 +475,34 @@ external roll disturbance torque. This feature stays within the simplified
 rotational model and does not add altitude-position coupling, trajectory
 control, or full 6-DOF dynamics.
 
+## Full 6-DOF Quadcopter Dynamics
+
+The full 6-DOF quadcopter model combines inertial-frame translation with
+rigid-body roll, pitch, and yaw rotation. The state is:
+
+```text
+[x, y, z, vx, vy, vz, phi, theta, psi, p, q, r]
+```
+
+The inputs are total thrust and body torques:
+
+```text
+[T, tau_phi, tau_theta, tau_psi]
+```
+
+Inertial `z` is positive upward, gravity is `[0, 0, -g]`, and hover at zero
+attitude requires `T = m*g`. The body-to-inertial rotation uses a standard ZYX
+Euler convention:
+
+```text
+R = Rz(psi) @ Ry(theta) @ Rx(phi)
+```
+
+With zero yaw, positive pitch redirects thrust toward positive inertial `x`,
+and positive roll redirects thrust toward negative inertial `y`. This model is
+open-loop only: it does not include trajectory tracking, rotor mixing, or an
+autopilot controller.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -814,6 +843,19 @@ python examples/run_quadcopter_attitude_roll_torque.py
 python examples/run_quadcopter_attitude_torque_step.py
 python examples/run_quadcopter_attitude_pid.py
 python examples/run_quadcopter_attitude_pid_disturbance.py
+```
+
+## Run the Full 6-DOF Quadcopter Examples
+
+The full 6-DOF examples show open-loop hover, tilted thrust causing horizontal
+acceleration, and body torque inputs changing attitude and motion.
+
+Run them with:
+
+```powershell
+python examples/run_quadcopter_6dof_hover.py
+python examples/run_quadcopter_6dof_tilted_thrust.py
+python examples/run_quadcopter_6dof_torque_response.py
 ```
 
 ## Run the DC Motor Example

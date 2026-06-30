@@ -31,6 +31,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - UAV altitude PID control
 - UAV attitude dynamics
 - UAV attitude PID control
+- UAV full 6-DOF rigid-body dynamics
 - electromechanical modeling
 - embedded-style digital PID control
 - discrete disturbance rejection for motor speed control
@@ -112,6 +113,13 @@ stabilization ideas by using independent sampled PID controllers for roll,
 pitch, and yaw. The examples show commanded attitude tracking, torque
 saturation, tracking error, and recovery from an external roll disturbance
 without adding full 6-DOF dynamics or trajectory control.
+
+### Full 6-DOF Quadcopter Dynamics
+
+Combines translational and rotational UAV motion in one rigid-body model. The
+examples show hover, tilted thrust producing horizontal acceleration, and body
+torques changing attitude, which creates a foundation for future UAV
+trajectory, waypoint, and control examples.
 
 ### DC Motor
 
@@ -217,6 +225,8 @@ The project supports offers such as:
   and yaw rotational dynamics.
 - I added attitude PID control to show roll, pitch, and yaw tracking with
   body torque commands and disturbance rejection.
+- I added a full 6-DOF quadcopter model that combines translational and
+  rotational rigid-body dynamics for future UAV control examples.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

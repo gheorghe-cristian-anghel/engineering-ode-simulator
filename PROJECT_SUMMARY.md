@@ -66,6 +66,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | Quadcopter Altitude PID Control | UAV / Control | Sampled-data PID altitude tracking | `analysis/quadcopter_altitude_control.py` | `examples/run_quadcopter_altitude_pid.py` | `tests/test_quadcopter_altitude_control.py` | Implemented |
 | Quadcopter Attitude | UAV / Rotational Dynamics | Linear sixth-order rotational dynamics | `models/quadcopter_attitude.py` | `examples/run_quadcopter_attitude_roll_torque.py` | `tests/test_quadcopter_attitude.py` | Implemented |
 | Quadcopter Attitude PID Control | UAV / Control | Sampled-data PID attitude tracking | `analysis/quadcopter_attitude_control.py` | `examples/run_quadcopter_attitude_pid.py` | `tests/test_quadcopter_attitude_control.py` | Implemented |
+| Full 6-DOF Quadcopter | UAV / Rigid-Body Dynamics | Nonlinear twelfth-order dynamics | `models/quadcopter_6dof.py` | `examples/run_quadcopter_6dof_hover.py` | `tests/test_quadcopter_6dof.py` | Implemented |
 | First-Order Control System | Control | First-order | `models/first_order_control.py` | `examples/run_first_order_control.py` | `tests/test_first_order_control.py` | Implemented |
 | Second-Order Control System | Control | Second-order | `models/second_order_control.py` | `examples/run_second_order_control.py` | `tests/test_second_order_control.py` | Implemented |
 | DC Motor | Electromechanical | Coupled first-order system | `models/dc_motor.py` | `examples/run_dc_motor.py` | `tests/test_dc_motor.py` | Implemented |
@@ -97,6 +98,11 @@ The attitude PID control helper builds on the attitude plant with independent
 sampled PID controllers for roll, pitch, and yaw torque commands, including
 target-angle tracking metrics and a simple disturbance torque rejection
 example.
+The full 6-DOF quadcopter model combines inertial-frame translation and
+rigid-body Euler-angle rotation using total thrust and body torque inputs. Its
+open-loop examples demonstrate hover, tilted-thrust horizontal acceleration,
+and torque-driven attitude response without adding trajectory tracking or
+autopilot control.
 
 ## Analysis Tools
 
@@ -234,6 +240,7 @@ quadcopter altitude dynamics,
 quadcopter altitude PID control,
 quadcopter attitude dynamics,
 quadcopter attitude PID control,
+full 6-DOF quadcopter rigid-body dynamics,
 Matplotlib animation examples for inverted pendulum trajectories,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC

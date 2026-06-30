@@ -25,6 +25,7 @@
 - [x] Transfer function utilities
 - [x] PID tuning examples
 - [x] Discrete PID disturbance response
+- [x] RLC parameter sweeps
 
 ## In Progress
 
@@ -36,7 +37,6 @@
 
 ## Medium-Term Features
 
-- RLC parameter sweeps
 - DC motor load disturbance rejection
 
 ## Long-Term / Advanced Features

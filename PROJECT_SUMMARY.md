@@ -63,6 +63,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | Inverted Pendulum / Cart-Pole | Control / Mechanical | Nonlinear fourth-order plus linearized state-space | `models/inverted_pendulum.py` | `examples/run_inverted_pendulum_open_loop.py` | `tests/test_inverted_pendulum.py` | Implemented |
 | Inverted Pendulum LQR Control | Control / Mechanical | State-feedback control | `models/inverted_pendulum_lqr.py` | `examples/run_inverted_pendulum_lqr.py` | `tests/test_lqr.py` | Implemented |
 | Quadcopter Altitude | UAV / Mechanical | Nonlinear second-order vertical dynamics | `models/quadcopter_altitude.py` | `examples/run_quadcopter_altitude_open_loop.py` | `tests/test_quadcopter_altitude.py` | Implemented |
+| Quadcopter Altitude PID Control | UAV / Control | Sampled-data PID altitude tracking | `analysis/quadcopter_altitude_control.py` | `examples/run_quadcopter_altitude_pid.py` | `tests/test_quadcopter_altitude_control.py` | Implemented |
 | Quadcopter Attitude | UAV / Rotational Dynamics | Linear sixth-order rotational dynamics | `models/quadcopter_attitude.py` | `examples/run_quadcopter_attitude_roll_torque.py` | `tests/test_quadcopter_attitude.py` | Implemented |
 | First-Order Control System | Control | First-order | `models/first_order_control.py` | `examples/run_first_order_control.py` | `tests/test_first_order_control.py` | Implemented |
 | Second-Order Control System | Control | Second-order | `models/second_order_control.py` | `examples/run_second_order_control.py` | `tests/test_second_order_control.py` | Implemented |
@@ -86,6 +87,9 @@ behavior against continuous PI and discrete PID feedback control.
 The quadcopter altitude model provides a one-dimensional UAV vertical dynamics
 foundation with hover thrust, thrust commands, and a hover-linearized
 state-space helper for later altitude-control examples.
+The altitude PID control helper builds on that plant with a sampled discrete
+PID loop, thrust saturation, anti-windup, target-altitude tracking metrics,
+and a downward-force disturbance example.
 The quadcopter attitude model extends the UAV track with simplified rotational
 dynamics for roll, pitch, yaw, and body rates under open-loop body torques.
 
@@ -100,6 +104,8 @@ RLC parameter sweep helpers are implemented in `analysis/rlc_sweep.py` for
 educational resistance, capacitance, and inductance transient-response studies.
 PID tuning helpers for discrete motor control examples are implemented in
 `analysis/pid_tuning.py`.
+Quadcopter altitude PID control helpers are implemented in
+`analysis/quadcopter_altitude_control.py`.
 CSV export helpers are implemented in `analysis/export_utils.py`.
 Frequency response and Bode plot helpers are implemented in
 `analysis/frequency_response.py`.
@@ -218,6 +224,7 @@ and discrete PID disturbance response, Kalman filter examples for noisy
 state estimation, a Streamlit GUI MVP for selected simulations,
 Extended Kalman Filter nonlinear observer examples,
 quadcopter altitude dynamics,
+quadcopter altitude PID control,
 quadcopter attitude dynamics,
 Matplotlib animation examples for inverted pendulum trajectories,
 reusable step response metrics, frequency response analysis, transfer function

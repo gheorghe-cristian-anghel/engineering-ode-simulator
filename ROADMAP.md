@@ -33,6 +33,7 @@
 - [x] Animation of inverted pendulum
 - [x] Nonlinear observer examples
 - [x] Quadcopter altitude model
+- [x] Quadcopter altitude PID control
 - [x] Quadcopter attitude model
 
 ## In Progress
@@ -49,7 +50,6 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Quadcopter altitude PID control
 - [ ] Quadcopter attitude PID control
 - [ ] Full 6-DOF quadcopter model
 - [ ] Quadcopter trajectory tracking

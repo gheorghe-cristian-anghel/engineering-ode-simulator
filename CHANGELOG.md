@@ -32,6 +32,8 @@ All notable changes to this project will be documented here.
 - Nonlinear pendulum state-estimation example with an Extended Kalman Filter
 - 1D quadcopter altitude dynamics model
 - Quadcopter hover thrust and thrust-step examples
+- PID altitude control example for the 1D quadcopter altitude model
+- Altitude tracking metrics and thrust response plots
 - Simplified quadcopter attitude dynamics model
 - Quadcopter roll torque and torque-step attitude examples
 - PI motor speed control with PID-compatible API

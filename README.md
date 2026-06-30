@@ -23,6 +23,7 @@ The project currently includes:
 - Discrete Kalman filter state estimation examples
 - Extended Kalman Filter nonlinear pendulum state estimation
 - Quadcopter altitude dynamics
+- Quadcopter altitude PID control
 - Quadcopter attitude dynamics
 - DC motor speed response
 - DC motor open-loop load disturbance response
@@ -409,9 +410,26 @@ The hover thrust is:
 T_hover = m*g
 ```
 
-This model is intentionally limited to vertical altitude motion. It does not
-include attitude dynamics, rotor dynamics, full 6-DOF motion, or altitude PID
-control yet.
+This plant model is intentionally limited to vertical altitude motion. It does
+not include attitude dynamics, rotor dynamics, or full 6-DOF motion.
+
+## Quadcopter Altitude PID Control
+
+The altitude PID control helper tracks a target altitude by adjusting thrust
+around hover thrust. The controller runs as a sampled discrete PID loop, holds
+the thrust command during each integration step, and uses output saturation
+with anti-windup.
+
+The control law is:
+
+```text
+error = z_target - z
+T = T_hover + PID(error)
+```
+
+The saturated thrust command is then applied to the same 1D altitude plant.
+This feature focuses only on vertical altitude control and does not include
+attitude coupling or full drone trajectory control.
 
 ## Quadcopter Attitude Dynamics
 
@@ -752,13 +770,16 @@ python examples/run_ekf_pendulum.py
 ## Run the Quadcopter Altitude Examples
 
 The quadcopter altitude examples compare open-loop thrust commands and show a
-simple thrust step from hover to climb.
+simple thrust step from hover to climb. The altitude PID examples show
+closed-loop target tracking and rejection of a downward force disturbance.
 
 Run them with:
 
 ```powershell
 python examples/run_quadcopter_altitude_open_loop.py
 python examples/run_quadcopter_altitude_thrust_step.py
+python examples/run_quadcopter_altitude_pid.py
+python examples/run_quadcopter_altitude_pid_disturbance.py
 ```
 
 ## Run the Quadcopter Attitude Examples

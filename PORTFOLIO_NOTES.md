@@ -28,6 +28,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Extended Kalman filtering for nonlinear observer design
 - nonlinear instability and linearization
 - UAV altitude dynamics
+- UAV altitude PID control
 - UAV attitude dynamics
 - electromechanical modeling
 - embedded-style digital PID control
@@ -87,6 +88,14 @@ Starts the UAV/drone simulation part of the project with a focused
 one-dimensional vertical dynamics model. The examples show hover thrust,
 descent below hover, climb above hover, and a thrust-step altitude response
 without introducing full attitude or 6-DOF dynamics yet.
+
+### Quadcopter Altitude PID Control
+
+Connects the UAV altitude plant to practical drone control by using a sampled
+PID loop to adjust thrust around hover thrust. The examples show target
+altitude tracking, thrust saturation, tracking error, and recovery from a
+downward force disturbance without adding attitude coupling or full 6-DOF
+dynamics.
 
 ### Quadcopter Attitude
 
@@ -193,6 +202,8 @@ The project supports offers such as:
   estimation from noisy angle measurements.
 - I added a 1D quadcopter altitude model as the foundation for future UAV
   control examples.
+- I added PID altitude control to show thrust-based target tracking and
+  disturbance rejection for the 1D quadcopter model.
 - I added a simplified quadcopter attitude model for open-loop roll, pitch,
   and yaw rotational dynamics.
 - I added an embedded-style discrete PID controller for motor speed control.

@@ -74,6 +74,11 @@ conversion, common low-pass helpers, and step/impulse response simulation.
 `analysis/pid_tuning.py` provides reusable PID tuning infrastructure for
 educational examples built on the discrete PID motor simulation.
 
+`analysis/quadcopter_altitude_control.py` provides sampled PID altitude
+control logic built on `models/quadcopter_altitude.py`. It computes thrust
+commands around hover thrust with saturation and anti-windup, then integrates
+the vertical altitude plant over each held-thrust sample interval.
+
 `analysis/lqr.py` provides reusable continuous-time Linear Quadratic
 Regulator infrastructure based on the continuous algebraic Riccati equation.
 

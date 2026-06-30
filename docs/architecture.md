@@ -35,6 +35,7 @@ Current example:
 
 - step response metrics
 - parameter sweep utilities
+- PID tuning helpers for educational discrete-control examples
 - frequency response and Bode plot utilities
 - transfer function step and impulse response utilities
 - state-space simulation utilities
@@ -44,11 +45,18 @@ Current example:
 function infrastructure, including validated coefficient storage, SciPy signal
 conversion, common low-pass helpers, and step/impulse response simulation.
 
+`analysis/pid_tuning.py` provides reusable PID tuning infrastructure for
+educational examples built on the discrete PID motor simulation.
+
 ### examples/
 
 Runnable scripts that demonstrate models, print important parameters, and
 generate plots. Selected examples can also export simulation arrays to CSV
 files under `outputs/`.
+
+The PID tuning examples compare P, PI, and PID behavior and show how `Kp`,
+`Ki`, and `Kd` affect DC motor speed tracking, overshoot, settling time, and
+control voltage.
 
 ### streamlit_app.py
 

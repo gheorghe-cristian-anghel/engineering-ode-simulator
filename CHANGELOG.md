@@ -24,6 +24,7 @@ All notable changes to this project will be documented here.
 - Second-order control system step response
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
+- PID tuning examples for P, PI, and PID comparison
 
 #### DC Motor and PI Control
 
@@ -31,6 +32,7 @@ All notable changes to this project will be documented here.
 - Closed-loop PI motor speed control with voltage saturation
 - Load disturbance response example for PI motor speed control
 - Discrete PID motor speed-control example
+- Kp, Ki, and Kd tuning demonstrations for DC motor speed control
 
 #### Analysis Utilities
 
@@ -41,6 +43,7 @@ All notable changes to this project will be documented here.
 - Tests for CSV export validation and file output
 - PI gain sweep utility for motor speed-control tuning
 - PI gain sweep example with speed and voltage comparison plots
+- Reusable PID tuning helper for discrete motor speed-control examples
 - Frequency response utility for continuous-time transfer functions
 - Bode plot examples for first-order, second-order, and RLC low-pass systems
 - Reusable transfer function utilities

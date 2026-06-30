@@ -71,12 +71,16 @@ Implemented control features include a reusable `DiscretePID` controller in
 sample time `dt`, output saturation, anti-windup, and
 derivative-on-measurement. The DC motor example is
 `examples/run_discrete_pid_motor.py`, with tests in `tests/test_discrete_pid.py`.
+Educational PID tuning examples compare P, PI, and PID behavior and show how
+changing `Kp`, `Ki`, and `Kd` affects DC motor speed tracking.
 
 ## Analysis Tools
 
 Reusable step response metrics are implemented in `analysis/step_response.py`.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
+PID tuning helpers for discrete motor control examples are implemented in
+`analysis/pid_tuning.py`.
 CSV export helpers are implemented in `analysis/export_utils.py`.
 Frequency response and Bode plot helpers are implemented in
 `analysis/frequency_response.py`.
@@ -108,6 +112,16 @@ The parameter sweep tool compares PI controller gain choices using:
 - overshoot
 - settling time
 - maximum control effort
+- maximum current
+
+The PID tuning helper compares discrete PID controller gain choices using:
+
+- final speed
+- final tracking error
+- peak speed
+- overshoot
+- settling time
+- maximum voltage
 - maximum current
 
 The export utility validates column names, dimensions, and column lengths,
@@ -144,8 +158,8 @@ pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
 control with disturbance rejection. It also includes embedded-style discrete
 PID motor speed control, a Streamlit GUI MVP for selected simulations,
 reusable step response metrics, frequency response analysis, transfer function
-utilities, state-space simulation utilities, PI gain sweep analysis, and pytest
-coverage for implemented models.
+utilities, state-space simulation utilities, PI gain sweep analysis, PID tuning
+examples, and pytest coverage for implemented models.
 
 ## How Future AI Chats Should Use This File
 

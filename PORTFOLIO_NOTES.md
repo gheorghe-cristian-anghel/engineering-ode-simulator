@@ -25,6 +25,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - control systems
 - electromechanical modeling
 - embedded-style digital PID control
+- practical PID tuning intuition
 - parameter validation
 - documentation
 
@@ -58,6 +59,12 @@ torque step.
 Shows embedded-style sampled control: fixed update time, held voltage commands,
 output saturation, anti-windup, derivative-on-measurement, and DC motor speed
 tracking.
+
+### PID Tuning Examples
+
+Shows practical control-engineering intuition by comparing P, PI, and PID
+responses and demonstrating how `Kp`, `Ki`, and `Kd` affect speed tracking,
+overshoot, settling time, and control effort.
 
 ### Streamlit GUI
 
@@ -112,6 +119,8 @@ The project supports offers such as:
 - I added CSV export so simulation data can be reused in external analysis tools.
 - I modeled both open-loop and closed-loop systems.
 - I added an embedded-style discrete PID controller for motor speed control.
+- I added PID tuning examples that show how controller gains affect response
+  quality.
 - I added a Streamlit GUI MVP so selected simulations can be explored from a
   browser.
 - I documented the project for future extension.

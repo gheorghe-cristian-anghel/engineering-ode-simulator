@@ -23,6 +23,7 @@
 - [x] Frequency response / Bode plots
 - [x] State-space system models
 - [x] Transfer function utilities
+- [x] PID tuning examples
 
 ## In Progress
 
@@ -34,7 +35,6 @@
 
 ## Medium-Term Features
 
-- PID tuning examples
 - Discrete PID disturbance response
 - RLC parameter sweeps
 - DC motor load disturbance rejection

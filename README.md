@@ -21,6 +21,7 @@ The project currently includes:
 - PI motor gain sweep analysis
 - DC motor PI load disturbance response
 - Discrete PID motor speed control
+- Educational PID tuning examples
 - Interactive Streamlit GUI for selected simulations
 - Frequency response and Bode plot examples
 - Transfer Function Utilities
@@ -585,6 +586,21 @@ Run it with:
 
 ```powershell
 python examples\run_pi_gain_sweep.py
+```
+
+## Run the PID Tuning Examples
+
+The PID tuning examples use the discrete PID motor simulation to show how
+proportional, integral, and derivative gains affect speed tracking,
+steady-state error, overshoot, settling time, and control voltage.
+
+Run them with:
+
+```powershell
+python examples/run_pid_p_pi_pid_comparison.py
+python examples/run_pid_kp_tuning.py
+python examples/run_pid_ki_tuning.py
+python examples/run_pid_kd_tuning.py
 ```
 
 ## Run the Motor Load Disturbance Example

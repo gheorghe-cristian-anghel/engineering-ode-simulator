@@ -22,6 +22,7 @@
 - [x] Streamlit GUI MVP for selected simulations
 - [x] Frequency response / Bode plots
 - [x] State-space system models
+- [x] Transfer function utilities
 
 ## In Progress
 
@@ -33,7 +34,6 @@
 
 ## Medium-Term Features
 
-- Transfer function utilities
 - PID tuning examples
 - Discrete PID disturbance response
 - RLC parameter sweeps

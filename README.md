@@ -23,6 +23,7 @@ The project currently includes:
 - Discrete PID motor speed control
 - Interactive Streamlit GUI for selected simulations
 - Frequency response and Bode plot examples
+- Transfer function step and impulse response utilities
 - Continuous-time state-space modeling
   - Generic `x_dot = A*x + B*u` simulation framework
   - Mass-spring-damper state-space model
@@ -385,6 +386,20 @@ Run the examples with:
 python examples/run_frequency_response_first_order.py
 python examples/run_frequency_response_second_order.py
 python examples/run_frequency_response_rlc.py
+```
+
+## Transfer Function Utilities
+
+The project includes reusable continuous-time transfer function utilities for
+first-order, second-order, and RLC low-pass systems. These helpers support step
+response simulation, impulse response simulation, and simple response plots.
+
+Run the examples with:
+
+```powershell
+python examples/run_transfer_function_step_response.py
+python examples/run_transfer_function_impulse_response.py
+python examples/run_transfer_function_comparison.py
 ```
 
 ## State-Space Models

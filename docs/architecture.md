@@ -36,8 +36,13 @@ Current example:
 - step response metrics
 - parameter sweep utilities
 - frequency response and Bode plot utilities
+- transfer function step and impulse response utilities
 - state-space simulation utilities
 - CSV export utilities
+
+`analysis/transfer_function.py` provides reusable continuous-time transfer
+function infrastructure, including validated coefficient storage, SciPy signal
+conversion, common low-pass helpers, and step/impulse response simulation.
 
 ### examples/
 

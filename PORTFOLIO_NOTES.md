@@ -15,6 +15,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Matplotlib visualization
 - Streamlit browser UI for selected simulations
 - frequency response and Bode plot analysis
+- transfer function step and impulse response analysis
 - state-space modeling for linear systems
 - CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
 - saved plot screenshots for GitHub and README presentation
@@ -67,6 +68,12 @@ Matplotlib plots while reusing the tested model modules.
 
 Shows Bode magnitude and phase plots for first-order, second-order, and RLC
 low-pass transfer functions.
+
+### Transfer Functions
+
+Strengthens the control-systems toolkit with reusable transfer function
+models, step response analysis, impulse response analysis, and common low-pass
+helpers.
 
 ### State-Space Models
 

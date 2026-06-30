@@ -80,6 +80,8 @@ PI motor controller gain sweeps are implemented in
 CSV export helpers are implemented in `analysis/export_utils.py`.
 Frequency response and Bode plot helpers are implemented in
 `analysis/frequency_response.py`.
+Transfer function helpers for continuous-time step and impulse response
+simulation are implemented in `analysis/transfer_function.py`.
 Continuous-time state-space simulation helpers are implemented in
 `analysis/state_space.py`.
 
@@ -114,6 +116,8 @@ to CSV files for later analysis in Excel, MATLAB, Python, or reports.
 
 The frequency response utility computes continuous-time transfer-function
 magnitude and phase data and provides a reusable Matplotlib Bode plot helper.
+The transfer function utility provides a reusable model representation plus
+step response, impulse response, and common low-pass transfer function helpers.
 The state-space utility simulates linear systems in the form
 `x_dot = A*x + B*u` and `y = C*x + D*u`.
 
@@ -139,9 +143,9 @@ The project can simulate first-order systems, second-order systems, nonlinear
 pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
 control with disturbance rejection. It also includes embedded-style discrete
 PID motor speed control, a Streamlit GUI MVP for selected simulations,
-reusable step response metrics, frequency response analysis, state-space
-simulation utilities, PI gain sweep analysis, and pytest coverage for
-implemented models.
+reusable step response metrics, frequency response analysis, transfer function
+utilities, state-space simulation utilities, PI gain sweep analysis, and pytest
+coverage for implemented models.
 
 ## How Future AI Chats Should Use This File
 

@@ -3,6 +3,12 @@
 import numpy as np
 from scipy import signal
 
+from analysis.transfer_function import (
+    first_order_lowpass_tf,
+    rlc_capacitor_voltage_tf,
+    second_order_lowpass_tf,
+)
+
 
 def _as_coefficient_array(coefficients, name):
     """Return transfer-function coefficients as a validated 1D float array."""
@@ -108,35 +114,23 @@ def compute_frequency_response(
 
 def first_order_transfer_function(K=1.0, tau=1.0):
     """Return coefficients for ``G(s) = K / (tau*s + 1)``."""
-    if tau <= 0:
-        raise ValueError("tau must be positive")
+    model = first_order_lowpass_tf(K=K, tau=tau)
 
-    return [K], [tau, 1.0]
+    return model.numerator.tolist(), model.denominator.tolist()
 
 
 def second_order_transfer_function(omega_n=1.0, zeta=0.5, K=1.0):
     """Return coefficients for a standard second-order low-pass system."""
-    if omega_n <= 0:
-        raise ValueError("omega_n must be positive")
+    model = second_order_lowpass_tf(K=K, omega_n=omega_n, zeta=zeta)
 
-    if zeta < 0:
-        raise ValueError("zeta must be nonnegative")
-
-    return [K * omega_n**2], [1.0, 2 * zeta * omega_n, omega_n**2]
+    return model.numerator.tolist(), model.denominator.tolist()
 
 
 def rlc_lowpass_transfer_function(R=10.0, L=1.0, C=0.01):
     """Return coefficients for series RLC capacitor voltage ``Vc(s)/Vin(s)``."""
-    if R < 0:
-        raise ValueError("R must be nonnegative")
+    model = rlc_capacitor_voltage_tf(R=R, L=L, C_value=C)
 
-    if L <= 0:
-        raise ValueError("L must be positive")
-
-    if C <= 0:
-        raise ValueError("C must be positive")
-
-    return [1.0], [L * C, R * C, 1.0]
+    return model.numerator.tolist(), model.denominator.tolist()
 
 
 def plot_bode_response(w, magnitude_db, phase_deg, title="Bode Plot"):

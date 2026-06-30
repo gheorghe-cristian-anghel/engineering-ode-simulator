@@ -43,6 +43,8 @@ All notable changes to this project will be documented here.
 - PI gain sweep example with speed and voltage comparison plots
 - Frequency response utility for continuous-time transfer functions
 - Bode plot examples for first-order, second-order, and RLC low-pass systems
+- Reusable transfer function utilities
+- Step, impulse, and comparison examples for transfer function models
 - Reusable continuous-time state-space simulation utilities
 - State-space examples for mass-spring-damper, RLC circuit, and DC motor
 - pytest test coverage for implemented models

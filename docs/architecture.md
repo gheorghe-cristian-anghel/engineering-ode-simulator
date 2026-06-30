@@ -25,7 +25,9 @@ Each model usually contains:
 `models/discrete_pid.py` contains reusable controller logic, not only
 motor-specific code. Its `DiscretePID` class can be used for embedded-style
 digital control with fixed sample time, output saturation, anti-windup, and
-derivative-on-measurement.
+derivative-on-measurement. The module also includes a focused disturbance
+response helper that reuses the sampled controller and DC motor plant with a
+step load torque input.
 
 ### analysis/
 
@@ -57,6 +59,10 @@ files under `outputs/`.
 The PID tuning examples compare P, PI, and PID behavior and show how `Kp`,
 `Ki`, and `Kd` affect DC motor speed tracking, overshoot, settling time, and
 control voltage.
+
+The discrete PID disturbance response example demonstrates practical
+closed-loop rejection of a load torque step while keeping the motor equations
+and sampled controller logic in the model layer.
 
 ### streamlit_app.py
 

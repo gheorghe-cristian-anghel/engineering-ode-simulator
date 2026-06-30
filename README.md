@@ -21,6 +21,7 @@ The project currently includes:
 - PI motor gain sweep analysis
 - DC motor PI load disturbance response
 - Discrete PID motor speed control
+- Discrete PID disturbance response for DC motor speed control
 - Educational PID tuning examples
 - Interactive Streamlit GUI for selected simulations
 - Frequency response and Bode plot examples
@@ -46,6 +47,12 @@ The project currently includes:
 
 A discrete PID controller regulates DC motor speed with low steady-state error
 and controlled actuator voltage.
+
+### Discrete PID Disturbance Response
+
+The discrete PID motor example can also reject a step load torque disturbance.
+The controller increases voltage and current after the disturbance to recover
+speed toward the target.
 
 ### Load Disturbance Response
 
@@ -623,6 +630,17 @@ Run it with:
 
 ```powershell
 python examples\run_discrete_pid_motor.py
+```
+
+## Run the Discrete PID Disturbance Response Example
+
+The example shows a sampled-data PID controller recovering motor speed after a
+step load torque disturbance.
+
+Run it with:
+
+```powershell
+python examples/run_discrete_pid_disturbance_response.py
 ```
 
 ## Run Tests

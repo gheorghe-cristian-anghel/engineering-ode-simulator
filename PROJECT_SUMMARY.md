@@ -65,12 +65,15 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | PI Motor Speed Control | Control / Electromechanical | Closed-loop system | `models/pid_motor_control.py` | `examples/run_pid_motor_control.py` | `tests/test_pid_motor_control.py` | Implemented |
 | PI Motor Load Disturbance | Control / Electromechanical | Disturbance response | `models/pid_motor_control.py` | `examples/run_motor_load_disturbance.py` | `tests/test_motor_load_disturbance.py` | Implemented |
 | Discrete PID Motor Speed Control | Control / Electromechanical | Sampled-data control | `models/discrete_pid.py` | `examples/run_discrete_pid_motor.py` | `tests/test_discrete_pid.py` | Implemented |
+| Discrete PID Load Disturbance | Control / Electromechanical | Sampled-data disturbance response | `models/discrete_pid.py` | `examples/run_discrete_pid_disturbance_response.py` | `tests/test_discrete_pid_disturbance.py` | Implemented |
 
 Implemented control features include a reusable `DiscretePID` controller in
 `models/discrete_pid.py`. It models embedded-style digital control with fixed
 sample time `dt`, output saturation, anti-windup, and
 derivative-on-measurement. The DC motor example is
 `examples/run_discrete_pid_motor.py`, with tests in `tests/test_discrete_pid.py`.
+The discrete PID disturbance response example uses the same sampled controller
+and DC motor model with a step load torque disturbance.
 Educational PID tuning examples compare P, PI, and PID behavior and show how
 changing `Kp`, `Ki`, and `Kd` affects DC motor speed tracking.
 
@@ -124,6 +127,15 @@ The PID tuning helper compares discrete PID controller gain choices using:
 - maximum voltage
 - maximum current
 
+The discrete PID disturbance helper summarizes:
+
+- speed before disturbance
+- minimum speed after disturbance
+- speed drop
+- recovery time when the response returns to the target band
+- final speed and final error
+- voltage and current before and after recovery or at the end
+
 The export utility validates column names, dimensions, and column lengths,
 creates missing output directories automatically, and writes simulation arrays
 to CSV files for later analysis in Excel, MATLAB, Python, or reports.
@@ -156,7 +168,8 @@ documentation and portfolio presentation assets.
 The project can simulate first-order systems, second-order systems, nonlinear
 pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
 control with disturbance rejection. It also includes embedded-style discrete
-PID motor speed control, a Streamlit GUI MVP for selected simulations,
+PID motor speed control and discrete PID disturbance response, a Streamlit GUI
+MVP for selected simulations,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, PID tuning
 examples, and pytest coverage for implemented models.

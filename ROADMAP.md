@@ -24,6 +24,7 @@
 - [x] State-space system models
 - [x] Transfer function utilities
 - [x] PID tuning examples
+- [x] Discrete PID disturbance response
 
 ## In Progress
 
@@ -35,7 +36,6 @@
 
 ## Medium-Term Features
 
-- Discrete PID disturbance response
 - RLC parameter sweeps
 - DC motor load disturbance rejection
 

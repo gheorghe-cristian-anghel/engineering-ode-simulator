@@ -24,6 +24,7 @@ All notable changes to this project will be documented here.
 - Second-order control system step response
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
+- Discrete PID disturbance response example for DC motor speed control
 - PID tuning examples for P, PI, and PID comparison
 
 #### DC Motor and PI Control
@@ -32,6 +33,7 @@ All notable changes to this project will be documented here.
 - Closed-loop PI motor speed control with voltage saturation
 - Load disturbance response example for PI motor speed control
 - Discrete PID motor speed-control example
+- Discrete PID load disturbance metrics and plots
 - Kp, Ki, and Kd tuning demonstrations for DC motor speed control
 
 #### Analysis Utilities

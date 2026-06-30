@@ -33,6 +33,7 @@
 - [x] Animation of inverted pendulum
 - [x] Nonlinear observer examples
 - [x] Quadcopter altitude model
+- [x] Quadcopter attitude model
 
 ## In Progress
 
@@ -49,8 +50,9 @@
 ## Long-Term / Advanced Features
 
 - [ ] Quadcopter altitude PID control
-- [ ] Quadcopter attitude dynamics
+- [ ] Quadcopter attitude PID control
 - [ ] Full 6-DOF quadcopter model
+- [ ] Quadcopter trajectory tracking
 - [ ] Unscented Kalman filter
 - [ ] Particle filter
 - [ ] MPC examples

@@ -43,6 +43,11 @@ vertical dynamics model. It provides hover thrust, constant and step thrust
 commands, open-loop altitude simulation, and a hover-linearized state-space
 helper without introducing attitude or full 6-DOF dynamics.
 
+`models/quadcopter_attitude.py` contains a simplified UAV rotational dynamics
+model. It provides constant and step body torque commands, open-loop roll,
+pitch, and yaw attitude simulation, and a linear attitude state-space helper
+without introducing full 6-DOF translation or attitude PID control.
+
 ### analysis/
 
 Reusable analysis and output tools independent of any one model.

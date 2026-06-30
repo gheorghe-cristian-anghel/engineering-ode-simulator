@@ -23,6 +23,7 @@ The project currently includes:
 - Discrete Kalman filter state estimation examples
 - Extended Kalman Filter nonlinear pendulum state estimation
 - Quadcopter altitude dynamics
+- Quadcopter attitude dynamics
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -412,6 +413,30 @@ This model is intentionally limited to vertical altitude motion. It does not
 include attitude dynamics, rotor dynamics, full 6-DOF motion, or altitude PID
 control yet.
 
+## Quadcopter Attitude Dynamics
+
+The quadcopter attitude model introduces simplified rotational dynamics for
+roll, pitch, and yaw motion. The state is `[phi, theta, psi, p, q, r]`, where
+`phi`, `theta`, and `psi` are roll, pitch, and yaw angles in radians, and
+`p`, `q`, and `r` are body angular rates in radians per second.
+
+The first version uses small-angle kinematics and decoupled rigid-body
+rotational dynamics:
+
+```text
+phi_dot = p
+theta_dot = q
+psi_dot = r
+p_dot = tau_phi / Ixx
+q_dot = tau_theta / Iyy
+r_dot = tau_psi / Izz
+```
+
+The inputs are body torques `[tau_phi, tau_theta, tau_psi]` in newton-meters.
+This model is intentionally limited to rotational attitude motion. It does not
+include translational 6-DOF dynamics, rotor dynamics, or attitude PID control
+yet.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -734,6 +759,18 @@ Run them with:
 ```powershell
 python examples/run_quadcopter_altitude_open_loop.py
 python examples/run_quadcopter_altitude_thrust_step.py
+```
+
+## Run the Quadcopter Attitude Examples
+
+The quadcopter attitude examples show open-loop roll response to a constant
+body torque and a roll/pitch/yaw response to a torque step.
+
+Run them with:
+
+```powershell
+python examples/run_quadcopter_attitude_roll_torque.py
+python examples/run_quadcopter_attitude_torque_step.py
 ```
 
 ## Run the DC Motor Example

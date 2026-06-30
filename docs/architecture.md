@@ -31,8 +31,12 @@ step load torque input.
 
 `models/inverted_pendulum.py` contains an advanced nonlinear cart-pole model
 and a linearized upright state-space helper. It demonstrates open-loop
-instability and prepares the project for future feedback-control examples
-without implementing stabilization in the model layer.
+instability and provides the plant model used by the LQR stabilization helper.
+
+`models/inverted_pendulum_lqr.py` contains inverted-pendulum-specific LQR
+design and nonlinear closed-loop simulation helpers. It reuses the nonlinear
+cart-pole dynamics from `models/inverted_pendulum.py` and applies state
+feedback as an external cart force.
 
 ### analysis/
 
@@ -48,6 +52,7 @@ Current example:
 - frequency response and Bode plot utilities
 - transfer function step and impulse response utilities
 - state-space simulation utilities
+- LQR optimal-control utilities
 - CSV export utilities
 
 `analysis/transfer_function.py` provides reusable continuous-time transfer
@@ -56,6 +61,9 @@ conversion, common low-pass helpers, and step/impulse response simulation.
 
 `analysis/pid_tuning.py` provides reusable PID tuning infrastructure for
 educational examples built on the discrete PID motor simulation.
+
+`analysis/lqr.py` provides reusable continuous-time Linear Quadratic
+Regulator infrastructure based on the continuous algebraic Riccati equation.
 
 ### examples/
 

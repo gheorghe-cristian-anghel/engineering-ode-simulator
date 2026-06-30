@@ -25,6 +25,7 @@ All notable changes to this project will be documented here.
 - Nonlinear inverted pendulum / cart-pole model
 - Linearized inverted pendulum upright state-space model
 - Open-loop inverted pendulum instability examples
+- LQR stabilization examples for the nonlinear inverted pendulum
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control
@@ -59,6 +60,7 @@ All notable changes to this project will be documented here.
 - Reusable transfer function utilities
 - Step, impulse, and comparison examples for transfer function models
 - Reusable continuous-time state-space simulation utilities
+- Reusable continuous-time LQR utility
 - State-space examples for mass-spring-damper, RLC circuit, and DC motor
 - pytest test coverage for implemented models
 

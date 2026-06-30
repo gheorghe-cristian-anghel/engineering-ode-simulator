@@ -23,6 +23,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Git/GitHub workflow
 - differential equation modeling
 - control systems
+- optimal state-space feedback with LQR
 - nonlinear instability and linearization
 - electromechanical modeling
 - embedded-style digital PID control
@@ -51,8 +52,14 @@ Shows damping ratio, natural frequency, overshoot, peak time, and settling time.
 ### Inverted Pendulum / Cart-Pole
 
 Shows nonlinear dynamics, open-loop upright instability, and linearization
-around an unstable equilibrium. This is a strong preparation model for future
-advanced controls such as LQR and observer/Kalman-filter examples.
+around an unstable equilibrium. It also supports advanced controls such as
+LQR, with observer/Kalman-filter examples left for future work.
+
+### Inverted Pendulum LQR Control
+
+Shows modern state-space feedback control by using a Linear Quadratic
+Regulator to stabilize the nonlinear inverted pendulum near the upright
+equilibrium.
 
 ### DC Motor
 
@@ -137,6 +144,8 @@ The project supports offers such as:
 - I modeled both open-loop and closed-loop systems.
 - I added an inverted pendulum/cart-pole model that demonstrates nonlinear
   instability and upright state-space linearization.
+- I added LQR control for the inverted pendulum to demonstrate modern
+  state-space feedback stabilization.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

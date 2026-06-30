@@ -19,6 +19,7 @@ The project currently includes:
 - Simple pendulum nonlinear dynamics
 - Inverted pendulum / cart-pole nonlinear dynamics
 - Linearized inverted pendulum upright state-space model
+- LQR stabilization for the inverted pendulum
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -341,8 +342,23 @@ cart velocity, pendulum angle, and pendulum angular velocity. The angle
 
 The project also includes a linearized upright state-space model with cart
 force as the input and cart position plus pendulum angle as outputs. This
-prepares the model for future controller work such as LQR, but no stabilizing
-controller is implemented yet.
+linearized model is used for the LQR stabilization example.
+
+## Inverted Pendulum LQR Control
+
+The LQR example uses the linearized upright state-space model to compute an
+optimal state-feedback gain, then applies that gain to the nonlinear
+cart-pole model. This demonstrates local stabilization near the upright
+equilibrium.
+
+The feedback law is:
+
+```text
+F = -K*x
+```
+
+Where `x` is `[cart_position, cart_velocity, pendulum_angle,
+pendulum_angular_velocity]` and `F` is the horizontal cart force.
 
 ## DC Motor Speed Response
 
@@ -608,6 +624,16 @@ Run them with:
 ```powershell
 python examples/run_inverted_pendulum_open_loop.py
 python examples/run_inverted_pendulum_linearized.py
+```
+
+The LQR examples show local stabilization of the nonlinear inverted pendulum
+and compare open-loop instability against LQR feedback.
+
+Run them with:
+
+```powershell
+python examples/run_inverted_pendulum_lqr.py
+python examples/run_inverted_pendulum_lqr_comparison.py
 ```
 
 ## Run the DC Motor Example

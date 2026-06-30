@@ -27,6 +27,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Kalman filtering and noisy-measurement state estimation
 - Extended Kalman filtering for nonlinear observer design
 - nonlinear instability and linearization
+- UAV altitude dynamics
 - electromechanical modeling
 - embedded-style digital PID control
 - discrete disturbance rejection for motor speed control
@@ -78,6 +79,13 @@ capacitor-voltage measurements.
 Shows nonlinear state estimation by using an Extended Kalman Filter to estimate
 pendulum angle and hidden angular velocity from noisy angle measurements. This
 demonstrates the observer idea beyond linear state-space models.
+
+### Quadcopter Altitude
+
+Starts the UAV/drone simulation part of the project with a focused
+one-dimensional vertical dynamics model. The examples show hover thrust,
+descent below hover, climb above hover, and a thrust-step altitude response
+without introducing full attitude or 6-DOF dynamics yet.
 
 ### DC Motor
 
@@ -175,6 +183,8 @@ The project supports offers such as:
   measurements.
 - I added an Extended Kalman Filter example for nonlinear pendulum state
   estimation from noisy angle measurements.
+- I added a 1D quadcopter altitude model as the foundation for future UAV
+  control examples.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

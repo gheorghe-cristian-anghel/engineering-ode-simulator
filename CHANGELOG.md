@@ -30,6 +30,8 @@ All notable changes to this project will be documented here.
 - Open-loop and LQR inverted pendulum animation examples
 - DC motor and RLC state-estimation examples with Kalman filtering
 - Nonlinear pendulum state-estimation example with an Extended Kalman Filter
+- 1D quadcopter altitude dynamics model
+- Quadcopter hover thrust and thrust-step examples
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control

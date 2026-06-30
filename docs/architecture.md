@@ -38,6 +38,11 @@ design and nonlinear closed-loop simulation helpers. It reuses the nonlinear
 cart-pole dynamics from `models/inverted_pendulum.py` and applies state
 feedback as an external cart force.
 
+`models/quadcopter_altitude.py` contains a simplified one-dimensional UAV
+vertical dynamics model. It provides hover thrust, constant and step thrust
+commands, open-loop altitude simulation, and a hover-linearized state-space
+helper without introducing attitude or full 6-DOF dynamics.
+
 ### analysis/
 
 Reusable analysis and output tools independent of any one model.

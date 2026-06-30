@@ -22,6 +22,7 @@ The project currently includes:
 - LQR stabilization for the inverted pendulum
 - Discrete Kalman filter state estimation examples
 - Extended Kalman Filter nonlinear pendulum state estimation
+- Quadcopter altitude dynamics
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -388,6 +389,29 @@ hidden angular velocity from noisy angle measurements. It uses the full
 nonlinear pendulum model for prediction and linearizes the model locally with
 Jacobians during each EKF step.
 
+## Quadcopter Altitude Dynamics
+
+The quadcopter altitude model introduces a simplified one-dimensional UAV
+vertical dynamics model. The state is `[z, v]`, where `z` is altitude and `v`
+is vertical velocity. Positive altitude, velocity, and thrust are upward.
+
+The governing equation is:
+
+```text
+dz/dt = v
+dv/dt = (T - m*g - c_drag*v) / m
+```
+
+The hover thrust is:
+
+```text
+T_hover = m*g
+```
+
+This model is intentionally limited to vertical altitude motion. It does not
+include attitude dynamics, rotor dynamics, full 6-DOF motion, or altitude PID
+control yet.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -698,6 +722,18 @@ Run it with:
 
 ```powershell
 python examples/run_ekf_pendulum.py
+```
+
+## Run the Quadcopter Altitude Examples
+
+The quadcopter altitude examples compare open-loop thrust commands and show a
+simple thrust step from hover to climb.
+
+Run them with:
+
+```powershell
+python examples/run_quadcopter_altitude_open_loop.py
+python examples/run_quadcopter_altitude_thrust_step.py
 ```
 
 ## Run the DC Motor Example

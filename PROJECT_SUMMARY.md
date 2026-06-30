@@ -82,6 +82,8 @@ changing `Kp`, `Ki`, and `Kd` affects DC motor speed tracking.
 Reusable step response metrics are implemented in `analysis/step_response.py`.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
+RLC parameter sweep helpers are implemented in `analysis/rlc_sweep.py` for
+educational resistance, capacitance, and inductance transient-response studies.
 PID tuning helpers for discrete motor control examples are implemented in
 `analysis/pid_tuning.py`.
 CSV export helpers are implemented in `analysis/export_utils.py`.
@@ -116,6 +118,15 @@ The parameter sweep tool compares PI controller gain choices using:
 - settling time
 - maximum control effort
 - maximum current
+
+The RLC sweep helper compares component values using:
+
+- natural frequency
+- damping ratio
+- final capacitor voltage
+- peak voltage
+- overshoot
+- settling time
 
 The PID tuning helper compares discrete PID controller gain choices using:
 
@@ -171,8 +182,9 @@ control with disturbance rejection. It also includes embedded-style discrete
 PID motor speed control and discrete PID disturbance response, a Streamlit GUI
 MVP for selected simulations,
 reusable step response metrics, frequency response analysis, transfer function
-utilities, state-space simulation utilities, PI gain sweep analysis, PID tuning
-examples, and pytest coverage for implemented models.
+utilities, state-space simulation utilities, PI gain sweep analysis, RLC
+parameter sweep examples, PID tuning examples, and pytest coverage for
+implemented models.
 
 ## How Future AI Chats Should Use This File
 

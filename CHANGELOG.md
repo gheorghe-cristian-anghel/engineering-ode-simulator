@@ -45,6 +45,8 @@ All notable changes to this project will be documented here.
 - Tests for CSV export validation and file output
 - PI gain sweep utility for motor speed-control tuning
 - PI gain sweep example with speed and voltage comparison plots
+- RLC parameter sweep examples for resistance, capacitance, and inductance
+- RLC transient-response metrics for comparing component effects
 - Reusable PID tuning helper for discrete motor speed-control examples
 - Frequency response utility for continuous-time transfer functions
 - Bode plot examples for first-order, second-order, and RLC low-pass systems

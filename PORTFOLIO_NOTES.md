@@ -35,6 +35,9 @@ simulation, control-system analysis, and clean software engineering practices.
 ### RLC Circuit
 
 Shows second-order electrical dynamics, damping, overshoot, and oscillation.
+The RLC parameter sweep examples demonstrate how resistance, capacitance, and
+inductance shape damping ratio, natural frequency, overshoot, resonance-like
+ringing, and settling behavior.
 
 ### Mass-Spring-Damper
 

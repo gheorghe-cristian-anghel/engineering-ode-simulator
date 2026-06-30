@@ -37,6 +37,7 @@ Current example:
 
 - step response metrics
 - parameter sweep utilities
+- RLC sweep helpers for educational component studies
 - PID tuning helpers for educational discrete-control examples
 - frequency response and Bode plot utilities
 - transfer function step and impulse response utilities
@@ -59,6 +60,10 @@ files under `outputs/`.
 The PID tuning examples compare P, PI, and PID behavior and show how `Kp`,
 `Ki`, and `Kd` affect DC motor speed tracking, overshoot, settling time, and
 control voltage.
+
+The RLC sweep examples compare resistance, capacitance, and inductance effects
+on capacitor-voltage transient response while reusing the RLC model and step
+response metrics.
 
 The discrete PID disturbance response example demonstrates practical
 closed-loop rejection of a load torque step while keeping the motor equations

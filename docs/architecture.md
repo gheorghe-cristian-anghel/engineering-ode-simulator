@@ -91,6 +91,12 @@ anti-windup, then integrates the rotational plant over each held-torque sample
 interval. Optional external disturbance torque can be added without changing
 the attitude dynamics model.
 
+`analysis/quadcopter_trajectory_tracking.py` provides UAV trajectory-control
+infrastructure built on `models/quadcopter_6dof.py`. It includes hover-point
+and circular reference generators plus a simplified cascaded PD controller
+that commands total thrust and body torques during sampled closed-loop
+integration.
+
 `analysis/lqr.py` provides reusable continuous-time Linear Quadratic
 Regulator infrastructure based on the continuous algebraic Riccati equation.
 
@@ -139,6 +145,10 @@ limited to rotational attitude dynamics.
 The full 6-DOF quadcopter examples demonstrate hover, tilted thrust causing
 horizontal acceleration, and torque-driven attitude response using the
 standalone rigid-body plant model.
+
+The quadcopter trajectory tracking examples demonstrate controlled 6-DOF UAV
+motion by tracking a fixed hover point and a slow circular path with a simple
+cascaded controller.
 
 ### streamlit_app.py
 

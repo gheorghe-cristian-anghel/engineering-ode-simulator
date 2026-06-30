@@ -41,6 +41,8 @@ All notable changes to this project will be documented here.
 - Quadcopter attitude PID disturbance torque rejection example
 - Full 6-DOF quadcopter rigid-body dynamics model
 - Quadcopter 6-DOF hover, tilted-thrust, and torque-response examples
+- Simplified cascaded trajectory controller for the 6-DOF quadcopter model
+- Quadcopter hover and circular trajectory tracking examples
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control

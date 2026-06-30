@@ -27,6 +27,7 @@ The project currently includes:
 - Quadcopter attitude dynamics
 - Quadcopter attitude PID control
 - Full 6-DOF quadcopter rigid-body dynamics
+- Quadcopter trajectory tracking
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -499,9 +500,23 @@ R = Rz(psi) @ Ry(theta) @ Rx(phi)
 ```
 
 With zero yaw, positive pitch redirects thrust toward positive inertial `x`,
-and positive roll redirects thrust toward negative inertial `y`. This model is
-open-loop only: it does not include trajectory tracking, rotor mixing, or an
-autopilot controller.
+and positive roll redirects thrust toward negative inertial `y`. The plant
+model itself is open-loop and does not include rotor mixing or an autopilot
+controller.
+
+## Quadcopter Trajectory Tracking
+
+The trajectory tracking helper builds an educational cascaded PD controller on
+top of the full 6-DOF plant. Reference generators provide hover-point and
+circular trajectories with desired position, velocity, and acceleration. The
+outer position loop computes a desired acceleration, converts horizontal
+acceleration into small roll and pitch commands, and the inner attitude loop
+commands body torques.
+
+This controller is intentionally simple. It demonstrates how trajectory
+tracking can be layered onto a 6-DOF rigid-body model, but it is not a
+production drone autopilot and does not include MPC, waypoint planning, rotor
+mixing, or individual motor dynamics.
 
 ## DC Motor Speed Response
 
@@ -856,6 +871,18 @@ Run them with:
 python examples/run_quadcopter_6dof_hover.py
 python examples/run_quadcopter_6dof_tilted_thrust.py
 python examples/run_quadcopter_6dof_torque_response.py
+```
+
+## Run the Quadcopter Trajectory Tracking Examples
+
+The trajectory tracking examples use the full 6-DOF plant with a simplified
+cascaded controller to track a hover point and a slow circular path.
+
+Run them with:
+
+```powershell
+python examples/run_quadcopter_trajectory_hover_tracking.py
+python examples/run_quadcopter_trajectory_circle_tracking.py
 ```
 
 ## Run the DC Motor Example

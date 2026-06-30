@@ -32,6 +32,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - UAV attitude dynamics
 - UAV attitude PID control
 - UAV full 6-DOF rigid-body dynamics
+- UAV trajectory tracking
 - electromechanical modeling
 - embedded-style digital PID control
 - discrete disturbance rejection for motor speed control
@@ -120,6 +121,13 @@ Combines translational and rotational UAV motion in one rigid-body model. The
 examples show hover, tilted thrust producing horizontal acceleration, and body
 torques changing attitude, which creates a foundation for future UAV
 trajectory, waypoint, and control examples.
+
+### Quadcopter Trajectory Tracking
+
+Demonstrates controlled UAV motion using the full 6-DOF model and a simplified
+cascaded PD controller. The examples compare actual and desired hover/circular
+paths, position error, thrust, attitude commands, and body torques while
+leaving advanced autopilot topics such as MPC and waypoint planning for later.
 
 ### DC Motor
 
@@ -227,6 +235,8 @@ The project supports offers such as:
   body torque commands and disturbance rejection.
 - I added a full 6-DOF quadcopter model that combines translational and
   rotational rigid-body dynamics for future UAV control examples.
+- I added quadcopter trajectory tracking with hover-point and circular-path
+  examples using the full 6-DOF model.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

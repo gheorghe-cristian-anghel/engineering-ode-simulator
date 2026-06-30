@@ -50,6 +50,10 @@ Shows damping ratio, natural frequency, overshoot, peak time, and settling time.
 ### DC Motor
 
 Shows coupled electrical-mechanical dynamics.
+The load disturbance rejection comparison shows the practical value of
+feedback control when external load torque changes: open-loop speed sags,
+while PI and discrete PID controllers increase voltage and current to recover
+toward the target.
 
 ### PI Motor Speed Control
 

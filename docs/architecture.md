@@ -37,6 +37,7 @@ Current example:
 
 - step response metrics
 - parameter sweep utilities
+- motor load disturbance metrics
 - RLC sweep helpers for educational component studies
 - PID tuning helpers for educational discrete-control examples
 - frequency response and Bode plot utilities
@@ -64,6 +65,11 @@ control voltage.
 The RLC sweep examples compare resistance, capacitance, and inductance effects
 on capacitor-voltage transient response while reusing the RLC model and step
 response metrics.
+
+The DC motor disturbance rejection examples compare fixed-voltage open-loop
+behavior with continuous PI and discrete PID feedback control under the same
+load torque step. They reuse the DC motor plant, existing controller models,
+and shared disturbance metrics.
 
 The discrete PID disturbance response example demonstrates practical
 closed-loop rejection of a load torque step while keeping the motor equations

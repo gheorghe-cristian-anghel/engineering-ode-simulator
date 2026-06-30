@@ -76,12 +76,16 @@ The discrete PID disturbance response example uses the same sampled controller
 and DC motor model with a step load torque disturbance.
 Educational PID tuning examples compare P, PI, and PID behavior and show how
 changing `Kp`, `Ki`, and `Kd` affects DC motor speed tracking.
+DC motor load disturbance rejection examples compare fixed-voltage open-loop
+behavior against continuous PI and discrete PID feedback control.
 
 ## Analysis Tools
 
 Reusable step response metrics are implemented in `analysis/step_response.py`.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
+DC motor load disturbance metrics are implemented in
+`analysis/motor_disturbance.py`.
 RLC parameter sweep helpers are implemented in `analysis/rlc_sweep.py` for
 educational resistance, capacitance, and inductance transient-response studies.
 PID tuning helpers for discrete motor control examples are implemented in
@@ -147,6 +151,16 @@ The discrete PID disturbance helper summarizes:
 - final speed and final error
 - voltage and current before and after recovery or at the end
 
+The motor disturbance helper summarizes open-loop and feedback disturbance
+responses using:
+
+- speed before disturbance
+- minimum speed after disturbance
+- speed drop
+- final speed and final error
+- recovery time
+- optional voltage and current before/final values
+
 The export utility validates column names, dimensions, and column lengths,
 creates missing output directories automatically, and writes simulation arrays
 to CSV files for later analysis in Excel, MATLAB, Python, or reports.
@@ -183,8 +197,8 @@ PID motor speed control and discrete PID disturbance response, a Streamlit GUI
 MVP for selected simulations,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC
-parameter sweep examples, PID tuning examples, and pytest coverage for
-implemented models.
+parameter sweep examples, DC motor disturbance rejection comparison examples,
+PID tuning examples, and pytest coverage for implemented models.
 
 ## How Future AI Chats Should Use This File
 

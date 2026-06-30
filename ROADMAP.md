@@ -26,6 +26,7 @@
 - [x] PID tuning examples
 - [x] Discrete PID disturbance response
 - [x] RLC parameter sweeps
+- [x] DC motor load disturbance rejection
 
 ## In Progress
 
@@ -37,7 +38,7 @@
 
 ## Medium-Term Features
 
-- DC motor load disturbance rejection
+- No active medium-term feature at the moment.
 
 ## Long-Term / Advanced Features
 

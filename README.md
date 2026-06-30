@@ -18,11 +18,13 @@ The project currently includes:
 - RLC parameter sweep examples for resistance, capacitance, and inductance
 - Simple pendulum nonlinear dynamics
 - DC motor speed response
+- DC motor open-loop load disturbance response
 - DC motor PI speed control
 - PI motor gain sweep analysis
 - DC motor PI load disturbance response
 - Discrete PID motor speed control
 - Discrete PID disturbance response for DC motor speed control
+- DC motor disturbance rejection comparison
 - Educational PID tuning examples
 - Interactive Streamlit GUI for selected simulations
 - Frequency response and Bode plot examples
@@ -591,6 +593,17 @@ Run it with:
 python examples\run_dc_motor.py
 ```
 
+## Run the DC Motor Open-Loop Disturbance Example
+
+The example shows that a fixed-voltage DC motor loses speed and settles at a
+lower operating point after a step load torque disturbance.
+
+Run it with:
+
+```powershell
+python examples/run_dc_motor_open_loop_disturbance.py
+```
+
 ## Run the DC Motor PI Control Example
 
 The example simulates closed-loop speed tracking with voltage saturation.
@@ -657,6 +670,18 @@ Run it with:
 
 ```powershell
 python examples/run_discrete_pid_disturbance_response.py
+```
+
+## Run the DC Motor Disturbance Rejection Comparison
+
+The comparison example applies the same load torque disturbance to open-loop,
+continuous PI, and discrete PID motor responses. It shows how feedback control
+increases control effort to recover speed toward the target.
+
+Run it with:
+
+```powershell
+python examples/run_dc_motor_disturbance_rejection_comparison.py
 ```
 
 ## Run Tests

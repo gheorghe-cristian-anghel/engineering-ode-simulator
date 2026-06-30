@@ -30,8 +30,10 @@ All notable changes to this project will be documented here.
 #### DC Motor and PI Control
 
 - DC motor open-loop speed response
+- DC motor open-loop load disturbance example
 - Closed-loop PI motor speed control with voltage saturation
 - Load disturbance response example for PI motor speed control
+- Disturbance rejection comparison for open-loop and feedback control
 - Discrete PID motor speed-control example
 - Discrete PID load disturbance metrics and plots
 - Kp, Ki, and Kd tuning demonstrations for DC motor speed control
@@ -43,6 +45,7 @@ All notable changes to this project will be documented here.
 - CSV export from the discrete PID motor example
 - Output directory support for generated files
 - Tests for CSV export validation and file output
+- DC motor load disturbance metrics helper
 - PI gain sweep utility for motor speed-control tuning
 - PI gain sweep example with speed and voltage comparison plots
 - RLC parameter sweep examples for resistance, capacitance, and inductance

@@ -15,6 +15,7 @@ The project currently includes:
 - Reusable step response metrics
 - RL circuit step response
 - Series RLC circuit step response
+- RLC parameter sweep examples for resistance, capacitance, and inductance
 - Simple pendulum nonlinear dynamics
 - DC motor speed response
 - DC motor PI speed control
@@ -552,6 +553,21 @@ Run it with:
 
 ```powershell
 python examples\run_rlc_circuit.py
+```
+
+## Run the RLC Parameter Sweep Examples
+
+These examples compare how component values shape the series RLC capacitor
+voltage step response. They reuse the existing RLC model and step response
+metrics to compare damping ratio, natural frequency, overshoot, peak voltage,
+settling time, and final voltage.
+
+Run them with:
+
+```powershell
+python examples/run_rlc_resistance_sweep.py
+python examples/run_rlc_capacitance_sweep.py
+python examples/run_rlc_inductance_sweep.py
 ```
 
 ## Run the Pendulum Example

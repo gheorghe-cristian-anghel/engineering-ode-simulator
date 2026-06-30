@@ -59,6 +59,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | Newton Cooling | Thermal | First-order | `models/cooling.py` | `examples/run_cooling.py` | `tests/test_cooling.py` | Implemented |
 | Mass-Spring-Damper | Mechanical | Second-order | `models/mass_spring_damper.py` | `examples/run_mass_spring_damper.py` | `tests/test_mass_spring_damper.py` | Implemented |
 | Pendulum | Mechanical | Nonlinear second-order | `models/pendulum.py` | `examples/run_pendulum.py` | `tests/test_pendulum.py` | Implemented |
+| Inverted Pendulum / Cart-Pole | Control / Mechanical | Nonlinear fourth-order plus linearized state-space | `models/inverted_pendulum.py` | `examples/run_inverted_pendulum_open_loop.py` | `tests/test_inverted_pendulum.py` | Implemented |
 | First-Order Control System | Control | First-order | `models/first_order_control.py` | `examples/run_first_order_control.py` | `tests/test_first_order_control.py` | Implemented |
 | Second-Order Control System | Control | Second-order | `models/second_order_control.py` | `examples/run_second_order_control.py` | `tests/test_second_order_control.py` | Implemented |
 | DC Motor | Electromechanical | Coupled first-order system | `models/dc_motor.py` | `examples/run_dc_motor.py` | `tests/test_dc_motor.py` | Implemented |
@@ -191,10 +192,11 @@ documentation and portfolio presentation assets.
 ## Current Status
 
 The project can simulate first-order systems, second-order systems, nonlinear
-pendulum motion, open-loop DC motor dynamics, and closed-loop PI motor speed
-control with disturbance rejection. It also includes embedded-style discrete
-PID motor speed control and discrete PID disturbance response, a Streamlit GUI
-MVP for selected simulations,
+pendulum motion, open-loop inverted pendulum/cart-pole instability, open-loop
+DC motor dynamics, and closed-loop PI motor speed control with disturbance
+rejection. It also includes embedded-style discrete PID motor speed control
+and discrete PID disturbance response, a Streamlit GUI MVP for selected
+simulations,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC
 parameter sweep examples, DC motor disturbance rejection comparison examples,

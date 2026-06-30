@@ -22,6 +22,9 @@ All notable changes to this project will be documented here.
 #### Control Systems
 
 - Second-order control system step response
+- Nonlinear inverted pendulum / cart-pole model
+- Linearized inverted pendulum upright state-space model
+- Open-loop inverted pendulum instability examples
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control

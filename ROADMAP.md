@@ -27,6 +27,7 @@
 - [x] Discrete PID disturbance response
 - [x] RLC parameter sweeps
 - [x] DC motor load disturbance rejection
+- [x] Inverted pendulum / cart-pole model
 
 ## In Progress
 
@@ -42,13 +43,11 @@
 
 ## Long-Term / Advanced Features
 
-- Inverted pendulum
-- Cart-pole system
+- [ ] LQR control for inverted pendulum
+- [ ] Kalman filter / observer examples
 - Quadcopter altitude model
 - Quadcopter attitude model
-- Kalman filter
 - Extended Kalman filter
-- LQR controller
 - Model predictive control
 - Heat equation
 - Wave equation

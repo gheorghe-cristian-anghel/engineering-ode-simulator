@@ -23,6 +23,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Git/GitHub workflow
 - differential equation modeling
 - control systems
+- nonlinear instability and linearization
 - electromechanical modeling
 - embedded-style digital PID control
 - discrete disturbance rejection for motor speed control
@@ -46,6 +47,12 @@ Shows mechanical vibration and energy/damping concepts.
 ### Second-Order Control System
 
 Shows damping ratio, natural frequency, overshoot, peak time, and settling time.
+
+### Inverted Pendulum / Cart-Pole
+
+Shows nonlinear dynamics, open-loop upright instability, and linearization
+around an unstable equilibrium. This is a strong preparation model for future
+advanced controls such as LQR and observer/Kalman-filter examples.
 
 ### DC Motor
 
@@ -128,6 +135,8 @@ The project supports offers such as:
 - I added reusable state-space simulation utilities for linear systems.
 - I added CSV export so simulation data can be reused in external analysis tools.
 - I modeled both open-loop and closed-loop systems.
+- I added an inverted pendulum/cart-pole model that demonstrates nonlinear
+  instability and upright state-space linearization.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

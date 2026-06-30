@@ -17,6 +17,8 @@ The project currently includes:
 - Series RLC circuit step response
 - RLC parameter sweep examples for resistance, capacitance, and inductance
 - Simple pendulum nonlinear dynamics
+- Inverted pendulum / cart-pole nonlinear dynamics
+- Linearized inverted pendulum upright state-space model
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -330,6 +332,18 @@ omega_n = sqrt(g/L)
 T = 2*pi*sqrt(L/g)
 ```
 
+## Inverted Pendulum / Cart-Pole
+
+The inverted pendulum model demonstrates nonlinear open-loop instability for a
+pendulum mounted on a moving cart. The state variables are cart position,
+cart velocity, pendulum angle, and pendulum angular velocity. The angle
+`theta` is measured from the upright equilibrium, so `theta = 0` is upright.
+
+The project also includes a linearized upright state-space model with cart
+force as the input and cart position plus pendulum angle as outputs. This
+prepares the model for future controller work such as LQR, but no stabilizing
+controller is implemented yet.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -581,6 +595,19 @@ Run it with:
 
 ```powershell
 python examples\run_pendulum.py
+```
+
+## Run the Inverted Pendulum Examples
+
+The open-loop example shows that a small initial angle perturbation grows
+without feedback control. The linearized example prints the upright
+state-space matrices and eigenvalues, then simulates a small perturbation.
+
+Run them with:
+
+```powershell
+python examples/run_inverted_pendulum_open_loop.py
+python examples/run_inverted_pendulum_linearized.py
 ```
 
 ## Run the DC Motor Example

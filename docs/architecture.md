@@ -29,6 +29,11 @@ derivative-on-measurement. The module also includes a focused disturbance
 response helper that reuses the sampled controller and DC motor plant with a
 step load torque input.
 
+`models/inverted_pendulum.py` contains an advanced nonlinear cart-pole model
+and a linearized upright state-space helper. It demonstrates open-loop
+instability and prepares the project for future feedback-control examples
+without implementing stabilization in the model layer.
+
 ### analysis/
 
 Reusable analysis and output tools independent of any one model.

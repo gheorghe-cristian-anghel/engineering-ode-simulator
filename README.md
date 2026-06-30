@@ -23,7 +23,12 @@ The project currently includes:
 - Discrete PID motor speed control
 - Interactive Streamlit GUI for selected simulations
 - Frequency response and Bode plot examples
-- Transfer function step and impulse response utilities
+- Transfer Function Utilities
+  - Reusable continuous-time transfer function representation
+  - Step response simulation
+  - Impulse response simulation
+  - Common engineering transfer functions
+  - Transfer-function comparison utilities
 - Continuous-time state-space modeling
   - Generic `x_dot = A*x + B*u` simulation framework
   - Mass-spring-damper state-space model
@@ -393,6 +398,10 @@ python examples/run_frequency_response_rlc.py
 The project includes reusable continuous-time transfer function utilities for
 first-order, second-order, and RLC low-pass systems. These helpers support step
 response simulation, impulse response simulation, and simple response plots.
+Transfer functions are one of the fundamental tools of control engineering.
+They describe the input-output behavior of linear time-invariant systems and
+provide the basis for step-response analysis, impulse-response analysis,
+frequency response, Bode plots, and classical controller design.
 
 Run the examples with:
 

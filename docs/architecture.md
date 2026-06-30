@@ -53,6 +53,7 @@ Current example:
 - transfer function step and impulse response utilities
 - state-space simulation utilities
 - LQR optimal-control utilities
+- Kalman filter state-estimation utilities
 - CSV export utilities
 
 `analysis/transfer_function.py` provides reusable continuous-time transfer
@@ -64,6 +65,9 @@ educational examples built on the discrete PID motor simulation.
 
 `analysis/lqr.py` provides reusable continuous-time Linear Quadratic
 Regulator infrastructure based on the continuous algebraic Riccati equation.
+
+`analysis/kalman_filter.py` provides reusable discrete-time linear Kalman
+filter infrastructure for estimating hidden states from noisy measurements.
 
 ### examples/
 

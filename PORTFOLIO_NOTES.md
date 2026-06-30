@@ -24,6 +24,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - differential equation modeling
 - control systems
 - optimal state-space feedback with LQR
+- Kalman filtering and noisy-measurement state estimation
 - nonlinear instability and linearization
 - electromechanical modeling
 - embedded-style digital PID control
@@ -60,6 +61,13 @@ LQR, with observer/Kalman-filter examples left for future work.
 Shows modern state-space feedback control by using a Linear Quadratic
 Regulator to stabilize the nonlinear inverted pendulum near the upright
 equilibrium.
+
+### Kalman Filter State Estimation
+
+Shows practical observer design by estimating hidden states from noisy sensor
+measurements. The DC motor example estimates current and speed from noisy
+speed measurements, while the RLC example reconstructs current from noisy
+capacitor-voltage measurements.
 
 ### DC Motor
 
@@ -146,6 +154,8 @@ The project supports offers such as:
   instability and upright state-space linearization.
 - I added LQR control for the inverted pendulum to demonstrate modern
   state-space feedback stabilization.
+- I added Kalman filter examples that estimate hidden states from noisy
+  measurements.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

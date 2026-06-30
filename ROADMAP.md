@@ -29,6 +29,7 @@
 - [x] DC motor load disturbance rejection
 - [x] Inverted pendulum / cart-pole model
 - [x] LQR control for inverted pendulum
+- [x] Kalman filter / observer examples
 
 ## In Progress
 
@@ -44,8 +45,8 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Kalman filter / observer examples
 - [ ] Animation of inverted pendulum
+- [ ] Nonlinear observer examples
 - Quadcopter altitude model
 - Quadcopter attitude model
 - Extended Kalman filter

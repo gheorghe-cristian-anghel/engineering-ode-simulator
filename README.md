@@ -20,6 +20,7 @@ The project currently includes:
 - Inverted pendulum / cart-pole nonlinear dynamics
 - Linearized inverted pendulum upright state-space model
 - LQR stabilization for the inverted pendulum
+- Discrete Kalman filter state estimation examples
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -360,6 +361,14 @@ F = -K*x
 Where `x` is `[cart_position, cart_velocity, pendulum_angle,
 pendulum_angular_velocity]` and `F` is the horizontal cart force.
 
+## Kalman Filter State Estimation
+
+The Kalman filter examples estimate hidden system states from noisy
+measurements using discrete-time linear state-space models. The DC motor
+example estimates armature current and speed from noisy speed measurements.
+The RLC example estimates capacitor voltage and hidden current from noisy
+capacitor-voltage measurements.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -634,6 +643,18 @@ Run them with:
 ```powershell
 python examples/run_inverted_pendulum_lqr.py
 python examples/run_inverted_pendulum_lqr_comparison.py
+```
+
+## Run the Kalman Filter Examples
+
+The Kalman examples demonstrate noisy-measurement state estimation for a DC
+motor and a series RLC circuit.
+
+Run them with:
+
+```powershell
+python examples/run_kalman_dc_motor.py
+python examples/run_kalman_rlc.py
 ```
 
 ## Run the DC Motor Example

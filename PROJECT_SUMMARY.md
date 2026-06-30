@@ -100,6 +100,8 @@ simulation are implemented in `analysis/transfer_function.py`.
 Continuous-time state-space simulation helpers are implemented in
 `analysis/state_space.py`.
 Continuous-time LQR design helpers are implemented in `analysis/lqr.py`.
+Discrete-time Kalman filter helpers are implemented in
+`analysis/kalman_filter.py`.
 
 The Streamlit MVP in `streamlit_app.py` provides an interactive browser UI for
 RC circuit charging, RLC circuit step response, and discrete PID motor speed
@@ -198,8 +200,8 @@ pendulum motion, open-loop inverted pendulum/cart-pole instability, LQR
 stabilization of the nonlinear inverted pendulum near upright, open-loop DC
 motor dynamics, and closed-loop PI motor speed control with disturbance
 rejection. It also includes embedded-style discrete PID motor speed control
-and discrete PID disturbance response, a Streamlit GUI MVP for selected
-simulations,
+and discrete PID disturbance response, Kalman filter examples for noisy
+state estimation, a Streamlit GUI MVP for selected simulations,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC
 parameter sweep examples, DC motor disturbance rejection comparison examples,

@@ -7,6 +7,10 @@ __pycache__/
 examples/*_response.png
 outputs/*.csv
 !outputs/.gitkeep
+docs/animations/*.gif
+docs/animations/*.mp4
+docs/animations/*.webm
+!docs/animations/.gitkeep
 .DS_Store
 .pytest_tmp/
 .pytest_tmp_*/

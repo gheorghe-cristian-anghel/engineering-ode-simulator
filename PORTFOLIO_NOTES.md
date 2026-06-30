@@ -54,13 +54,16 @@ Shows damping ratio, natural frequency, overshoot, peak time, and settling time.
 
 Shows nonlinear dynamics, open-loop upright instability, and linearization
 around an unstable equilibrium. It also supports advanced controls such as
-LQR, with observer/Kalman-filter examples left for future work.
+LQR, with observer/Kalman-filter examples left for future work. Matplotlib
+animations make the cart motion, pendulum angle, and unstable departure easier
+to understand visually.
 
 ### Inverted Pendulum LQR Control
 
 Shows modern state-space feedback control by using a Linear Quadratic
 Regulator to stabilize the nonlinear inverted pendulum near the upright
-equilibrium.
+equilibrium. Animation examples make the stabilizing effect easier to show in
+a portfolio or walkthrough.
 
 ### Kalman Filter State Estimation
 
@@ -129,6 +132,11 @@ for external analysis in Excel, MATLAB, LibreOffice Calc, or Python.
 Selected simulation plots are saved as screenshots for GitHub, README, and
 portfolio presentation.
 
+### Animation Examples
+
+Selected Matplotlib animations can show nonlinear motion and feedback
+stabilization, especially for the inverted pendulum and LQR examples.
+
 ## Freelance Relevance
 
 The project supports offers such as:
@@ -154,6 +162,8 @@ The project supports offers such as:
   instability and upright state-space linearization.
 - I added LQR control for the inverted pendulum to demonstrate modern
   state-space feedback stabilization.
+- I added Matplotlib animation examples for open-loop and LQR inverted
+  pendulum trajectories.
 - I added Kalman filter examples that estimate hidden states from noisy
   measurements.
 - I added an embedded-style discrete PID controller for motor speed control.

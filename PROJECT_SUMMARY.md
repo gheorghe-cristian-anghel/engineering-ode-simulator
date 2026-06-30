@@ -31,6 +31,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 
 - `models/`: engineering models and simulation functions
 - `analysis/`: reusable analysis tools independent of one specific model
+- `visualization/`: reusable plotting and animation helpers
 - `examples/`: runnable scripts that print parameters and plot results
 - `streamlit_app.py`: browser UI for selected interactive simulations
 - `tests/`: pytest coverage for model behavior and helper formulas
@@ -102,6 +103,8 @@ Continuous-time state-space simulation helpers are implemented in
 Continuous-time LQR design helpers are implemented in `analysis/lqr.py`.
 Discrete-time Kalman filter helpers are implemented in
 `analysis/kalman_filter.py`.
+Reusable cart-pole animation helpers are implemented in
+`visualization/inverted_pendulum_animation.py`.
 
 The Streamlit MVP in `streamlit_app.py` provides an interactive browser UI for
 RC circuit charging, RLC circuit step response, and discrete PID motor speed
@@ -202,6 +205,7 @@ motor dynamics, and closed-loop PI motor speed control with disturbance
 rejection. It also includes embedded-style discrete PID motor speed control
 and discrete PID disturbance response, Kalman filter examples for noisy
 state estimation, a Streamlit GUI MVP for selected simulations,
+Matplotlib animation examples for inverted pendulum trajectories,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC
 parameter sweep examples, DC motor disturbance rejection comparison examples,

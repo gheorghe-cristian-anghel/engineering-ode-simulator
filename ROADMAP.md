@@ -30,6 +30,7 @@
 - [x] Inverted pendulum / cart-pole model
 - [x] LQR control for inverted pendulum
 - [x] Kalman filter / observer examples
+- [x] Animation of inverted pendulum
 
 ## In Progress
 
@@ -45,7 +46,6 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Animation of inverted pendulum
 - [ ] Nonlinear observer examples
 - Quadcopter altitude model
 - Quadcopter attitude model

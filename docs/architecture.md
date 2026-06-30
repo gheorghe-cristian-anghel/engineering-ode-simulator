@@ -69,11 +69,18 @@ Regulator infrastructure based on the continuous algebraic Riccati equation.
 `analysis/kalman_filter.py` provides reusable discrete-time linear Kalman
 filter infrastructure for estimating hidden states from noisy measurements.
 
+### visualization/
+
+Reusable visualization helpers for plotting and animation code that should not
+live in the physics model modules. `visualization/inverted_pendulum_animation.py`
+animates cart-pole trajectories using Matplotlib while preserving the state and
+angle convention from `models/inverted_pendulum.py`.
+
 ### examples/
 
 Runnable scripts that demonstrate models, print important parameters, and
-generate plots. Selected examples can also export simulation arrays to CSV
-files under `outputs/`.
+generate plots or animations. Selected examples can also export simulation
+arrays to CSV files under `outputs/`.
 
 The PID tuning examples compare P, PI, and PID behavior and show how `Kp`,
 `Ki`, and `Kd` affect DC motor speed tracking, overshoot, settling time, and
@@ -108,6 +115,8 @@ Longer documentation and project notes.
 
 `docs/screenshots/` stores selected generated plot images used for
 documentation and portfolio presentation.
+`docs/animations/` is reserved for selected generated animations when they are
+explicitly kept as portfolio assets.
 
 ## Model Pattern
 

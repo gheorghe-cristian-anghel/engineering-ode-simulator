@@ -31,6 +31,7 @@ The project currently includes:
 - DC motor disturbance rejection comparison
 - Educational PID tuning examples
 - Interactive Streamlit GUI for selected simulations
+- Matplotlib animation examples for inverted pendulum motion
 - Frequency response and Bode plot examples
 - Transfer Function Utilities
   - Reusable continuous-time transfer function representation
@@ -361,6 +362,16 @@ F = -K*x
 Where `x` is `[cart_position, cart_velocity, pendulum_angle,
 pendulum_angular_velocity]` and `F` is the horizontal cart force.
 
+## Inverted Pendulum Animation
+
+The project includes reusable Matplotlib animation support for cart-pole
+trajectories. The animation uses the same state convention as the nonlinear
+model, where `theta = 0` is upright. Open-loop and LQR examples show the
+unstable departure from upright and the controlled stabilization behavior.
+
+Animations are displayed interactively by default. GIF and MP4 saving is
+optional and only happens when a save path is provided.
+
 ## Kalman Filter State Estimation
 
 The Kalman filter examples estimate hidden system states from noisy
@@ -643,6 +654,21 @@ Run them with:
 ```powershell
 python examples/run_inverted_pendulum_lqr.py
 python examples/run_inverted_pendulum_lqr_comparison.py
+```
+
+Animation examples visualize the same cart-pole trajectories with Matplotlib.
+
+Run them with:
+
+```powershell
+python examples/run_inverted_pendulum_animation_open_loop.py
+python examples/run_inverted_pendulum_animation_lqr.py
+```
+
+Optionally save an animation as GIF or MP4:
+
+```powershell
+python examples/run_inverted_pendulum_animation_lqr.py --save docs/animations/inverted_pendulum_lqr.gif
 ```
 
 ## Run the Kalman Filter Examples

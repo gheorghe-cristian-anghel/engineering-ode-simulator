@@ -26,6 +26,8 @@ All notable changes to this project will be documented here.
 - Linearized inverted pendulum upright state-space model
 - Open-loop inverted pendulum instability examples
 - LQR stabilization examples for the nonlinear inverted pendulum
+- Matplotlib animation helper for inverted pendulum trajectories
+- Open-loop and LQR inverted pendulum animation examples
 - DC motor and RLC state-estimation examples with Kalman filtering
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement

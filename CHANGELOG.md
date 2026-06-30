@@ -43,6 +43,8 @@ All notable changes to this project will be documented here.
 - Quadcopter 6-DOF hover, tilted-thrust, and torque-response examples
 - Simplified cascaded trajectory controller for the 6-DOF quadcopter model
 - Quadcopter hover and circular trajectory tracking examples
+- Quadcopter waypoint following with smooth waypoint trajectory generation
+- Waypoint-following example using the full 6-DOF quadcopter model
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control

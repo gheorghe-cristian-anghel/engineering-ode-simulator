@@ -38,6 +38,7 @@
 - [x] Quadcopter attitude PID control
 - [x] Full 6-DOF quadcopter model
 - [x] Quadcopter trajectory tracking
+- [x] Quadcopter waypoint following
 
 ## In Progress
 
@@ -53,11 +54,11 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Quadcopter waypoint following
 - [ ] Quadcopter animation
 - [ ] Unscented Kalman filter
 - [ ] Particle filter
 - [ ] MPC examples
+- [ ] Obstacle avoidance
 - Heat equation
 - Wave equation
 - Finite difference methods

@@ -28,6 +28,7 @@ The project currently includes:
 - Quadcopter attitude PID control
 - Full 6-DOF quadcopter rigid-body dynamics
 - Quadcopter trajectory tracking
+- Quadcopter waypoint following
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -518,6 +519,17 @@ tracking can be layered onto a 6-DOF rigid-body model, but it is not a
 production drone autopilot and does not include MPC, waypoint planning, rotor
 mixing, or individual motor dynamics.
 
+## Quadcopter Waypoint Following
+
+The waypoint-following helper converts a list of 3D waypoints into a time-based
+reference trajectory, then tracks that reference with the existing simplified
+6-DOF cascaded controller. The reference can use piecewise-linear interpolation
+or smoothstep interpolation between waypoints.
+
+This feature demonstrates waypoint following, not full autonomous path
+planning. It does not include obstacle avoidance, MPC, rotor mixing, or real
+drone autopilot complexity.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -883,6 +895,17 @@ Run them with:
 ```powershell
 python examples/run_quadcopter_trajectory_hover_tracking.py
 python examples/run_quadcopter_trajectory_circle_tracking.py
+```
+
+## Run the Quadcopter Waypoint Following Example
+
+The waypoint-following example uses the full 6-DOF plant with the simplified
+cascaded controller to track a smooth path through several 3D waypoints.
+
+Run it with:
+
+```powershell
+python examples/run_quadcopter_waypoint_following.py
 ```
 
 ## Run the DC Motor Example

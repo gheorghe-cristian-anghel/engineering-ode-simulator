@@ -97,6 +97,12 @@ and circular reference generators plus a simplified cascaded PD controller
 that commands total thrust and body torques during sampled closed-loop
 integration.
 
+`analysis/quadcopter_waypoint_following.py` provides educational UAV waypoint
+following logic built on the trajectory tracking infrastructure. It converts
+discrete 3D waypoint goals into linear or smoothstep reference trajectories,
+then reuses the existing cascaded 6-DOF controller without adding obstacle
+avoidance, MPC, rotor mixing, or autopilot complexity.
+
 `analysis/lqr.py` provides reusable continuous-time Linear Quadratic
 Regulator infrastructure based on the continuous algebraic Riccati equation.
 
@@ -149,6 +155,10 @@ standalone rigid-body plant model.
 The quadcopter trajectory tracking examples demonstrate controlled 6-DOF UAV
 motion by tracking a fixed hover point and a slow circular path with a simple
 cascaded controller.
+
+The quadcopter waypoint-following example demonstrates discrete UAV navigation
+goals by tracking a smooth reference path through several 3D waypoints with
+the same simplified cascaded controller.
 
 ### streamlit_app.py
 

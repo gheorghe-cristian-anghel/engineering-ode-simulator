@@ -311,7 +311,7 @@ def simulate_quadcopter_trajectory_tracking(
     initial_state = _validate_state(initial_state, "initial_state")
 
     duration = end_time - start_time
-    steps = int(np.ceil(duration / dt))
+    steps = int(np.ceil(duration / dt - 1e-12))
     time = start_time + np.arange(steps + 1) * dt
     time[-1] = end_time
 

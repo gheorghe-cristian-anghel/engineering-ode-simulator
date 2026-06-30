@@ -68,6 +68,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | Quadcopter Attitude PID Control | UAV / Control | Sampled-data PID attitude tracking | `analysis/quadcopter_attitude_control.py` | `examples/run_quadcopter_attitude_pid.py` | `tests/test_quadcopter_attitude_control.py` | Implemented |
 | Full 6-DOF Quadcopter | UAV / Rigid-Body Dynamics | Nonlinear twelfth-order dynamics | `models/quadcopter_6dof.py` | `examples/run_quadcopter_6dof_hover.py` | `tests/test_quadcopter_6dof.py` | Implemented |
 | Quadcopter Trajectory Tracking | UAV / Control | Cascaded PD trajectory tracking | `analysis/quadcopter_trajectory_tracking.py` | `examples/run_quadcopter_trajectory_circle_tracking.py` | `tests/test_quadcopter_trajectory_tracking.py` | Implemented |
+| Quadcopter Waypoint Following | UAV / Control | Smooth waypoint reference tracking | `analysis/quadcopter_waypoint_following.py` | `examples/run_quadcopter_waypoint_following.py` | `tests/test_quadcopter_waypoint_following.py` | Implemented |
 | First-Order Control System | Control | First-order | `models/first_order_control.py` | `examples/run_first_order_control.py` | `tests/test_first_order_control.py` | Implemented |
 | Second-Order Control System | Control | Second-order | `models/second_order_control.py` | `examples/run_second_order_control.py` | `tests/test_second_order_control.py` | Implemented |
 | DC Motor | Electromechanical | Coupled first-order system | `models/dc_motor.py` | `examples/run_dc_motor.py` | `tests/test_dc_motor.py` | Implemented |
@@ -108,6 +109,10 @@ The quadcopter trajectory tracking helper adds hover-point and circular
 reference generators plus a simplified cascaded PD controller for the full
 6-DOF plant. It demonstrates controlled UAV motion without adding MPC,
 waypoint planning, rotor mixing, or individual motor dynamics.
+The quadcopter waypoint-following helper converts discrete 3D waypoints into
+linear or smoothstep reference trajectories, then reuses the full 6-DOF
+trajectory tracking controller to demonstrate educational waypoint following
+without obstacle avoidance, MPC, or rotor-level motor mixing.
 
 ## Analysis Tools
 
@@ -126,6 +131,8 @@ Quadcopter attitude PID control helpers are implemented in
 `analysis/quadcopter_attitude_control.py`.
 Quadcopter trajectory tracking helpers are implemented in
 `analysis/quadcopter_trajectory_tracking.py`.
+Quadcopter waypoint-following helpers are implemented in
+`analysis/quadcopter_waypoint_following.py`.
 CSV export helpers are implemented in `analysis/export_utils.py`.
 Frequency response and Bode plot helpers are implemented in
 `analysis/frequency_response.py`.
@@ -249,6 +256,7 @@ quadcopter attitude dynamics,
 quadcopter attitude PID control,
 full 6-DOF quadcopter rigid-body dynamics,
 quadcopter trajectory tracking,
+quadcopter waypoint following,
 Matplotlib animation examples for inverted pendulum trajectories,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC

@@ -19,6 +19,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - state-space modeling for linear systems
 - CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
 - saved plot screenshots for GitHub and README presentation
+- saved or interactive Matplotlib animations for demos and social posts
 - pytest testing
 - Git/GitHub workflow
 - differential equation modeling
@@ -138,6 +139,13 @@ reference trajectory, then tracks it with the existing full 6-DOF cascaded
 controller without adding obstacle avoidance, MPC, or rotor-level motor
 mixing.
 
+### Quadcopter Animation
+
+Improves visual presentation of the 6-DOF UAV examples by showing the drone
+body attitude, path trail, reference trajectory, and waypoint markers in a 3D
+Matplotlib animation. This makes the waypoint and circular tracking examples
+easier to present on GitHub, LinkedIn, and short demo videos.
+
 ### DC Motor
 
 Shows coupled electrical-mechanical dynamics.
@@ -201,7 +209,8 @@ portfolio presentation.
 ### Animation Examples
 
 Selected Matplotlib animations can show nonlinear motion and feedback
-stabilization, especially for the inverted pendulum and LQR examples.
+stabilization, especially for the inverted pendulum, LQR, and quadcopter
+trajectory examples.
 
 ## Freelance Relevance
 
@@ -249,6 +258,8 @@ The project supports offers such as:
 - I added quadcopter waypoint following to show how discrete 3D navigation
   goals can be converted into smooth reference motion for a controlled 6-DOF
   UAV simulation.
+- I added 3D quadcopter animation examples to visualize 6-DOF position,
+  attitude, reference paths, and waypoint tracking.
 - I added an embedded-style discrete PID controller for motor speed control.
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response

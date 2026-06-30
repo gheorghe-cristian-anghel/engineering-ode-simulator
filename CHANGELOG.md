@@ -45,6 +45,8 @@ All notable changes to this project will be documented here.
 - Quadcopter hover and circular trajectory tracking examples
 - Quadcopter waypoint following with smooth waypoint trajectory generation
 - Waypoint-following example using the full 6-DOF quadcopter model
+- 3D quadcopter animation utilities for 6-DOF simulations
+- Waypoint-following and circular trajectory quadcopter animation examples
 - PI motor speed control with PID-compatible API
 - Discrete PID controller with anti-windup and derivative-on-measurement
 - Discrete PID disturbance response example for DC motor speed control

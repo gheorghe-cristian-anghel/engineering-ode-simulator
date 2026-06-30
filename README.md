@@ -29,6 +29,7 @@ The project currently includes:
 - Full 6-DOF quadcopter rigid-body dynamics
 - Quadcopter trajectory tracking
 - Quadcopter waypoint following
+- 3D Matplotlib animation for 6-DOF quadcopter simulations
 - DC motor speed response
 - DC motor open-loop load disturbance response
 - DC motor PI speed control
@@ -40,6 +41,7 @@ The project currently includes:
 - Educational PID tuning examples
 - Interactive Streamlit GUI for selected simulations
 - Matplotlib animation examples for inverted pendulum motion
+- Matplotlib 3D animation examples for quadcopter motion
 - Frequency response and Bode plot examples
 - Transfer Function Utilities
   - Reusable continuous-time transfer function representation
@@ -530,6 +532,18 @@ This feature demonstrates waypoint following, not full autonomous path
 planning. It does not include obstacle avoidance, MPC, rotor mixing, or real
 drone autopilot complexity.
 
+## Quadcopter Animation
+
+The project includes reusable 3D Matplotlib animation support for full 6-DOF
+quadcopter trajectories. The animation uses the same state convention and ZYX
+body-to-inertial rotation matrix as `models/quadcopter_6dof.py`, then draws a
+simple drone body with crossing arms, rotor markers, path trail, optional
+reference path, and optional waypoint markers.
+
+Animations are displayed interactively by default. GIF and MP4 saving is
+optional and only happens when a save path is provided. Saved portfolio
+animations can be written under `docs/animations/`.
+
 ## DC Motor Speed Response
 
 The DC motor model demonstrates coupled electrical-mechanical dynamics for a
@@ -906,6 +920,25 @@ Run it with:
 
 ```powershell
 python examples/run_quadcopter_waypoint_following.py
+```
+
+## Run the Quadcopter Animation Examples
+
+The quadcopter animation examples reuse the existing waypoint-following and
+circular trajectory simulations, then visualize the 6-DOF position and
+attitude in 3D.
+
+Run them with:
+
+```powershell
+python examples/run_quadcopter_waypoint_animation.py
+python examples/run_quadcopter_circle_animation.py
+```
+
+Optionally save an animation as GIF or MP4:
+
+```powershell
+python examples/run_quadcopter_waypoint_animation.py --save docs/animations/quadcopter_waypoint_following.gif --no-show
 ```
 
 ## Run the DC Motor Example

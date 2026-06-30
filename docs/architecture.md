@@ -120,6 +120,9 @@ Reusable visualization helpers for plotting and animation code that should not
 live in the physics model modules. `visualization/inverted_pendulum_animation.py`
 animates cart-pole trajectories using Matplotlib while preserving the state and
 angle convention from `models/inverted_pendulum.py`.
+`visualization/quadcopter_animation.py` animates full 6-DOF quadcopter
+trajectories in 3D using the state convention and body-to-inertial rotation
+matrix from `models/quadcopter_6dof.py`.
 
 ### examples/
 
@@ -159,6 +162,10 @@ cascaded controller.
 The quadcopter waypoint-following example demonstrates discrete UAV navigation
 goals by tracking a smooth reference path through several 3D waypoints with
 the same simplified cascaded controller.
+
+The quadcopter animation examples reuse the waypoint-following and circular
+trajectory results, then visualize the 6-DOF vehicle position, attitude,
+reference path, trail, and waypoint markers without changing controller logic.
 
 ### streamlit_app.py
 

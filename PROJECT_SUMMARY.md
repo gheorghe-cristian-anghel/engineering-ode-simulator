@@ -37,6 +37,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 - `tests/`: pytest coverage for model behavior and helper formulas
 - `docs/`: longer documentation, equations, architecture notes, and future ideas
 - `docs/screenshots/`: selected generated plots for documentation and portfolio presentation
+- `docs/animations/`: selected generated animations for portfolio presentation
 
 ## Coding Conventions
 
@@ -149,6 +150,8 @@ that estimates angle and hidden angular velocity from noisy angle
 measurements.
 Reusable cart-pole animation helpers are implemented in
 `visualization/inverted_pendulum_animation.py`.
+Reusable 3D quadcopter animation helpers are implemented in
+`visualization/quadcopter_animation.py`.
 
 The Streamlit MVP in `streamlit_app.py` provides an interactive browser UI for
 RC circuit charging, RLC circuit step response, and discrete PID motor speed
@@ -258,6 +261,7 @@ full 6-DOF quadcopter rigid-body dynamics,
 quadcopter trajectory tracking,
 quadcopter waypoint following,
 Matplotlib animation examples for inverted pendulum trajectories,
+3D Matplotlib animation examples for full 6-DOF quadcopter trajectories,
 reusable step response metrics, frequency response analysis, transfer function
 utilities, state-space simulation utilities, PI gain sweep analysis, RLC
 parameter sweep examples, DC motor disturbance rejection comparison examples,

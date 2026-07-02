@@ -10,6 +10,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from analysis.finite_element_1d import simulate_axial_bar_fem
+from visualization.plot_style import apply_plot_style, format_axes, save_figure
 
 
 def _analytical_displacement(nodes, force, E, A):
@@ -19,6 +20,8 @@ def _analytical_displacement(nodes, force, E, A):
 
 def _draw_plots(result):
     """Draw displacement, stress, and exaggerated deformed-shape plots."""
+    apply_plot_style()
+
     nodes = result["nodes"]
     elements = result["elements"]
     displacements = result["displacements"]
@@ -39,11 +42,12 @@ def _draw_plots(result):
 
     axes[0].plot(nodes, displacements, "o-", label="FEM displacement")
     axes[0].plot(nodes, analytical, "--", label="Analytical displacement")
-    axes[0].set_title("1D Axial Bar FEM: Displacement")
-    axes[0].set_xlabel("Position x (m)")
-    axes[0].set_ylabel("Displacement u (m)")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_axes(
+        axes[0],
+        title="1D Axial Bar FEM: Displacement",
+        xlabel="Position x (m)",
+        ylabel="Displacement u (m)",
+    )
 
     axes[1].step(
         element_centers,
@@ -57,11 +61,12 @@ def _draw_plots(result):
         linestyle="--",
         label="Analytical stress",
     )
-    axes[1].set_title("Element Stress Distribution")
-    axes[1].set_xlabel("Element center x (m)")
-    axes[1].set_ylabel("Stress (Pa)")
-    axes[1].grid(True)
-    axes[1].legend()
+    format_axes(
+        axes[1],
+        title="Element Stress Distribution",
+        xlabel="Element center x (m)",
+        ylabel="Stress (Pa)",
+    )
 
     max_displacement = np.max(np.abs(displacements))
     scale = 0.1 * parameters["length"] / max_displacement
@@ -74,21 +79,24 @@ def _draw_plots(result):
         "o-",
         label=f"Deformed shape ({scale:.2e}x)",
     )
-    axes[2].set_title("Exaggerated Deformed Shape")
-    axes[2].set_xlabel("Position x (m)")
+    axes[2].set_ylim(-0.04, 0.08)
     axes[2].set_yticks([])
-    axes[2].grid(True, axis="x")
-    axes[2].legend()
+    format_axes(
+        axes[2],
+        title="Exaggerated Deformed Shape",
+        xlabel="Position x (m)",
+    )
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(result):
     """Save and display the FEM example plots."""
     output_path = PROJECT_ROOT / "examples" / "fem_1d_bar.png"
 
-    _draw_plots(result)
-    plt.savefig(output_path, dpi=150)
+    figure = _draw_plots(result)
+    save_figure(figure, output_path)
     print(f"Plot saved to: {output_path}")
     plt.show()
 

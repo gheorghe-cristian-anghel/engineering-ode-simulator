@@ -14,6 +14,13 @@ from models.wave_equation_2d import (
     simulate_wave_equation_2d,
     zero_initial_velocity_2d,
 )
+from visualization.plot_style import (
+    add_colorbar,
+    apply_plot_style,
+    format_axes,
+    save_figure,
+    set_equal_2d_axes,
+)
 
 
 def _snapshot_indices(t):
@@ -24,6 +31,8 @@ def _snapshot_indices(t):
 
 def _draw_plots(result):
     """Draw displacement heatmaps and centerline profiles."""
+    apply_plot_style()
+
     x = result["x"]
     y = result["y"]
     t = result["t"]
@@ -55,10 +64,15 @@ def _draw_plots(result):
             vmin=-color_limit,
             vmax=color_limit,
         )
-        axis.set_title(f"Displacement at t = {t[index]:.3f} s")
-        axis.set_xlabel("x (m)")
-        axis.set_ylabel("y (m)")
-        figure.colorbar(heatmap, ax=axis, label="Displacement")
+        format_axes(
+            axis,
+            title=f"Displacement at t = {t[index]:.3f} s",
+            xlabel="x (m)",
+            ylabel="y (m)",
+            grid=False,
+        )
+        set_equal_2d_axes(axis)
+        add_colorbar(figure, heatmap, axis, label="Displacement")
 
     center_y_index = len(y) // 2
     for index in _snapshot_indices(t):
@@ -68,21 +82,23 @@ def _draw_plots(result):
             label=f"t = {t[index]:.3f} s",
         )
 
-    centerline_axis.set_title("Centerline Displacement Profile")
-    centerline_axis.set_xlabel("x (m)")
-    centerline_axis.set_ylabel("Displacement")
-    centerline_axis.grid(True)
-    centerline_axis.legend()
+    format_axes(
+        centerline_axis,
+        title="Centerline Displacement Profile",
+        xlabel="x (m)",
+        ylabel="Displacement",
+    )
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(result):
     """Save and display the 2D wave equation plots."""
     output_path = PROJECT_ROOT / "examples" / "wave_equation_2d.png"
 
-    _draw_plots(result)
-    plt.savefig(output_path, dpi=150)
+    figure = _draw_plots(result)
+    save_figure(figure, output_path)
     print(f"Plot saved to: {output_path}")
     plt.show()
 

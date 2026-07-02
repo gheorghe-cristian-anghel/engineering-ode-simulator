@@ -17,6 +17,7 @@ from analysis.finite_difference import (
     rms_error,
     uniform_grid_1d,
 )
+from visualization.plot_style import apply_plot_style, format_axes, save_figure
 
 
 def _function(x):
@@ -31,6 +32,8 @@ def _exact_first_derivative(x):
 
 def _draw_plot(dx_values, forward_errors, backward_errors, central_errors):
     """Draw log-log convergence curves for first derivative methods."""
+    apply_plot_style()
+
     figure, ax = plt.subplots(figsize=(7, 5))
 
     ax.loglog(dx_values, forward_errors, "o-", label="Forward")
@@ -48,22 +51,25 @@ def _draw_plot(dx_values, forward_errors, backward_errors, central_errors):
     ax.loglog(reference_dx, reference_first_order, ":", label="O(dx)")
     ax.loglog(reference_dx, reference_second_order, "--", label="O(dx^2)")
 
-    ax.set_title("Finite Difference Convergence")
-    ax.set_xlabel("Grid spacing dx")
-    ax.set_ylabel("RMS error")
-    ax.grid(True, which="both")
-    ax.legend()
+    format_axes(
+        ax,
+        title="Finite Difference Convergence",
+        xlabel="Grid spacing dx",
+        ylabel="RMS error",
+    )
+    ax.grid(True, which="both", linestyle="--", linewidth=0.7, alpha=0.8)
     ax.invert_xaxis()
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(dx_values, forward_errors, backward_errors, central_errors):
     """Save and display the convergence plot."""
     output_path = PROJECT_ROOT / "examples" / "finite_difference_convergence.png"
 
-    _draw_plot(dx_values, forward_errors, backward_errors, central_errors)
-    plt.savefig(output_path, dpi=150)
+    figure = _draw_plot(dx_values, forward_errors, backward_errors, central_errors)
+    save_figure(figure, output_path)
     print(f"Plot saved to: {output_path}")
     plt.show()
 

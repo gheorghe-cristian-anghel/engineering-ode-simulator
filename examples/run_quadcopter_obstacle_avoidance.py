@@ -15,6 +15,11 @@ from analysis.quadcopter_obstacle_avoidance import (  # noqa: E402
     simulate_quadcopter_obstacle_avoidance,
 )
 from analysis.quadcopter_waypoint_following import waypoint_trajectory  # noqa: E402
+from visualization.plot_style import (  # noqa: E402
+    apply_plot_style,
+    format_axes,
+    save_figure,
+)
 
 
 def _plot_obstacle_sphere(axis, obstacle):
@@ -37,6 +42,8 @@ def _plot_obstacle_sphere(axis, obstacle):
 
 def _draw_plots(result, waypoints):
     """Draw trajectory, tracking, clearance, avoidance, and command plots."""
+    apply_plot_style()
+
     time = result["time"]
     states = result["states"]
     controls = result["controls"]
@@ -77,11 +84,13 @@ def _draw_plots(result, waypoints):
     )
     for obstacle in obstacles:
         _plot_obstacle_sphere(axes_trajectory, obstacle)
-    axes_trajectory.set_xlabel("x (m)")
-    axes_trajectory.set_ylabel("y (m)")
     axes_trajectory.set_zlabel("z (m)")
-    axes_trajectory.set_title("Quadcopter Static Obstacle Avoidance")
-    axes_trajectory.legend()
+    format_axes(
+        axes_trajectory,
+        title="Quadcopter Static Obstacle Avoidance",
+        xlabel="x (m)",
+        ylabel="y (m)",
+    )
 
     for axis, label in enumerate(("x", "y", "z")):
         axes_position.plot(time, positions[:, axis], label=f"{label} actual")
@@ -91,9 +100,7 @@ def _draw_plots(result, waypoints):
             linestyle="--",
             label=f"{label} reference",
         )
-    axes_position.set_ylabel("Position (m)")
-    axes_position.set_title("Position Tracking")
-    axes_position.grid(True)
+    format_axes(axes_position, title="Position Tracking", ylabel="Position (m)")
     axes_position.legend(ncol=3)
 
     axes_clearance.plot(
@@ -103,10 +110,11 @@ def _draw_plots(result, waypoints):
         label="Nearest obstacle clearance",
     )
     axes_clearance.axhline(0.0, color="black", linestyle=":", label="Obstacle surface")
-    axes_clearance.set_ylabel("Clearance (m)")
-    axes_clearance.set_title("Obstacle Clearance")
-    axes_clearance.grid(True)
-    axes_clearance.legend()
+    format_axes(
+        axes_clearance,
+        title="Obstacle Clearance",
+        ylabel="Clearance (m)",
+    )
 
     axes_avoidance.plot(
         time,
@@ -114,22 +122,26 @@ def _draw_plots(result, waypoints):
         color="tab:purple",
         label="Avoidance acceleration magnitude",
     )
-    axes_avoidance.set_ylabel("Acceleration (m/s^2)")
-    axes_avoidance.set_title("Repulsive Avoidance Command")
-    axes_avoidance.grid(True)
-    axes_avoidance.legend()
+    format_axes(
+        axes_avoidance,
+        title="Repulsive Avoidance Command",
+        ylabel="Acceleration (m/s^2)",
+    )
 
     axes_control.plot(time, controls[:, 0], label="Thrust T")
     axes_control.plot(time, controls[:, 1], label="tau_phi")
     axes_control.plot(time, controls[:, 2], label="tau_theta")
     axes_control.plot(time, controls[:, 3], label="tau_psi")
-    axes_control.set_xlabel("Time (s)")
-    axes_control.set_ylabel("Control")
-    axes_control.set_title("Thrust and Torque Commands")
-    axes_control.grid(True)
+    format_axes(
+        axes_control,
+        title="Thrust and Torque Commands",
+        xlabel="Time (s)",
+        ylabel="Control",
+    )
     axes_control.legend(ncol=4)
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(result, waypoints):
@@ -137,17 +149,15 @@ def _plot_response(result, waypoints):
     output_path = PROJECT_ROOT / "examples" / "quadcopter_obstacle_avoidance.png"
 
     try:
-        _draw_plots(result, waypoints)
-        plt.savefig(output_path, dpi=150)
-        if plt.get_backend().lower() == "agg":
-            print(f"Plot saved to: {output_path}")
-        else:
-            plt.show()
+        figure = _draw_plots(result, waypoints)
+        save_figure(figure, output_path)
+        print(f"Plot saved to: {output_path}")
+        plt.show()
     except TclError:
         plt.switch_backend("Agg")
         plt.close("all")
-        _draw_plots(result, waypoints)
-        plt.savefig(output_path, dpi=150)
+        figure = _draw_plots(result, waypoints)
+        save_figure(figure, output_path)
         print("Interactive Matplotlib window is unavailable in this environment.")
         print(f"Plot saved to: {output_path}")
 

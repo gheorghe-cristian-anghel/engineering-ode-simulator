@@ -14,6 +14,12 @@ from models.wave_equation_1d import (
     simulate_wave_equation_1d,
     zero_initial_velocity,
 )
+from visualization.plot_style import (
+    add_colorbar,
+    apply_plot_style,
+    format_axes,
+    save_figure,
+)
 
 
 def _profile_indices(t):
@@ -24,6 +30,8 @@ def _profile_indices(t):
 
 def _draw_plots(result):
     """Draw displacement profiles and a heatmap."""
+    apply_plot_style()
+
     x = result["x"]
     t = result["t"]
     displacement = result["displacement"]
@@ -37,11 +45,12 @@ def _draw_plots(result):
             label=f"t = {t[index]:.2f} s",
         )
 
-    axes[0].set_title("1D Wave Equation: Displacement Profiles")
-    axes[0].set_xlabel("Position x (m)")
-    axes[0].set_ylabel("Displacement")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_axes(
+        axes[0],
+        title="1D Wave Equation: Displacement Profiles",
+        xlabel="Position x (m)",
+        ylabel="Displacement",
+    )
 
     peak = np.max(np.abs(displacement))
     color_limit = peak if peak > 0 else 1.0
@@ -54,20 +63,25 @@ def _draw_plots(result):
         vmin=-color_limit,
         vmax=color_limit,
     )
-    axes[1].set_title("Displacement Heatmap")
-    axes[1].set_xlabel("Position x (m)")
-    axes[1].set_ylabel("Time (s)")
-    figure.colorbar(heatmap, ax=axes[1], label="Displacement")
+    format_axes(
+        axes[1],
+        title="Displacement Heatmap",
+        xlabel="Position x (m)",
+        ylabel="Time (s)",
+        grid=False,
+    )
+    add_colorbar(figure, heatmap, axes[1], label="Displacement")
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(result):
     """Save and display the wave equation plots."""
     output_path = PROJECT_ROOT / "examples" / "wave_equation_1d.png"
 
-    _draw_plots(result)
-    plt.savefig(output_path, dpi=150)
+    figure = _draw_plots(result)
+    save_figure(figure, output_path)
     print(f"Plot saved to: {output_path}")
     plt.show()
 

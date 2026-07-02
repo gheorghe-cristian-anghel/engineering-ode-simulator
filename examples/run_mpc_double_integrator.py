@@ -16,10 +16,17 @@ from analysis.model_predictive_control import (
     simulate_mpc_tracking,
     summarize_mpc_response,
 )
+from visualization.plot_style import (  # noqa: E402
+    apply_plot_style,
+    format_axes,
+    save_figure,
+)
 
 
 def _draw_plots(result, dt, u_min, u_max):
     """Draw position, velocity, control, and tracking-error plots."""
+    apply_plot_style()
+
     states = result["states"]
     controls = result["controls"]
     references = result["references"]
@@ -27,21 +34,19 @@ def _draw_plots(result, dt, u_min, u_max):
     control_time = time[:-1]
     position_error = references[:, 0] - states[:, 0]
 
-    figure, axes = plt.subplots(4, 1, sharex=True)
+    figure, axes = plt.subplots(4, 1, figsize=(9, 8), sharex=True)
 
     axes[0].plot(time, states[:, 0], label="Position")
     axes[0].plot(time, references[:, 0], ":", color="gray", label="Reference")
-    axes[0].set_ylabel("Position (m)")
-    axes[0].set_title("MPC Double Integrator Position Tracking")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_axes(
+        axes[0],
+        title="MPC Double Integrator Position Tracking",
+        ylabel="Position (m)",
+    )
 
     axes[1].plot(time, states[:, 1], label="Velocity", color="tab:orange")
     axes[1].plot(time, references[:, 1], ":", color="gray", label="Reference")
-    axes[1].set_ylabel("Velocity (m/s)")
-    axes[1].set_title("Velocity")
-    axes[1].grid(True)
-    axes[1].legend()
+    format_axes(axes[1], title="Velocity", ylabel="Velocity (m/s)")
 
     axes[2].step(
         control_time,
@@ -52,20 +57,23 @@ def _draw_plots(result, dt, u_min, u_max):
     )
     axes[2].axhline(u_min[0], color="gray", linestyle=":", label="Input limits")
     axes[2].axhline(u_max[0], color="gray", linestyle=":")
-    axes[2].set_ylabel("Acceleration (m/s^2)")
-    axes[2].set_title("Constrained MPC Input")
-    axes[2].grid(True)
-    axes[2].legend()
+    format_axes(
+        axes[2],
+        title="Constrained MPC Input",
+        ylabel="Acceleration (m/s^2)",
+    )
 
     axes[3].plot(time, position_error, label="Position error", color="tab:red")
     axes[3].axhline(0.0, color="gray", linestyle=":")
-    axes[3].set_xlabel("Time (s)")
-    axes[3].set_ylabel("Error (m)")
-    axes[3].set_title("Tracking Error")
-    axes[3].grid(True)
-    axes[3].legend()
+    format_axes(
+        axes[3],
+        title="Tracking Error",
+        xlabel="Time (s)",
+        ylabel="Error (m)",
+    )
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(result, dt, u_min, u_max):
@@ -73,17 +81,15 @@ def _plot_response(result, dt, u_min, u_max):
     output_path = PROJECT_ROOT / "examples" / "mpc_double_integrator.png"
 
     try:
-        _draw_plots(result, dt, u_min, u_max)
-        plt.savefig(output_path, dpi=150)
-        if plt.get_backend().lower() == "agg":
-            print(f"Plot saved to: {output_path}")
-        else:
-            plt.show()
+        figure = _draw_plots(result, dt, u_min, u_max)
+        save_figure(figure, output_path)
+        print(f"Plot saved to: {output_path}")
+        plt.show()
     except TclError:
         plt.switch_backend("Agg")
         plt.close("all")
-        _draw_plots(result, dt, u_min, u_max)
-        plt.savefig(output_path, dpi=150)
+        figure = _draw_plots(result, dt, u_min, u_max)
+        save_figure(figure, output_path)
         print("Interactive Matplotlib window is unavailable in this environment.")
         print(f"Plot saved to: {output_path}")
 

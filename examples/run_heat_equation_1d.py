@@ -13,6 +13,12 @@ from models.heat_equation_1d import (
     gaussian_initial_condition,
     simulate_heat_equation_1d,
 )
+from visualization.plot_style import (
+    add_colorbar,
+    apply_plot_style,
+    format_axes,
+    save_figure,
+)
 
 
 def _profile_indices(t):
@@ -23,6 +29,8 @@ def _profile_indices(t):
 
 def _draw_plots(result):
     """Draw temperature profiles and a heatmap."""
+    apply_plot_style()
+
     x = result["x"]
     t = result["t"]
     temperature = result["temperature"]
@@ -36,11 +44,12 @@ def _draw_plots(result):
             label=f"t = {t[index]:.2f} s",
         )
 
-    axes[0].set_title("1D Heat Equation: Temperature Profiles")
-    axes[0].set_xlabel("Position x (m)")
-    axes[0].set_ylabel("Temperature")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_axes(
+        axes[0],
+        title="1D Heat Equation: Temperature Profiles",
+        xlabel="Position x (m)",
+        ylabel="Temperature",
+    )
 
     heatmap = axes[1].imshow(
         temperature,
@@ -49,20 +58,25 @@ def _draw_plots(result):
         extent=[x[0], x[-1], t[0], t[-1]],
         cmap="inferno",
     )
-    axes[1].set_title("Temperature Heatmap")
-    axes[1].set_xlabel("Position x (m)")
-    axes[1].set_ylabel("Time (s)")
-    figure.colorbar(heatmap, ax=axes[1], label="Temperature")
+    format_axes(
+        axes[1],
+        title="Temperature Heatmap",
+        xlabel="Position x (m)",
+        ylabel="Time (s)",
+        grid=False,
+    )
+    add_colorbar(figure, heatmap, axes[1], label="Temperature")
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(result):
     """Save and display the heat equation plots."""
     output_path = PROJECT_ROOT / "examples" / "heat_equation_1d.png"
 
-    _draw_plots(result)
-    plt.savefig(output_path, dpi=150)
+    figure = _draw_plots(result)
+    save_figure(figure, output_path)
     print(f"Plot saved to: {output_path}")
     plt.show()
 

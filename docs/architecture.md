@@ -180,7 +180,10 @@ angle measurements.
 ### visualization/
 
 Reusable visualization helpers for plotting and animation code that should not
-live in the physics model modules. `visualization/inverted_pendulum_animation.py`
+live in the physics model modules. `visualization/plot_style.py` provides
+shared Matplotlib styling, axes formatting, colorbar, equal-axis, and
+high-DPI figure-saving helpers for examples that need consistent presentation.
+`visualization/inverted_pendulum_animation.py`
 animates cart-pole trajectories using Matplotlib while preserving the state and
 angle convention from `models/inverted_pendulum.py`.
 `visualization/quadcopter_animation.py` animates full 6-DOF quadcopter

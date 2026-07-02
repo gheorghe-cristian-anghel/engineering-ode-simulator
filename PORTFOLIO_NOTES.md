@@ -26,6 +26,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Git/GitHub workflow
 - differential equation modeling
 - PDE-based scientific computing with finite differences
+- finite difference derivative accuracy and convergence analysis
 - control systems
 - optimal state-space feedback with LQR
 - Kalman filtering and noisy-measurement state estimation
@@ -74,6 +75,13 @@ Complements the heat equation by showing propagation instead of diffusion. The
 example uses explicit second-order finite differences to show a Gaussian
 displacement splitting into traveling waves that reflect from fixed
 boundaries.
+
+### Finite Difference Methods
+
+Connects the heat and wave PDE solvers to general numerical differentiation.
+The examples compare forward, backward, and central derivative formulas
+against analytical derivatives and show first- and second-order convergence as
+the grid spacing decreases.
 
 ### Second-Order Control System
 
@@ -328,6 +336,8 @@ The project supports offers such as:
   differences, stability checks, boundary conditions, and heatmap visualization.
 - I added a 1D wave equation solver to demonstrate propagation, reflection,
   CFL stability, and second-order PDE time integration.
+- I added reusable finite difference derivative utilities to demonstrate
+  numerical differentiation, error metrics, and convergence-order analysis.
 
 ## Future Portfolio Upgrades
 

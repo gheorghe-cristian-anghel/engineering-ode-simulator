@@ -11,6 +11,7 @@ The project currently includes:
 - Newton's Law of Cooling
 - 1D heat equation finite-difference solver
 - 1D wave equation finite-difference solver
+- Finite difference derivative utilities
 - Mass-spring-damper free vibration
 - First-order control system step response
 - Second-order control system step response
@@ -203,6 +204,23 @@ lambda = c * dt / dx
 The explicit method requires the CFL stability condition `lambda <= 1`. The
 example shows a Gaussian displacement pulse splitting into traveling waves
 that reflect from fixed boundaries.
+
+## Finite Difference Methods
+
+The project includes reusable finite difference utilities for numerical
+differentiation on uniform 1D grids. These helpers demonstrate forward,
+backward, and central first-derivative approximations plus a central
+second-derivative approximation:
+
+```text
+forward:  f'(x_i)  ~= (f_{i+1} - f_i) / dx
+backward: f'(x_i)  ~= (f_i - f_{i-1}) / dx
+central:  f'(x_i)  ~= (f_{i+1} - f_{i-1}) / (2*dx)
+second:   f''(x_i) ~= (f_{i+1} - 2*f_i + f_{i-1}) / dx^2
+```
+
+The examples compare numerical derivatives with analytical derivatives and
+show how error decreases as the grid spacing gets smaller.
 
 ## Mass-Spring-Damper Free Vibration
 
@@ -819,6 +837,18 @@ python examples/run_wave_equation_1d.py
 
 This prints the CFL number and plots displacement profiles plus a position-time
 heatmap.
+
+## Run the Finite Difference Examples
+
+The finite difference examples compare numerical derivative formulas against
+analytical derivatives and show convergence as grid spacing decreases.
+
+Run them with:
+
+```powershell
+python examples/run_finite_difference_derivatives.py
+python examples/run_finite_difference_convergence.py
+```
 
 ## Run the Mass-Spring-Damper Example
 

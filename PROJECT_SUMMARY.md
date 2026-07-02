@@ -27,6 +27,8 @@ The project goals are to:
 
 ODE simulations use `scipy.integrate.solve_ivp` for numerical integration.
 The 1D heat and wave equation examples use explicit finite-difference methods.
+Reusable finite difference derivative utilities support numerical-methods
+examples and convergence studies.
 
 ## Project Structure
 
@@ -139,6 +141,10 @@ initial displacement and velocity helpers, and wave propagation examples.
 ## Analysis Tools
 
 Reusable step response metrics are implemented in `analysis/step_response.py`.
+Finite difference derivative utilities are implemented in
+`analysis/finite_difference.py`, including uniform 1D grids, forward,
+backward, and central first derivatives, central second derivatives, dense
+differentiation matrices, error metrics, and convergence-order estimation.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
 DC motor load disturbance metrics are implemented in
@@ -260,6 +266,9 @@ The transfer function utility provides a reusable model representation plus
 step response, impulse response, and common low-pass transfer function helpers.
 The state-space utility simulates linear systems in the form
 `x_dot = A*x + B*u` and `y = C*x + D*u`.
+The finite difference examples compare numerical derivatives against
+analytical derivatives and show the expected first- and second-order
+convergence behavior as grid spacing decreases.
 
 Selected examples also save plot screenshots in `docs/screenshots/` as
 documentation and portfolio presentation assets.
@@ -299,6 +308,7 @@ quadcopter waypoint following,
 quadcopter static obstacle avoidance,
 1D heat equation finite-difference simulation,
 1D wave equation finite-difference simulation,
+finite difference derivative utilities and convergence examples,
 Matplotlib animation examples for inverted pendulum trajectories,
 3D Matplotlib animation examples for full 6-DOF quadcopter trajectories,
 reusable step response metrics, frequency response analysis, transfer function

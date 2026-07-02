@@ -70,6 +70,7 @@ Reusable analysis and output tools independent of any one model.
 Current example:
 
 - step response metrics
+- finite difference derivative utilities
 - parameter sweep utilities
 - motor load disturbance metrics
 - RLC sweep helpers for educational component studies
@@ -89,6 +90,11 @@ Current example:
 `analysis/transfer_function.py` provides reusable continuous-time transfer
 function infrastructure, including validated coefficient storage, SciPy signal
 conversion, common low-pass helpers, and step/impulse response simulation.
+
+`analysis/finite_difference.py` provides reusable numerical-methods
+infrastructure for finite difference derivatives on uniform 1D grids. It
+includes first- and second-derivative approximations, dense differentiation
+matrices, error metrics, and convergence-order estimation.
 
 `analysis/pid_tuning.py` provides reusable PID tuning infrastructure for
 educational examples built on the discrete PID motor simulation.
@@ -219,6 +225,9 @@ selected temperature profiles and a position-time heatmap.
 The 1D wave equation example demonstrates wave propagation from a Gaussian
 displacement pulse, prints CFL stability metrics, and plots selected
 displacement profiles plus a position-time heatmap.
+
+The finite difference examples compare numerical derivatives against exact
+analytical derivatives and show convergence order as grid spacing decreases.
 
 ### streamlit_app.py
 

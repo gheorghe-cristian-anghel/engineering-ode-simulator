@@ -76,6 +76,8 @@ All notable changes to this project will be documented here.
 - Heat diffusion example with temperature profile and heatmap plots
 - 1D wave equation finite-difference solver
 - Wave propagation example with displacement profiles and heatmap plots
+- Reusable finite difference derivative utilities
+- Finite difference derivative comparison and convergence examples
 - Generic CSV export utility for simulation results
 - CSV export from the discrete PID motor example
 - Output directory support for generated files

@@ -46,6 +46,7 @@
 - [x] Obstacle avoidance
 - [x] Heat equation
 - [x] Wave equation
+- [x] Finite difference methods
 
 ## In Progress
 
@@ -61,7 +62,6 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Finite difference methods
 - [ ] Finite element method basics
 - [ ] 2D heat equation
 - [ ] 2D wave equation

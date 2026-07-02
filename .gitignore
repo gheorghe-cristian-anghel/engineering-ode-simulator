@@ -4,6 +4,11 @@ __pycache__/
 .ipynb_checkpoints/
 .ruff_cache/
 .pytest_cache/
+.pytest_tmp/
+.pytest_tmp_*/
+build/
+dist/
+*.egg-info/
 examples/*_response.png
 outputs/*.csv
 !outputs/.gitkeep
@@ -12,5 +17,3 @@ docs/animations/*.mp4
 docs/animations/*.webm
 !docs/animations/.gitkeep
 .DS_Store
-.pytest_tmp/
-.pytest_tmp_*/

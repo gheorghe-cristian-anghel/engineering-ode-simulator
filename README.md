@@ -115,6 +115,12 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
+For an editable development install:
+
+```powershell
+python -m pip install -e ".[dev]"
+```
+
 Run the tests:
 
 ```powershell
@@ -188,6 +194,32 @@ Run the full test suite:
 
 ```powershell
 python -m pytest
+```
+
+For verbose local test output:
+
+```powershell
+python -m pytest -v
+```
+
+On Windows when running from Git Bash, use a fresh temporary pytest directory and
+disable pytest's cache provider if file-locking or cleanup permissions get in
+the way:
+
+```bash
+python -m pytest -v --basetemp=".pytest_tmp_$(date +%s)" -p no:cacheprovider
+```
+
+Run the Streamlit app:
+
+```powershell
+streamlit run streamlit_app.py
+```
+
+Install the project in editable mode with development tools:
+
+```powershell
+python -m pip install -e ".[dev]"
 ```
 
 The tests cover implemented models and analysis helpers, including physical behavior, known formulas, stability checks, control metrics, state-estimation utilities, PDE solvers, FEM basics, and selected visualization helpers.

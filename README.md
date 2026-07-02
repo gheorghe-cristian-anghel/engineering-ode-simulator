@@ -206,6 +206,19 @@ streamlit_app.py Interactive browser UI for selected simulations
 
 The codebase follows a simple pattern: keep equations and simulation logic in model or analysis modules, keep plotting and demonstration workflows in examples, and verify behavior with focused tests.
 
+## Theory Documentation
+
+Concise background notes are available for the main engineering and numerical
+methods areas:
+
+- [Theory overview](docs/theory_overview.md)
+- [Control systems](docs/control_systems.md)
+- [State estimation](docs/state_estimation.md)
+- [PDE methods](docs/pde_methods.md)
+- [FEM basics](docs/fem_basics.md)
+- [UAV models](docs/uav_models.md)
+- [Numerical methods](docs/numerical_methods.md)
+
 ## Skills Demonstrated
 
 - Scientific Python with NumPy, SciPy, Matplotlib, Streamlit, and pytest.
@@ -241,4 +254,3 @@ See [ROADMAP.md](ROADMAP.md) for the current tracked roadmap.
 - Obstacle avoidance is local and reactive around static spherical obstacles.
 - PDE solvers use explicit finite-difference methods with stability constraints, not high-performance production solvers.
 - FEM coverage is introductory and currently limited to a 1D axial bar example.
-

@@ -68,6 +68,13 @@ scientific computing. The example uses an explicit finite-difference method to
 show how a hot Gaussian temperature pulse diffuses along a rod while the peak
 temperature decreases.
 
+### 1D Wave Equation
+
+Complements the heat equation by showing propagation instead of diffusion. The
+example uses explicit second-order finite differences to show a Gaussian
+displacement splitting into traveling waves that reflect from fixed
+boundaries.
+
 ### Second-Order Control System
 
 Shows damping ratio, natural frequency, overshoot, peak time, and settling time.
@@ -319,6 +326,8 @@ The project supports offers such as:
 - I documented the project for future extension.
 - I added a 1D heat equation solver to demonstrate PDE simulation with finite
   differences, stability checks, boundary conditions, and heatmap visualization.
+- I added a 1D wave equation solver to demonstrate propagation, reflection,
+  CFL stability, and second-order PDE time integration.
 
 ## Future Portfolio Upgrades
 

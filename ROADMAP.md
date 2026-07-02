@@ -45,6 +45,7 @@
 - [x] MPC examples
 - [x] Obstacle avoidance
 - [x] Heat equation
+- [x] Wave equation
 
 ## In Progress
 
@@ -60,10 +61,10 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Wave equation
 - [ ] Finite difference methods
 - [ ] Finite element method basics
 - [ ] 2D heat equation
+- [ ] 2D wave equation
 
 ## Portfolio Goals
 

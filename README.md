@@ -10,6 +10,7 @@ The project currently includes:
 - RC circuit charging
 - Newton's Law of Cooling
 - 1D heat equation finite-difference solver
+- 1D wave equation finite-difference solver
 - Mass-spring-damper free vibration
 - First-order control system step response
 - Second-order control system step response
@@ -181,6 +182,27 @@ r = alpha * dt / dx^2
 The explicit method requires the stability condition `r <= 0.5`. The example
 shows a hot Gaussian pulse spreading along a rod while its peak temperature
 decreases.
+
+## 1D Wave Equation
+
+The 1D wave equation models how displacement disturbances propagate along a
+string or rod:
+
+```text
+d2u/dt2 = c^2 * d2u/dx2
+```
+
+This project solves it with an explicit central finite-difference method:
+
+```text
+u_i^{n+1} = 2*u_i^n - u_i^{n-1}
+            + lambda^2 * (u_{i+1}^n - 2*u_i^n + u_{i-1}^n)
+lambda = c * dt / dx
+```
+
+The explicit method requires the CFL stability condition `lambda <= 1`. The
+example shows a Gaussian displacement pulse splitting into traveling waves
+that reflect from fixed boundaries.
 
 ## Mass-Spring-Damper Free Vibration
 
@@ -783,6 +805,20 @@ python examples/run_heat_equation_1d.py
 
 This prints the finite-difference stability number and plots temperature
 profiles plus a position-time heatmap.
+
+## Run the 1D Wave Equation Example
+
+The example simulates wave propagation from a Gaussian displacement pulse with
+fixed zero-displacement ends.
+
+Run it with:
+
+```powershell
+python examples/run_wave_equation_1d.py
+```
+
+This prints the CFL number and plots displacement profiles plus a position-time
+heatmap.
 
 ## Run the Mass-Spring-Damper Example
 

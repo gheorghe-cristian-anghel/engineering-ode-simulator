@@ -10,6 +10,7 @@ The project currently includes:
 - RC circuit charging
 - Newton's Law of Cooling
 - 1D heat equation finite-difference solver
+- 2D heat equation finite-difference solver
 - 1D wave equation finite-difference solver
 - Finite difference derivative utilities
 - Finite Element Method basics with a 1D axial bar solver
@@ -184,6 +185,29 @@ r = alpha * dt / dx^2
 The explicit method requires the stability condition `r <= 0.5`. The example
 shows a hot Gaussian pulse spreading along a rod while its peak temperature
 decreases.
+
+## 2D Heat Equation
+
+The 2D heat equation models how temperature diffuses across a rectangular
+plate:
+
+```text
+du/dt = alpha * (d2u/dx2 + d2u/dy2)
+```
+
+This project solves it with an explicit finite-difference method:
+
+```text
+u_i,j^{n+1} = u_i,j^n
+              + rx * (u_{i,j+1}^n - 2*u_i,j^n + u_{i,j-1}^n)
+              + ry * (u_{i+1,j}^n - 2*u_i,j^n + u_{i-1,j}^n)
+rx = alpha * dt / dx^2
+ry = alpha * dt / dy^2
+```
+
+The explicit 2D method requires `rx + ry <= 0.5`. The example shows a
+localized hot spot diffusing across a square plate while fixed boundaries
+remain at the prescribed temperature.
 
 ## 1D Wave Equation
 
@@ -841,6 +865,20 @@ python examples/run_heat_equation_1d.py
 
 This prints the finite-difference stability number and plots temperature
 profiles plus a position-time heatmap.
+
+## Run the 2D Heat Equation Example
+
+The example simulates heat diffusion from a Gaussian hot spot on a square
+plate with fixed zero-temperature boundaries.
+
+Run it with:
+
+```powershell
+python examples/run_heat_equation_2d.py
+```
+
+This prints the 2D finite-difference stability numbers and plots temperature
+heatmaps plus a centerline temperature profile.
 
 ## Run the 1D Wave Equation Example
 

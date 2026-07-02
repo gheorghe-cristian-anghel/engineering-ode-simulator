@@ -26,6 +26,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Git/GitHub workflow
 - differential equation modeling
 - PDE-based scientific computing with finite differences
+- 2D field simulation with explicit finite differences
 - finite difference derivative accuracy and convergence analysis
 - computational mechanics basics with 1D finite elements
 - stiffness assembly, displacement boundary conditions, reaction forces, and
@@ -71,6 +72,13 @@ Broadens the project from ODE and control simulations into PDE-based
 scientific computing. The example uses an explicit finite-difference method to
 show how a hot Gaussian temperature pulse diffuses along a rod while the peak
 temperature decreases.
+
+### 2D Heat Equation
+
+Expands the project from 1D PDE examples to 2D field simulation. The example
+uses an explicit finite-difference method to show a localized hot spot
+diffusing across a rectangular plate while fixed boundaries remain at the
+prescribed temperature.
 
 ### 1D Wave Equation
 
@@ -346,6 +354,8 @@ The project supports offers such as:
 - I documented the project for future extension.
 - I added a 1D heat equation solver to demonstrate PDE simulation with finite
   differences, stability checks, boundary conditions, and heatmap visualization.
+- I added a 2D heat equation solver to demonstrate rectangular-grid field
+  simulation, 2D stability checks, and heatmap visualization.
 - I added a 1D wave equation solver to demonstrate propagation, reflection,
   CFL stability, and second-order PDE time integration.
 - I added reusable finite difference derivative utilities to demonstrate

@@ -45,6 +45,7 @@
 - [x] MPC examples
 - [x] Obstacle avoidance
 - [x] Heat equation
+- [x] 2D heat equation
 - [x] Wave equation
 - [x] Finite difference methods
 - [x] Finite element method basics
@@ -63,10 +64,10 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] 2D heat equation
 - [ ] 2D wave equation
 - [ ] 2D truss FEM solver
 - [ ] Beam bending FEM
+- [ ] Streamlit PDE polish
 
 ## Portfolio Goals
 

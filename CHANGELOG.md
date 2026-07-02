@@ -74,6 +74,8 @@ All notable changes to this project will be documented here.
 - Reusable step response metrics
 - 1D heat equation finite-difference solver
 - Heat diffusion example with temperature profile and heatmap plots
+- Added 2D heat equation finite-difference solver.
+- Added 2D heat diffusion example with heatmap visualizations.
 - 1D wave equation finite-difference solver
 - Wave propagation example with displacement profiles and heatmap plots
 - Reusable finite difference derivative utilities

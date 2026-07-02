@@ -26,7 +26,8 @@ The project goals are to:
 - VS Code
 
 ODE simulations use `scipy.integrate.solve_ivp` for numerical integration.
-The 1D heat and wave equation examples use explicit finite-difference methods.
+The 1D and 2D heat equation examples plus the 1D wave equation example use
+explicit finite-difference methods.
 Reusable finite difference derivative utilities support numerical-methods
 examples and convergence studies. The first finite element example introduces
 1D axial bar stiffness assembly, displacement boundary conditions, reaction
@@ -65,6 +66,7 @@ forces, and stress recovery.
 | RLC Circuit | Electrical | Second-order | `models/rlc_circuit.py` | `examples/run_rlc_circuit.py` | `tests/test_rlc_circuit.py` | Implemented |
 | Newton Cooling | Thermal | First-order | `models/cooling.py` | `examples/run_cooling.py` | `tests/test_cooling.py` | Implemented |
 | 1D Heat Equation | Thermal / Numerical Methods | PDE finite difference | `models/heat_equation_1d.py` | `examples/run_heat_equation_1d.py` | `tests/test_heat_equation_1d.py` | Implemented |
+| 2D Heat Equation | Thermal / Numerical Methods | PDE finite difference | `models/heat_equation_2d.py` | `examples/run_heat_equation_2d.py` | `tests/test_heat_equation_2d.py` | Implemented |
 | 1D Wave Equation | Mechanical / Numerical Methods | PDE finite difference | `models/wave_equation_1d.py` | `examples/run_wave_equation_1d.py` | `tests/test_wave_equation_1d.py` | Implemented |
 | 1D Axial Bar FEM | Computational Mechanics / Numerical Methods | Static finite element method | `analysis/finite_element_1d.py` | `examples/run_fem_1d_bar.py` | `tests/test_finite_element_1d.py` | Implemented |
 | Mass-Spring-Damper | Mechanical | Second-order | `models/mass_spring_damper.py` | `examples/run_mass_spring_damper.py` | `tests/test_mass_spring_damper.py` | Implemented |
@@ -137,6 +139,10 @@ The 1D heat equation module extends the project into PDE-based scientific
 computing with an explicit finite-difference solver, stability-number checks,
 fixed-temperature and insulated boundary conditions, and educational initial
 condition helpers.
+The 2D heat equation module extends the same explicit finite-difference
+diffusion idea to rectangular plates, with 2D stability checks, Gaussian and
+rectangular hot regions, sine initial conditions, fixed boundaries, optional
+insulated boundaries, and heatmap visualization.
 The 1D wave equation module complements it with explicit second-order time
 integration, CFL stability checks, fixed and free-end boundary conditions,
 initial displacement and velocity helpers, and wave propagation examples.
@@ -315,6 +321,7 @@ quadcopter trajectory tracking,
 quadcopter waypoint following,
 quadcopter static obstacle avoidance,
 1D heat equation finite-difference simulation,
+2D heat equation finite-difference simulation,
 1D wave equation finite-difference simulation,
 finite difference derivative utilities and convergence examples,
 1D axial bar finite element stiffness assembly and stress recovery,

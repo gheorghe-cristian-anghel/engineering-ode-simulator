@@ -58,6 +58,12 @@ the one-dimensional heat equation. It uses an explicit finite-difference
 scheme with stability-number checks, educational initial-condition helpers,
 and fixed-temperature or insulated rod-end boundary conditions.
 
+`models/heat_equation_2d.py` contains PDE/numerical-methods infrastructure for
+the two-dimensional heat equation on a rectangular plate. It uses an explicit
+finite-difference scheme with 2D stability checks, educational initial
+condition helpers, fixed-temperature boundaries, optional insulated
+boundaries, and stored temperature snapshots for heatmap visualization.
+
 `models/wave_equation_1d.py` contains PDE/numerical-methods infrastructure for
 the one-dimensional wave equation. It uses an explicit central
 finite-difference scheme with CFL stability checks, initial displacement and
@@ -228,6 +234,10 @@ horizon.
 The 1D heat equation example demonstrates thermal diffusion from a Gaussian
 temperature pulse, prints finite-difference stability metrics, and plots both
 selected temperature profiles and a position-time heatmap.
+
+The 2D heat equation example demonstrates thermal diffusion from a Gaussian
+hot spot on a rectangular plate, prints 2D stability metrics, and plots
+temperature heatmaps plus a centerline profile.
 
 The 1D wave equation example demonstrates wave propagation from a Gaussian
 displacement pulse, prints CFL stability metrics, and plots selected

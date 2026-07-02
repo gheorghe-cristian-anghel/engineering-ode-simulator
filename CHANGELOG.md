@@ -28,6 +28,8 @@ All notable changes to this project will be documented here.
 - LQR stabilization examples for the nonlinear inverted pendulum
 - Matplotlib animation helper for inverted pendulum trajectories
 - Open-loop and LQR inverted pendulum animation examples
+- Linear Model Predictive Control implementation
+- Constrained double-integrator MPC tracking example
 - DC motor and RLC state-estimation examples with Kalman filtering
 - Nonlinear pendulum state-estimation example with an Extended Kalman Filter
 - Nonlinear pendulum state-estimation example with an Unscented Kalman Filter
@@ -84,6 +86,7 @@ All notable changes to this project will be documented here.
 - Step, impulse, and comparison examples for transfer function models
 - Reusable continuous-time state-space simulation utilities
 - Reusable continuous-time LQR utility
+- Reusable linear MPC utility for constrained discrete-time tracking
 - Reusable linear discrete-time Kalman filter utility
 - Reusable Extended Kalman Filter utility for nonlinear state estimation
 - Reusable Unscented Kalman Filter implementation

@@ -63,6 +63,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | Pendulum | Mechanical | Nonlinear second-order | `models/pendulum.py` | `examples/run_pendulum.py` | `tests/test_pendulum.py` | Implemented |
 | Inverted Pendulum / Cart-Pole | Control / Mechanical | Nonlinear fourth-order plus linearized state-space | `models/inverted_pendulum.py` | `examples/run_inverted_pendulum_open_loop.py` | `tests/test_inverted_pendulum.py` | Implemented |
 | Inverted Pendulum LQR Control | Control / Mechanical | State-feedback control | `models/inverted_pendulum_lqr.py` | `examples/run_inverted_pendulum_lqr.py` | `tests/test_lqr.py` | Implemented |
+| Linear Model Predictive Control | Control | Constrained receding-horizon control | `analysis/model_predictive_control.py` | `examples/run_mpc_double_integrator.py` | `tests/test_model_predictive_control.py` | Implemented |
 | Quadcopter Altitude | UAV / Mechanical | Nonlinear second-order vertical dynamics | `models/quadcopter_altitude.py` | `examples/run_quadcopter_altitude_open_loop.py` | `tests/test_quadcopter_altitude.py` | Implemented |
 | Quadcopter Altitude PID Control | UAV / Control | Sampled-data PID altitude tracking | `analysis/quadcopter_altitude_control.py` | `examples/run_quadcopter_altitude_pid.py` | `tests/test_quadcopter_altitude_control.py` | Implemented |
 | Quadcopter Attitude | UAV / Rotational Dynamics | Linear sixth-order rotational dynamics | `models/quadcopter_attitude.py` | `examples/run_quadcopter_attitude_roll_torque.py` | `tests/test_quadcopter_attitude.py` | Implemented |
@@ -114,6 +115,10 @@ The quadcopter waypoint-following helper converts discrete 3D waypoints into
 linear or smoothstep reference trajectories, then reuses the full 6-DOF
 trajectory tracking controller to demonstrate educational waypoint following
 without obstacle avoidance, MPC, or rotor-level motor mixing.
+The linear MPC helper demonstrates constrained receding-horizon control for
+small discrete-time systems using SciPy optimization. The first example uses a
+double integrator to track a position reference while respecting acceleration
+limits.
 
 ## Analysis Tools
 
@@ -142,6 +147,9 @@ simulation are implemented in `analysis/transfer_function.py`.
 Continuous-time state-space simulation helpers are implemented in
 `analysis/state_space.py`.
 Continuous-time LQR design helpers are implemented in `analysis/lqr.py`.
+Linear Model Predictive Control helpers are implemented in
+`analysis/model_predictive_control.py` for constrained discrete-time tracking
+examples.
 Discrete-time Kalman filter helpers are implemented in
 `analysis/kalman_filter.py`.
 Extended Kalman Filter helpers for nonlinear state estimation are implemented
@@ -273,9 +281,10 @@ quadcopter waypoint following,
 Matplotlib animation examples for inverted pendulum trajectories,
 3D Matplotlib animation examples for full 6-DOF quadcopter trajectories,
 reusable step response metrics, frequency response analysis, transfer function
-utilities, state-space simulation utilities, PI gain sweep analysis, RLC
-parameter sweep examples, DC motor disturbance rejection comparison examples,
-PID tuning examples, and pytest coverage for implemented models.
+utilities, state-space simulation utilities, linear constrained MPC, PI gain
+sweep analysis, RLC parameter sweep examples, DC motor disturbance rejection
+comparison examples, PID tuning examples, and pytest coverage for implemented
+models.
 
 ## How Future AI Chats Should Use This File
 

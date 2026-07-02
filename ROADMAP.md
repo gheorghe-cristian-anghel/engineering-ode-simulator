@@ -42,6 +42,7 @@
 - [x] Quadcopter trajectory tracking
 - [x] Quadcopter waypoint following
 - [x] Quadcopter animation
+- [x] MPC examples
 
 ## In Progress
 
@@ -57,12 +58,11 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] MPC examples
 - [ ] Obstacle avoidance
 - [ ] Heat equation
 - [ ] Wave equation
 - [ ] Finite difference methods
-- Finite element method basics
+- [ ] Finite element method basics
 
 ## Portfolio Goals
 

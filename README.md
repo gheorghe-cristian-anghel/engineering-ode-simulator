@@ -20,6 +20,7 @@ The project currently includes:
 - Inverted pendulum / cart-pole nonlinear dynamics
 - Linearized inverted pendulum upright state-space model
 - LQR stabilization for the inverted pendulum
+- Linear Model Predictive Control for constrained double-integrator tracking
 - Discrete Kalman filter state estimation examples
 - Extended Kalman Filter nonlinear pendulum state estimation
 - Unscented Kalman Filter nonlinear pendulum state estimation
@@ -374,6 +375,24 @@ F = -K*x
 Where `x` is `[cart_position, cart_velocity, pendulum_angle,
 pendulum_angular_velocity]` and `F` is the horizontal cart force.
 
+## Linear Model Predictive Control
+
+The linear MPC example demonstrates constrained optimal control for a
+discrete-time double integrator. The state is position and velocity, and the
+input is acceleration. At each sample, the controller solves a finite-horizon
+optimization problem, applies only the first acceleration command, then solves
+again at the next sample.
+
+The discrete dynamics are:
+
+```text
+position[k+1] = position[k] + dt*velocity[k] + 0.5*dt^2*u[k]
+velocity[k+1] = velocity[k] + dt*u[k]
+```
+
+The cost penalizes position/velocity tracking error and control effort while
+respecting acceleration limits.
+
 ## Inverted Pendulum Animation
 
 The project includes reusable Matplotlib animation support for cart-pole
@@ -668,6 +687,18 @@ Run the examples with:
 python examples/run_state_space_mass_spring_damper.py
 python examples/run_state_space_rlc.py
 python examples/run_state_space_dc_motor.py
+```
+
+## Run the Linear MPC Example
+
+The MPC example tracks a target position with a constrained double integrator.
+It shows receding-horizon optimization, acceleration limits, position/velocity
+tracking, and control effort.
+
+Run it with:
+
+```powershell
+python examples/run_mpc_double_integrator.py
 ```
 
 ## Run the RC Circuit Example

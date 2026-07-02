@@ -68,6 +68,7 @@ Current example:
 - transfer function step and impulse response utilities
 - state-space simulation utilities
 - LQR optimal-control utilities
+- linear MPC constrained-control utilities
 - Kalman filter state-estimation utilities
 - Extended Kalman Filter nonlinear state-estimation utilities
 - Unscented Kalman Filter nonlinear state-estimation utilities
@@ -107,6 +108,12 @@ avoidance, MPC, rotor mixing, or autopilot complexity.
 
 `analysis/lqr.py` provides reusable continuous-time Linear Quadratic
 Regulator infrastructure based on the continuous algebraic Riccati equation.
+
+`analysis/model_predictive_control.py` provides reusable linear Model
+Predictive Control infrastructure for small discrete-time systems. It supports
+finite-horizon prediction, quadratic tracking cost, input limits, optional
+simple state bounds, and receding-horizon simulation without adding heavy
+optimization dependencies.
 
 `analysis/kalman_filter.py` provides reusable discrete-time linear Kalman
 filter infrastructure for estimating hidden states from noisy measurements.
@@ -179,6 +186,10 @@ the same simplified cascaded controller.
 The quadcopter animation examples reuse the waypoint-following and circular
 trajectory results, then visualize the 6-DOF vehicle position, attitude,
 reference path, trail, and waypoint markers without changing controller logic.
+
+The MPC double-integrator example demonstrates constrained optimal control by
+tracking a position target with acceleration limits and a receding prediction
+horizon.
 
 ### streamlit_app.py
 

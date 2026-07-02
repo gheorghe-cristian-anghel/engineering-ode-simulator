@@ -17,6 +17,8 @@ simulation, control-system analysis, and clean software engineering practices.
 - frequency response and Bode plot analysis
 - transfer function step and impulse response analysis
 - state-space modeling for linear systems
+- constrained optimal control with Model Predictive Control
+- receding-horizon simulation
 - CSV export for Excel, MATLAB, LibreOffice Calc, or Python analysis
 - saved plot screenshots for GitHub and README presentation
 - saved or interactive Matplotlib animations for demos and social posts
@@ -75,6 +77,13 @@ Shows modern state-space feedback control by using a Linear Quadratic
 Regulator to stabilize the nonlinear inverted pendulum near the upright
 equilibrium. Animation examples make the stabilizing effect easier to show in
 a portfolio or walkthrough.
+
+### Linear Model Predictive Control
+
+Shows constrained optimal control by solving a finite-horizon optimization
+problem at each time step. The double-integrator example tracks a target
+position while respecting acceleration limits, demonstrating the core
+receding-horizon idea without adding nonlinear or UAV-specific MPC complexity.
 
 ### Kalman Filter State Estimation
 
@@ -253,6 +262,8 @@ The project supports offers such as:
   instability and upright state-space linearization.
 - I added LQR control for the inverted pendulum to demonstrate modern
   state-space feedback stabilization.
+- I added linear Model Predictive Control to demonstrate constrained optimal
+  control with receding-horizon simulation.
 - I added Matplotlib animation examples for open-loop and LQR inverted
   pendulum trajectories.
 - I added Kalman filter examples that estimate hidden states from noisy

@@ -47,6 +47,7 @@
 - [x] Heat equation
 - [x] 2D heat equation
 - [x] Wave equation
+- [x] 2D wave equation
 - [x] Finite difference methods
 - [x] Finite element method basics
 
@@ -64,10 +65,10 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] 2D wave equation
 - [ ] 2D truss FEM solver
 - [ ] Beam bending FEM
 - [ ] Streamlit PDE polish
+- [ ] Packaging / release polish
 
 ## Portfolio Goals
 

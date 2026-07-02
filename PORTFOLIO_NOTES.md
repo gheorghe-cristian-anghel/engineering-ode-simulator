@@ -87,6 +87,13 @@ example uses explicit second-order finite differences to show a Gaussian
 displacement splitting into traveling waves that reflect from fixed
 boundaries.
 
+### 2D Wave Equation
+
+Complements the 2D heat equation by showing propagation and reflection rather
+than diffusion. The example uses explicit second-order finite differences to
+show a localized membrane displacement spreading outward as oscillating waves
+on a rectangular grid with fixed boundaries.
+
 ### Finite Difference Methods
 
 Connects the heat and wave PDE solvers to general numerical differentiation.
@@ -358,6 +365,8 @@ The project supports offers such as:
   simulation, 2D stability checks, and heatmap visualization.
 - I added a 1D wave equation solver to demonstrate propagation, reflection,
   CFL stability, and second-order PDE time integration.
+- I added a 2D wave equation solver to demonstrate membrane wave propagation,
+  fixed-boundary reflection, and 2D CFL stability.
 - I added reusable finite difference derivative utilities to demonstrate
   numerical differentiation, error metrics, and convergence-order analysis.
 - I added a 1D axial bar finite element example to demonstrate stiffness

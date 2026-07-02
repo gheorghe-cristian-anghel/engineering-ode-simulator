@@ -69,6 +69,13 @@ the one-dimensional wave equation. It uses an explicit central
 finite-difference scheme with CFL stability checks, initial displacement and
 velocity helpers, and fixed or free-end boundary conditions.
 
+`models/wave_equation_2d.py` contains PDE/numerical-methods infrastructure for
+the two-dimensional wave equation on a rectangular membrane. It uses an
+explicit central finite-difference scheme with 2D CFL stability checks,
+Gaussian, circular-ring, and sine initial displacement helpers, zero initial
+velocity support, fixed Dirichlet boundaries, and stored displacement
+snapshots for heatmap visualization.
+
 ### analysis/
 
 Reusable analysis and output tools independent of any one model.
@@ -242,6 +249,10 @@ temperature heatmaps plus a centerline profile.
 The 1D wave equation example demonstrates wave propagation from a Gaussian
 displacement pulse, prints CFL stability metrics, and plots selected
 displacement profiles plus a position-time heatmap.
+
+The 2D wave equation example demonstrates membrane wave propagation from a
+Gaussian displacement pulse, prints 2D CFL stability metrics, and plots
+displacement heatmap snapshots plus a centerline profile.
 
 The finite difference examples compare numerical derivatives against exact
 analytical derivatives and show convergence order as grid spacing decreases.

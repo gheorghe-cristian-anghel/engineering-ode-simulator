@@ -12,6 +12,7 @@ The project currently includes:
 - 1D heat equation finite-difference solver
 - 2D heat equation finite-difference solver
 - 1D wave equation finite-difference solver
+- 2D wave equation finite-difference solver
 - Finite difference derivative utilities
 - Finite Element Method basics with a 1D axial bar solver
 - Mass-spring-damper free vibration
@@ -229,6 +230,29 @@ lambda = c * dt / dx
 The explicit method requires the CFL stability condition `lambda <= 1`. The
 example shows a Gaussian displacement pulse splitting into traveling waves
 that reflect from fixed boundaries.
+
+## 2D Wave Equation
+
+The 2D wave equation models transverse displacement waves on a rectangular
+membrane:
+
+```text
+d2u/dt2 = c^2 * (d2u/dx2 + d2u/dy2)
+```
+
+This project solves it with an explicit central finite-difference method:
+
+```text
+u_i,j^{n+1} = 2*u_i,j^n - u_i,j^{n-1}
+              + rx * (u_{i,j+1}^n - 2*u_{i,j}^n + u_{i,j-1}^n)
+              + ry * (u_{i+1,j}^n - 2*u_{i,j}^n + u_{i-1,j}^n)
+rx = (c * dt / dx)^2
+ry = (c * dt / dy)^2
+```
+
+The explicit 2D method requires `rx + ry <= 1`. The example shows a localized
+membrane displacement propagating outward as waves that oscillate and reflect
+from fixed boundaries.
 
 ## Finite Difference Methods
 
@@ -893,6 +917,20 @@ python examples/run_wave_equation_1d.py
 
 This prints the CFL number and plots displacement profiles plus a position-time
 heatmap.
+
+## Run the 2D Wave Equation Example
+
+The example simulates membrane wave propagation from a Gaussian displacement
+bump with fixed zero-displacement boundaries.
+
+Run it with:
+
+```powershell
+python examples/run_wave_equation_2d.py
+```
+
+This prints the 2D CFL stability numbers and plots displacement heatmap
+snapshots plus a centerline displacement profile.
 
 ## Run the Finite Difference Examples
 

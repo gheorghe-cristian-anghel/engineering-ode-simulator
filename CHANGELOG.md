@@ -78,6 +78,8 @@ All notable changes to this project will be documented here.
 - Added 2D heat diffusion example with heatmap visualizations.
 - 1D wave equation finite-difference solver
 - Wave propagation example with displacement profiles and heatmap plots
+- Added 2D wave equation finite-difference solver.
+- Added 2D membrane wave propagation example with heatmap snapshots.
 - Reusable finite difference derivative utilities
 - Finite difference derivative comparison and convergence examples
 - Added 1D axial bar finite element method solver.

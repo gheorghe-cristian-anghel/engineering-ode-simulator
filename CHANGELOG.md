@@ -72,6 +72,8 @@ All notable changes to this project will be documented here.
 #### Analysis Utilities
 
 - Reusable step response metrics
+- 1D heat equation finite-difference solver
+- Heat diffusion example with temperature profile and heatmap plots
 - Generic CSV export utility for simulation results
 - CSV export from the discrete PID motor example
 - Output directory support for generated files

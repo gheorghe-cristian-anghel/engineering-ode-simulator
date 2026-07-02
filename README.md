@@ -9,6 +9,7 @@ The project currently includes:
 
 - RC circuit charging
 - Newton's Law of Cooling
+- 1D heat equation finite-difference solver
 - Mass-spring-damper free vibration
 - First-order control system step response
 - Second-order control system step response
@@ -161,6 +162,25 @@ tau = 1/k
 The time constant `tau` describes how quickly the object approaches the
 environment temperature. After one time constant, the remaining temperature
 difference is about `exp(-1)`, or 36.8%, of the initial difference.
+
+## 1D Heat Equation
+
+The 1D heat equation models how temperature diffuses along a rod:
+
+```text
+du/dt = alpha * d2u/dx2
+```
+
+This project solves it with an explicit finite-difference method:
+
+```text
+u_i^{n+1} = u_i^n + r * (u_{i+1}^n - 2u_i^n + u_{i-1}^n)
+r = alpha * dt / dx^2
+```
+
+The explicit method requires the stability condition `r <= 0.5`. The example
+shows a hot Gaussian pulse spreading along a rod while its peak temperature
+decreases.
 
 ## Mass-Spring-Damper Free Vibration
 
@@ -749,6 +769,20 @@ python examples\run_cooling.py
 ```
 
 This plots the numerical and analytical temperature curves on the same graph.
+
+## Run the 1D Heat Equation Example
+
+The example simulates heat diffusion from a Gaussian temperature pulse with
+fixed zero-temperature rod ends.
+
+Run it with:
+
+```powershell
+python examples/run_heat_equation_1d.py
+```
+
+This prints the finite-difference stability number and plots temperature
+profiles plus a position-time heatmap.
 
 ## Run the Mass-Spring-Damper Example
 

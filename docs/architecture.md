@@ -53,6 +53,11 @@ dynamics model. It combines inertial-frame translation, ZYX Euler-angle
 rotation, total thrust, body torques, gravity, and optional simple linear drag
 without introducing trajectory tracking, rotor mixing, or autopilot control.
 
+`models/heat_equation_1d.py` contains PDE/numerical-methods infrastructure for
+the one-dimensional heat equation. It uses an explicit finite-difference
+scheme with stability-number checks, educational initial-condition helpers,
+and fixed-temperature or insulated rod-end boundary conditions.
+
 ### analysis/
 
 Reusable analysis and output tools independent of any one model.
@@ -201,6 +206,10 @@ reference path, trail, and waypoint markers without changing controller logic.
 The MPC double-integrator example demonstrates constrained optimal control by
 tracking a position target with acceleration limits and a receding prediction
 horizon.
+
+The 1D heat equation example demonstrates thermal diffusion from a Gaussian
+temperature pulse, prints finite-difference stability metrics, and plots both
+selected temperature profiles and a position-time heatmap.
 
 ### streamlit_app.py
 

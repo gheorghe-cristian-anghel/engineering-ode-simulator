@@ -25,7 +25,8 @@ The project goals are to:
 - Git/GitHub
 - VS Code
 
-Simulations use `scipy.integrate.solve_ivp` for numerical integration.
+ODE simulations use `scipy.integrate.solve_ivp` for numerical integration.
+The 1D heat equation example uses an explicit finite-difference method.
 
 ## Project Structure
 
@@ -59,6 +60,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | RL Circuit | Electrical | First-order | `models/rl_circuit.py` | `examples/run_rl_circuit.py` | `tests/test_rl_circuit.py` | Implemented |
 | RLC Circuit | Electrical | Second-order | `models/rlc_circuit.py` | `examples/run_rlc_circuit.py` | `tests/test_rlc_circuit.py` | Implemented |
 | Newton Cooling | Thermal | First-order | `models/cooling.py` | `examples/run_cooling.py` | `tests/test_cooling.py` | Implemented |
+| 1D Heat Equation | Thermal / Numerical Methods | PDE finite difference | `models/heat_equation_1d.py` | `examples/run_heat_equation_1d.py` | `tests/test_heat_equation_1d.py` | Implemented |
 | Mass-Spring-Damper | Mechanical | Second-order | `models/mass_spring_damper.py` | `examples/run_mass_spring_damper.py` | `tests/test_mass_spring_damper.py` | Implemented |
 | Pendulum | Mechanical | Nonlinear second-order | `models/pendulum.py` | `examples/run_pendulum.py` | `tests/test_pendulum.py` | Implemented |
 | Inverted Pendulum / Cart-Pole | Control / Mechanical | Nonlinear fourth-order plus linearized state-space | `models/inverted_pendulum.py` | `examples/run_inverted_pendulum_open_loop.py` | `tests/test_inverted_pendulum.py` | Implemented |
@@ -125,6 +127,10 @@ The linear MPC helper demonstrates constrained receding-horizon control for
 small discrete-time systems using SciPy optimization. The first example uses a
 double integrator to track a position reference while respecting acceleration
 limits.
+The 1D heat equation module extends the project into PDE-based scientific
+computing with an explicit finite-difference solver, stability-number checks,
+fixed-temperature and insulated boundary conditions, and educational initial
+condition helpers.
 
 ## Analysis Tools
 
@@ -287,6 +293,7 @@ full 6-DOF quadcopter rigid-body dynamics,
 quadcopter trajectory tracking,
 quadcopter waypoint following,
 quadcopter static obstacle avoidance,
+1D heat equation finite-difference simulation,
 Matplotlib animation examples for inverted pendulum trajectories,
 3D Matplotlib animation examples for full 6-DOF quadcopter trajectories,
 reusable step response metrics, frequency response analysis, transfer function

@@ -44,6 +44,7 @@
 - [x] Quadcopter animation
 - [x] MPC examples
 - [x] Obstacle avoidance
+- [x] Heat equation
 
 ## In Progress
 
@@ -59,10 +60,10 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Heat equation
 - [ ] Wave equation
 - [ ] Finite difference methods
 - [ ] Finite element method basics
+- [ ] 2D heat equation
 
 ## Portfolio Goals
 

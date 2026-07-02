@@ -25,6 +25,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - pytest testing
 - Git/GitHub workflow
 - differential equation modeling
+- PDE-based scientific computing with finite differences
 - control systems
 - optimal state-space feedback with LQR
 - Kalman filtering and noisy-measurement state estimation
@@ -59,6 +60,13 @@ ringing, and settling behavior.
 ### Mass-Spring-Damper
 
 Shows mechanical vibration and energy/damping concepts.
+
+### 1D Heat Equation
+
+Broadens the project from ODE and control simulations into PDE-based
+scientific computing. The example uses an explicit finite-difference method to
+show how a hot Gaussian temperature pulse diffuses along a rod while the peak
+temperature decreases.
 
 ### Second-Order Control System
 
@@ -309,6 +317,8 @@ The project supports offers such as:
 - I added a Streamlit GUI MVP so selected simulations can be explored from a
   browser.
 - I documented the project for future extension.
+- I added a 1D heat equation solver to demonstrate PDE simulation with finite
+  differences, stability checks, boundary conditions, and heatmap visualization.
 
 ## Future Portfolio Upgrades
 

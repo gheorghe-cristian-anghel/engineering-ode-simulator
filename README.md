@@ -202,9 +202,15 @@ For verbose local test output:
 python -m pytest -v
 ```
 
-On Windows when running from Git Bash, use a fresh temporary pytest directory and
-disable pytest's cache provider if file-locking or cleanup permissions get in
-the way:
+On Windows PowerShell, use a fresh temporary pytest directory and disable
+pytest's cache provider if file-locking or cleanup permissions get in the way:
+
+```powershell
+$stamp = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds()
+python -m pytest -v --basetemp=".pytest_tmp_$stamp" -p no:cacheprovider
+```
+
+From Git Bash, the equivalent command is:
 
 ```bash
 python -m pytest -v --basetemp=".pytest_tmp_$(date +%s)" -p no:cacheprovider

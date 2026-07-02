@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Engineering ODE Simulator is a Python engineering simulation library for
-modeling physical and control systems governed by ordinary differential
-equations.
+Engineering ODE Simulator is a Python engineering simulation toolkit for
+modeling physical systems, control systems, state estimation examples, PDEs,
+and introductory numerical methods.
 
 The project goals are to:
 
@@ -212,9 +212,10 @@ Reusable cart-pole animation helpers are implemented in
 Reusable 3D quadcopter animation helpers are implemented in
 `visualization/quadcopter_animation.py`.
 
-The Streamlit MVP in `streamlit_app.py` provides an interactive browser UI for
-RC circuit charging, RLC circuit step response, and discrete PID motor speed
-control while reusing the existing model and analysis modules.
+The Streamlit app in `streamlit_app.py` provides an interactive browser UI for
+selected simulations, including RC and RLC circuits, discrete PID motor speed
+control, heat and wave PDEs, finite-difference convergence, and 1D axial bar
+FEM while reusing the existing model and analysis modules.
 
 The tool estimates:
 
@@ -313,7 +314,7 @@ stabilization of the nonlinear inverted pendulum near upright, open-loop DC
 motor dynamics, and closed-loop PI motor speed control with disturbance
 rejection. It also includes embedded-style discrete PID motor speed control
 and discrete PID disturbance response, Kalman filter examples for noisy
-state estimation, a Streamlit GUI MVP for selected simulations,
+state estimation, a Streamlit app for selected simulations,
 Extended Kalman Filter nonlinear observer examples,
 Unscented Kalman Filter nonlinear observer examples,
 Particle Filter nonlinear observer examples,

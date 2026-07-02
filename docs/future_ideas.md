@@ -1,29 +1,23 @@
 # Future Ideas
 
-## Near-Term
+This file tracks optional extensions only. The main completed/pending project
+status is maintained in `ROADMAP.md`.
 
-- Load disturbance response for DC motor
-- True discrete PID implementation
-- Parameter sweeps
-- CSV export
-- Screenshots for README
-- Streamlit GUI
+## Near-Term Polish
+
+- Improve Streamlit layout and responsiveness for PDE and portfolio pages
+- Add a short hosted-demo or local-demo walkthrough
+- Curate a smaller set of polished screenshots for portfolio sharing
+- Add a concise release checklist before tagged versions
 
 ## Control Systems
 
-- PID tuning comparison
 - Ziegler-Nichols tuning
-- Bode plots
-- Frequency response
-- Transfer function tools
-- State-space models
 - Root locus
-- LQR controller
-- Kalman filter
+- Robustness-margin examples
 
 ## Electrical Engineering
 
-- RLC parameter sweep
 - Filters
 - DC-DC converter averaged model
 - Transformer transient model
@@ -42,18 +36,17 @@
 
 ## Aerospace / Robotics
 
-- Quadcopter altitude dynamics
-- Quadcopter attitude dynamics
 - Rocket vertical flight
 - Reaction wheel model
 - Drone motor response model
-- UAV control examples
+- More UAV control comparisons
 
 ## Numerical Methods
 
 - Euler method demonstrations
 - Runge-Kutta comparison
 - Stiff ODE examples
-- Finite difference heat equation
-- Wave equation
-- Simple finite element examples
+- Implicit PDE solver examples
+- Adaptive time stepping examples
+- 2D truss FEM
+- Beam bending FEM

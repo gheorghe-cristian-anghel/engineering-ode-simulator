@@ -3,8 +3,8 @@
 ## Project Pitch
 
 Engineering ODE Simulator is a Python-based simulation toolkit for modeling
-electrical, mechanical, thermal, and control systems using ordinary
-differential equations. It demonstrates scientific computing, numerical
+electrical, mechanical, thermal, control, UAV, state-estimation, PDE, and
+introductory FEM examples. It demonstrates scientific computing, numerical
 simulation, control-system analysis, and clean software engineering practices.
 
 ## Skills Demonstrated
@@ -118,7 +118,8 @@ Shows damping ratio, natural frequency, overshoot, peak time, and settling time.
 
 Shows nonlinear dynamics, open-loop upright instability, and linearization
 around an unstable equilibrium. It also supports advanced controls such as
-LQR, with observer/Kalman-filter examples left for future work. Matplotlib
+LQR, while separate state-estimation examples cover Kalman-style observers.
+Matplotlib
 animations make the cart motion, pendulum angle, and unstable departure easier
 to understand visually.
 
@@ -197,8 +198,8 @@ without adding full 6-DOF dynamics or trajectory control.
 
 Combines translational and rotational UAV motion in one rigid-body model. The
 examples show hover, tilted thrust producing horizontal acceleration, and body
-torques changing attitude, which creates a foundation for future UAV
-trajectory, waypoint, and control examples.
+torques changing attitude, which creates a foundation for UAV trajectory,
+waypoint, and control examples.
 
 ### Quadcopter Trajectory Tracking
 
@@ -333,7 +334,7 @@ The project supports offers such as:
   state without manually deriving Jacobians.
 - I added a Particle Filter example that estimates nonlinear pendulum state
   with weighted particles and resampling.
-- I added a 1D quadcopter altitude model as the foundation for future UAV
+- I added a 1D quadcopter altitude model as a foundation for UAV
   control examples.
 - I added PID altitude control to show thrust-based target tracking and
   disturbance rejection for the 1D quadcopter model.
@@ -342,7 +343,7 @@ The project supports offers such as:
 - I added attitude PID control to show roll, pitch, and yaw tracking with
   body torque commands and disturbance rejection.
 - I added a full 6-DOF quadcopter model that combines translational and
-  rotational rigid-body dynamics for future UAV control examples.
+  rotational rigid-body dynamics for UAV control examples.
 - I added quadcopter trajectory tracking with hover-point and circular-path
   examples using the full 6-DOF model.
 - I added quadcopter waypoint following to show how discrete 3D navigation
@@ -356,7 +357,7 @@ The project supports offers such as:
 - I added a discrete PID disturbance response example to show load rejection.
 - I added PID tuning examples that show how controller gains affect response
   quality.
-- I added a Streamlit GUI MVP so selected simulations can be explored from a
+- I added a Streamlit app so selected simulations can be explored from a
   browser.
 - I documented the project for future extension.
 - I added a 1D heat equation solver to demonstrate PDE simulation with finite
@@ -374,7 +375,7 @@ The project supports offers such as:
 
 ## Future Portfolio Upgrades
 
-- screenshots
+- more curated screenshots
 - hosted demo
 - blog post series
 - LinkedIn posts

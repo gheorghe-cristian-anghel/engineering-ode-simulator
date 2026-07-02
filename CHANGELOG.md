@@ -114,6 +114,10 @@ All notable changes to this project will be documented here.
 
 - Streamlit GUI MVP for RC circuit charging, RLC circuit step response, and
   discrete PID motor speed control
+- Streamlit interactive demos for 1D/2D heat equations, 1D/2D wave equations,
+  finite-difference convergence, and 1D axial bar FEM
+- Lightweight Streamlit portfolio overview pages for mechanical systems, state
+  estimation, and UAV examples
 
 #### Documentation and Portfolio Assets
 

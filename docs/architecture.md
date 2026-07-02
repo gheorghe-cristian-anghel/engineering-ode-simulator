@@ -308,9 +308,9 @@ Tests should check:
 
 ## Future Architecture Improvements
 
-Possible improvements:
+Possible refinements:
 
-- package installation with `pyproject.toml`
-- shared plotting utilities
-- shared validation utilities
-- exporting results to CSV
+- Broader shared validation utilities where repeated checks become noisy.
+- More structured gallery asset generation for screenshots and animations.
+- Optional documentation site generation if the repository grows further.
+- Release metadata polish before publishing versioned packages.

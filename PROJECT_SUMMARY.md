@@ -148,6 +148,10 @@ Extended Kalman Filter helpers for nonlinear state estimation are implemented
 in `analysis/extended_kalman_filter.py`, with a nonlinear pendulum EKF example
 that estimates angle and hidden angular velocity from noisy angle
 measurements.
+Unscented Kalman Filter helpers for nonlinear state estimation are implemented
+in `analysis/unscented_kalman_filter.py`, with a nonlinear pendulum UKF example
+that estimates angle and hidden angular velocity from noisy angle measurements
+without manually deriving Jacobians.
 Reusable cart-pole animation helpers are implemented in
 `visualization/inverted_pendulum_animation.py`.
 Reusable 3D quadcopter animation helpers are implemented in
@@ -253,6 +257,7 @@ rejection. It also includes embedded-style discrete PID motor speed control
 and discrete PID disturbance response, Kalman filter examples for noisy
 state estimation, a Streamlit GUI MVP for selected simulations,
 Extended Kalman Filter nonlinear observer examples,
+Unscented Kalman Filter nonlinear observer examples,
 quadcopter altitude dynamics,
 quadcopter altitude PID control,
 quadcopter attitude dynamics,

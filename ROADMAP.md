@@ -32,6 +32,7 @@
 - [x] Kalman filter / observer examples
 - [x] Animation of inverted pendulum
 - [x] Nonlinear observer examples
+- [x] Unscented Kalman Filter
 - [x] Quadcopter altitude model
 - [x] Quadcopter altitude PID control
 - [x] Quadcopter attitude model
@@ -40,6 +41,7 @@
 - [x] Quadcopter trajectory tracking
 - [x] Quadcopter waypoint following
 - [x] Quadcopter animation
+- [x] Unscented Kalman Filter
 
 ## In Progress
 
@@ -55,12 +57,11 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Unscented Kalman filter
 - [ ] Particle filter
 - [ ] MPC examples
 - [ ] Obstacle avoidance
-- Heat equation
-- Wave equation
+- [ ] Heat equation
+- [ ] Wave equation
 - Finite difference methods
 - Finite element method basics
 

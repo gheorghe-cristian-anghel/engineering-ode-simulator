@@ -70,6 +70,7 @@ Current example:
 - LQR optimal-control utilities
 - Kalman filter state-estimation utilities
 - Extended Kalman Filter nonlinear state-estimation utilities
+- Unscented Kalman Filter nonlinear state-estimation utilities
 - CSV export utilities
 
 `analysis/transfer_function.py` provides reusable continuous-time transfer
@@ -113,6 +114,11 @@ filter infrastructure for estimating hidden states from noisy measurements.
 infrastructure for nonlinear state estimation. The pendulum EKF example uses
 nonlinear prediction plus local Jacobians to estimate angle and hidden angular
 velocity from noisy angle measurements.
+
+`analysis/unscented_kalman_filter.py` provides reusable Unscented Kalman Filter
+infrastructure for nonlinear state estimation. The pendulum UKF example uses
+sigma points to estimate angle and hidden angular velocity from noisy angle
+measurements without manually deriving Jacobians.
 
 ### visualization/
 

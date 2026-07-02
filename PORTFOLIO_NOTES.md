@@ -27,6 +27,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - optimal state-space feedback with LQR
 - Kalman filtering and noisy-measurement state estimation
 - Extended Kalman filtering for nonlinear observer design
+- Unscented Kalman filtering without manually derived Jacobians
 - nonlinear instability and linearization
 - UAV altitude dynamics
 - UAV altitude PID control
@@ -86,6 +87,13 @@ capacitor-voltage measurements.
 Shows nonlinear state estimation by using an Extended Kalman Filter to estimate
 pendulum angle and hidden angular velocity from noisy angle measurements. This
 demonstrates the observer idea beyond linear state-space models.
+
+### Unscented Kalman Filter / Nonlinear Observer
+
+Shows nonlinear state estimation by using an Unscented Kalman Filter to
+estimate pendulum angle and hidden angular velocity from noisy angle
+measurements. This demonstrates nonlinear observer design without manually
+deriving Jacobians.
 
 ### Quadcopter Altitude
 
@@ -243,6 +251,8 @@ The project supports offers such as:
   measurements.
 - I added an Extended Kalman Filter example for nonlinear pendulum state
   estimation from noisy angle measurements.
+- I added an Unscented Kalman Filter example that estimates nonlinear pendulum
+  state without manually deriving Jacobians.
 - I added a 1D quadcopter altitude model as the foundation for future UAV
   control examples.
 - I added PID altitude control to show thrust-based target tracking and

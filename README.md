@@ -22,6 +22,7 @@ The project currently includes:
 - LQR stabilization for the inverted pendulum
 - Discrete Kalman filter state estimation examples
 - Extended Kalman Filter nonlinear pendulum state estimation
+- Unscented Kalman Filter nonlinear pendulum state estimation
 - Quadcopter altitude dynamics
 - Quadcopter altitude PID control
 - Quadcopter attitude dynamics
@@ -396,6 +397,13 @@ The Extended Kalman Filter example estimates nonlinear pendulum angle and
 hidden angular velocity from noisy angle measurements. It uses the full
 nonlinear pendulum model for prediction and linearizes the model locally with
 Jacobians during each EKF step.
+
+## Unscented Kalman Filter / Nonlinear Observer
+
+The Unscented Kalman Filter example estimates nonlinear pendulum angle and
+hidden angular velocity from noisy angle measurements without manually
+deriving Jacobians. It uses sigma points to propagate uncertainty through the
+nonlinear pendulum model.
 
 ## Quadcopter Altitude Dynamics
 
@@ -854,6 +862,15 @@ Run it with:
 
 ```powershell
 python examples/run_ekf_pendulum.py
+```
+
+The nonlinear pendulum UKF example demonstrates nonlinear state estimation
+with sigma points instead of manually derived Jacobians.
+
+Run it with:
+
+```powershell
+python examples/run_ukf_pendulum.py
 ```
 
 ## Run the Quadcopter Altitude Examples

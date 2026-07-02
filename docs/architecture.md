@@ -71,6 +71,7 @@ Current example:
 
 - step response metrics
 - finite difference derivative utilities
+- finite element axial bar utilities
 - parameter sweep utilities
 - motor load disturbance metrics
 - RLC sweep helpers for educational component studies
@@ -95,6 +96,12 @@ conversion, common low-pass helpers, and step/impulse response simulation.
 infrastructure for finite difference derivatives on uniform 1D grids. It
 includes first- and second-derivative approximations, dense differentiation
 matrices, error metrics, and convergence-order estimation.
+
+`analysis/finite_element_1d.py` provides reusable computational mechanics
+infrastructure for an educational 1D axial bar finite element method. It
+includes uniform mesh generation, linear element stiffness matrices, global
+stiffness assembly, Dirichlet displacement boundary conditions, nodal
+displacement solution, reaction force computation, and strain/stress recovery.
 
 `analysis/pid_tuning.py` provides reusable PID tuning infrastructure for
 educational examples built on the discrete PID motor simulation.
@@ -228,6 +235,11 @@ displacement profiles plus a position-time heatmap.
 
 The finite difference examples compare numerical derivatives against exact
 analytical derivatives and show convergence order as grid spacing decreases.
+
+The 1D axial bar FEM example demonstrates stiffness assembly, fixed
+displacement boundary conditions, nodal displacement solution, support
+reaction recovery, and element strain/stress computation for a uniform bar
+under an end load.
 
 ### streamlit_app.py
 

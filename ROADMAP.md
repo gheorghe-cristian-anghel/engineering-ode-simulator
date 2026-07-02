@@ -47,6 +47,7 @@
 - [x] Heat equation
 - [x] Wave equation
 - [x] Finite difference methods
+- [x] Finite element method basics
 
 ## In Progress
 
@@ -62,9 +63,10 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Finite element method basics
 - [ ] 2D heat equation
 - [ ] 2D wave equation
+- [ ] 2D truss FEM solver
+- [ ] Beam bending FEM
 
 ## Portfolio Goals
 

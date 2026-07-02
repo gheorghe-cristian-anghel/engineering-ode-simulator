@@ -78,6 +78,9 @@ All notable changes to this project will be documented here.
 - Wave propagation example with displacement profiles and heatmap plots
 - Reusable finite difference derivative utilities
 - Finite difference derivative comparison and convergence examples
+- Added 1D axial bar finite element method solver.
+- Added FEM example comparing numerical displacement with the analytical axial
+  bar solution.
 - Generic CSV export utility for simulation results
 - CSV export from the discrete PID motor example
 - Output directory support for generated files

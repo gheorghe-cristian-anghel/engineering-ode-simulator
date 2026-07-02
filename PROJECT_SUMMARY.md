@@ -28,7 +28,9 @@ The project goals are to:
 ODE simulations use `scipy.integrate.solve_ivp` for numerical integration.
 The 1D heat and wave equation examples use explicit finite-difference methods.
 Reusable finite difference derivative utilities support numerical-methods
-examples and convergence studies.
+examples and convergence studies. The first finite element example introduces
+1D axial bar stiffness assembly, displacement boundary conditions, reaction
+forces, and stress recovery.
 
 ## Project Structure
 
@@ -64,6 +66,7 @@ examples and convergence studies.
 | Newton Cooling | Thermal | First-order | `models/cooling.py` | `examples/run_cooling.py` | `tests/test_cooling.py` | Implemented |
 | 1D Heat Equation | Thermal / Numerical Methods | PDE finite difference | `models/heat_equation_1d.py` | `examples/run_heat_equation_1d.py` | `tests/test_heat_equation_1d.py` | Implemented |
 | 1D Wave Equation | Mechanical / Numerical Methods | PDE finite difference | `models/wave_equation_1d.py` | `examples/run_wave_equation_1d.py` | `tests/test_wave_equation_1d.py` | Implemented |
+| 1D Axial Bar FEM | Computational Mechanics / Numerical Methods | Static finite element method | `analysis/finite_element_1d.py` | `examples/run_fem_1d_bar.py` | `tests/test_finite_element_1d.py` | Implemented |
 | Mass-Spring-Damper | Mechanical | Second-order | `models/mass_spring_damper.py` | `examples/run_mass_spring_damper.py` | `tests/test_mass_spring_damper.py` | Implemented |
 | Pendulum | Mechanical | Nonlinear second-order | `models/pendulum.py` | `examples/run_pendulum.py` | `tests/test_pendulum.py` | Implemented |
 | Inverted Pendulum / Cart-Pole | Control / Mechanical | Nonlinear fourth-order plus linearized state-space | `models/inverted_pendulum.py` | `examples/run_inverted_pendulum_open_loop.py` | `tests/test_inverted_pendulum.py` | Implemented |
@@ -145,6 +148,11 @@ Finite difference derivative utilities are implemented in
 `analysis/finite_difference.py`, including uniform 1D grids, forward,
 backward, and central first derivatives, central second derivatives, dense
 differentiation matrices, error metrics, and convergence-order estimation.
+Finite element utilities are implemented in `analysis/finite_element_1d.py`
+for educational 1D axial bar analysis, including uniform mesh generation,
+linear bar element stiffness, global assembly, displacement boundary
+conditions, nodal displacement solution, reactions, strains, stresses, and an
+analytical fixed-free bar comparison.
 PI motor controller gain sweeps are implemented in
 `analysis/parameter_sweep.py`.
 DC motor load disturbance metrics are implemented in
@@ -309,6 +317,7 @@ quadcopter static obstacle avoidance,
 1D heat equation finite-difference simulation,
 1D wave equation finite-difference simulation,
 finite difference derivative utilities and convergence examples,
+1D axial bar finite element stiffness assembly and stress recovery,
 Matplotlib animation examples for inverted pendulum trajectories,
 3D Matplotlib animation examples for full 6-DOF quadcopter trajectories,
 reusable step response metrics, frequency response analysis, transfer function

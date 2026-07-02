@@ -27,6 +27,9 @@ simulation, control-system analysis, and clean software engineering practices.
 - differential equation modeling
 - PDE-based scientific computing with finite differences
 - finite difference derivative accuracy and convergence analysis
+- computational mechanics basics with 1D finite elements
+- stiffness assembly, displacement boundary conditions, reaction forces, and
+  stress recovery
 - control systems
 - optimal state-space feedback with LQR
 - Kalman filtering and noisy-measurement state estimation
@@ -82,6 +85,15 @@ Connects the heat and wave PDE solvers to general numerical differentiation.
 The examples compare forward, backward, and central derivative formulas
 against analytical derivatives and show first- and second-order convergence as
 the grid spacing decreases.
+
+### Finite Element Method Basics
+
+Introduces computational mechanics through a 1D axial bar finite element
+solver. The example demonstrates linear element stiffness matrices, global
+assembly, fixed displacement boundary conditions, nodal displacement solution,
+reaction force recovery, and element strain/stress computation. For a uniform
+fixed-free bar with an end load, the FEM displacement matches the analytical
+linear axial bar solution.
 
 ### Second-Order Control System
 
@@ -338,6 +350,8 @@ The project supports offers such as:
   CFL stability, and second-order PDE time integration.
 - I added reusable finite difference derivative utilities to demonstrate
   numerical differentiation, error metrics, and convergence-order analysis.
+- I added a 1D axial bar finite element example to demonstrate stiffness
+  assembly, boundary conditions, reaction forces, and stress recovery.
 
 ## Future Portfolio Upgrades
 

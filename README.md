@@ -12,6 +12,7 @@ The project currently includes:
 - 1D heat equation finite-difference solver
 - 1D wave equation finite-difference solver
 - Finite difference derivative utilities
+- Finite Element Method basics with a 1D axial bar solver
 - Mass-spring-damper free vibration
 - First-order control system step response
 - Second-order control system step response
@@ -221,6 +222,23 @@ second:   f''(x_i) ~= (f_{i+1} - 2*f_i + f_{i-1}) / dx^2
 
 The examples compare numerical derivatives with analytical derivatives and
 show how error decreases as the grid spacing gets smaller.
+
+## Finite Element Method Basics
+
+The project includes an educational 1D finite element solver for axial bar
+deformation with linear two-node elements. The solver builds a uniform mesh,
+computes element stiffness matrices, assembles the global stiffness matrix,
+applies displacement boundary conditions, solves nodal displacements, and
+recovers reaction forces, element strains, and element stresses.
+
+For a fixed-free uniform bar with an axial end load, the analytical tip
+displacement is:
+
+```text
+u_tip = F*L/(E*A)
+```
+
+The example compares the FEM displacement field with this analytical solution.
 
 ## Mass-Spring-Damper Free Vibration
 
@@ -848,6 +866,17 @@ Run them with:
 ```powershell
 python examples/run_finite_difference_derivatives.py
 python examples/run_finite_difference_convergence.py
+```
+
+## Run the 1D Axial Bar FEM Example
+
+The FEM example solves a fixed-free axial bar with an end load and compares
+the finite element tip displacement with the analytical axial bar solution.
+
+Run it with:
+
+```powershell
+python examples/run_fem_1d_bar.py
 ```
 
 ## Run the Mass-Spring-Damper Example

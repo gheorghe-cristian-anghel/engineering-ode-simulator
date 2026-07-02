@@ -49,6 +49,8 @@ All notable changes to this project will be documented here.
 - Quadcopter hover and circular trajectory tracking examples
 - Quadcopter waypoint following with smooth waypoint trajectory generation
 - Waypoint-following example using the full 6-DOF quadcopter model
+- Static obstacle avoidance for quadcopter trajectory tracking
+- Spherical obstacle geometry and repulsive avoidance acceleration utilities
 - 3D quadcopter animation utilities for 6-DOF simulations
 - Waypoint-following and circular trajectory quadcopter animation examples
 - PI motor speed control with PID-compatible API
@@ -87,6 +89,7 @@ All notable changes to this project will be documented here.
 - Reusable continuous-time state-space simulation utilities
 - Reusable continuous-time LQR utility
 - Reusable linear MPC utility for constrained discrete-time tracking
+- Reusable static obstacle-avoidance utilities for quadcopter tracking
 - Reusable linear discrete-time Kalman filter utility
 - Reusable Extended Kalman Filter utility for nonlinear state estimation
 - Reusable Unscented Kalman Filter implementation

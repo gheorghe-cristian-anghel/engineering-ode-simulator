@@ -71,6 +71,7 @@ Simulations use `scipy.integrate.solve_ivp` for numerical integration.
 | Full 6-DOF Quadcopter | UAV / Rigid-Body Dynamics | Nonlinear twelfth-order dynamics | `models/quadcopter_6dof.py` | `examples/run_quadcopter_6dof_hover.py` | `tests/test_quadcopter_6dof.py` | Implemented |
 | Quadcopter Trajectory Tracking | UAV / Control | Cascaded PD trajectory tracking | `analysis/quadcopter_trajectory_tracking.py` | `examples/run_quadcopter_trajectory_circle_tracking.py` | `tests/test_quadcopter_trajectory_tracking.py` | Implemented |
 | Quadcopter Waypoint Following | UAV / Control | Smooth waypoint reference tracking | `analysis/quadcopter_waypoint_following.py` | `examples/run_quadcopter_waypoint_following.py` | `tests/test_quadcopter_waypoint_following.py` | Implemented |
+| Quadcopter Obstacle Avoidance | UAV / Control | Static spherical obstacle avoidance | `analysis/quadcopter_obstacle_avoidance.py` | `examples/run_quadcopter_obstacle_avoidance.py` | `tests/test_quadcopter_obstacle_avoidance.py` | Implemented |
 | First-Order Control System | Control | First-order | `models/first_order_control.py` | `examples/run_first_order_control.py` | `tests/test_first_order_control.py` | Implemented |
 | Second-Order Control System | Control | Second-order | `models/second_order_control.py` | `examples/run_second_order_control.py` | `tests/test_second_order_control.py` | Implemented |
 | DC Motor | Electromechanical | Coupled first-order system | `models/dc_motor.py` | `examples/run_dc_motor.py` | `tests/test_dc_motor.py` | Implemented |
@@ -115,6 +116,11 @@ The quadcopter waypoint-following helper converts discrete 3D waypoints into
 linear or smoothstep reference trajectories, then reuses the full 6-DOF
 trajectory tracking controller to demonstrate educational waypoint following
 without obstacle avoidance, MPC, or rotor-level motor mixing.
+The quadcopter obstacle-avoidance helper builds on the same 6-DOF trajectory
+tracking infrastructure with static spherical obstacles and a repulsive
+potential-field acceleration term. It demonstrates local reactive avoidance,
+not SLAM, moving-obstacle handling, RRT/A*, MPC obstacle avoidance, or global
+path planning.
 The linear MPC helper demonstrates constrained receding-horizon control for
 small discrete-time systems using SciPy optimization. The first example uses a
 double integrator to track a position reference while respecting acceleration
@@ -139,6 +145,8 @@ Quadcopter trajectory tracking helpers are implemented in
 `analysis/quadcopter_trajectory_tracking.py`.
 Quadcopter waypoint-following helpers are implemented in
 `analysis/quadcopter_waypoint_following.py`.
+Static quadcopter obstacle-avoidance helpers are implemented in
+`analysis/quadcopter_obstacle_avoidance.py`.
 CSV export helpers are implemented in `analysis/export_utils.py`.
 Frequency response and Bode plot helpers are implemented in
 `analysis/frequency_response.py`.
@@ -278,6 +286,7 @@ quadcopter attitude PID control,
 full 6-DOF quadcopter rigid-body dynamics,
 quadcopter trajectory tracking,
 quadcopter waypoint following,
+quadcopter static obstacle avoidance,
 Matplotlib animation examples for inverted pendulum trajectories,
 3D Matplotlib animation examples for full 6-DOF quadcopter trajectories,
 reusable step response metrics, frequency response analysis, transfer function

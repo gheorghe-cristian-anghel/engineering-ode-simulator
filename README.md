@@ -32,6 +32,7 @@ The project currently includes:
 - Full 6-DOF quadcopter rigid-body dynamics
 - Quadcopter trajectory tracking
 - Quadcopter waypoint following
+- Static quadcopter obstacle avoidance with spherical obstacles
 - 3D Matplotlib animation for 6-DOF quadcopter simulations
 - DC motor speed response
 - DC motor open-loop load disturbance response
@@ -567,6 +568,18 @@ This feature demonstrates waypoint following, not full autonomous path
 planning. It does not include obstacle avoidance, MPC, rotor mixing, or real
 drone autopilot complexity.
 
+## Quadcopter Static Obstacle Avoidance
+
+The obstacle-avoidance helper adds static spherical obstacles to the existing
+6-DOF quadcopter trajectory-tracking workflow. A repulsive potential-field
+term creates an additional desired acceleration when the vehicle enters an
+obstacle influence region, while the original trajectory tracker still drives
+toward the reference path or waypoint target.
+
+This feature demonstrates local reactive obstacle avoidance, not full path
+planning. It does not include SLAM, map building, moving obstacles, RRT, A*,
+MPC obstacle avoidance, or production autopilot behavior.
+
 ## Quadcopter Animation
 
 The project includes reusable 3D Matplotlib animation support for full 6-DOF
@@ -985,6 +998,18 @@ Run it with:
 
 ```powershell
 python examples/run_quadcopter_waypoint_following.py
+```
+
+## Run the Quadcopter Obstacle Avoidance Example
+
+The obstacle-avoidance example tracks a waypoint path that passes near a
+static spherical obstacle. The repulsive avoidance term pushes the commanded
+motion away from the obstacle while the tracker continues toward the target.
+
+Run it with:
+
+```powershell
+python examples/run_quadcopter_obstacle_avoidance.py
 ```
 
 ## Run the Quadcopter Animation Examples

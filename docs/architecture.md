@@ -69,6 +69,7 @@ Current example:
 - state-space simulation utilities
 - LQR optimal-control utilities
 - linear MPC constrained-control utilities
+- quadcopter static obstacle-avoidance utilities
 - Kalman filter state-estimation utilities
 - Extended Kalman Filter nonlinear state-estimation utilities
 - Unscented Kalman Filter nonlinear state-estimation utilities
@@ -105,6 +106,12 @@ following logic built on the trajectory tracking infrastructure. It converts
 discrete 3D waypoint goals into linear or smoothstep reference trajectories,
 then reuses the existing cascaded 6-DOF controller without adding obstacle
 avoidance, MPC, rotor mixing, or autopilot complexity.
+
+`analysis/quadcopter_obstacle_avoidance.py` provides educational static
+obstacle-avoidance infrastructure built on the 6-DOF trajectory controller. It
+models spherical obstacles and adds a repulsive acceleration term near obstacle
+influence regions without changing the 6-DOF plant model or adding SLAM,
+global planning, moving obstacles, or MPC obstacle avoidance.
 
 `analysis/lqr.py` provides reusable continuous-time Linear Quadratic
 Regulator infrastructure based on the continuous algebraic Riccati equation.
@@ -182,6 +189,10 @@ cascaded controller.
 The quadcopter waypoint-following example demonstrates discrete UAV navigation
 goals by tracking a smooth reference path through several 3D waypoints with
 the same simplified cascaded controller.
+
+The quadcopter obstacle-avoidance example demonstrates local reactive
+navigation around a static spherical obstacle while continuing to track a
+waypoint reference.
 
 The quadcopter animation examples reuse the waypoint-following and circular
 trajectory results, then visualize the 6-DOF vehicle position, attitude,

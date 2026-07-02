@@ -39,6 +39,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - UAV full 6-DOF rigid-body dynamics
 - UAV trajectory tracking
 - UAV waypoint following
+- UAV static obstacle avoidance
 - electromechanical modeling
 - embedded-style digital PID control
 - discrete disturbance rejection for motor speed control
@@ -163,6 +164,14 @@ motion. The example turns a list of 3D waypoints into a linear or smoothstep
 reference trajectory, then tracks it with the existing full 6-DOF cascaded
 controller without adding obstacle avoidance, MPC, or rotor-level motor
 mixing.
+
+### Quadcopter Static Obstacle Avoidance
+
+Demonstrates navigation behavior beyond waypoint tracking by adding static
+spherical obstacles and a local repulsive acceleration term. The example shows
+how a UAV can reactively deviate from a reference path near an obstacle while
+still moving toward the final waypoint, without adding SLAM, global planning,
+or moving-obstacle logic.
 
 ### Quadcopter Animation
 
@@ -289,6 +298,8 @@ The project supports offers such as:
 - I added quadcopter waypoint following to show how discrete 3D navigation
   goals can be converted into smooth reference motion for a controlled 6-DOF
   UAV simulation.
+- I added static quadcopter obstacle avoidance to demonstrate local reactive
+  navigation around spherical obstacles.
 - I added 3D quadcopter animation examples to visualize 6-DOF position,
   attitude, reference paths, and waypoint tracking.
 - I added an embedded-style discrete PID controller for motor speed control.

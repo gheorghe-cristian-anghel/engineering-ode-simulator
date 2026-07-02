@@ -43,6 +43,7 @@
 - [x] Quadcopter waypoint following
 - [x] Quadcopter animation
 - [x] MPC examples
+- [x] Obstacle avoidance
 
 ## In Progress
 
@@ -58,7 +59,6 @@
 
 ## Long-Term / Advanced Features
 
-- [ ] Obstacle avoidance
 - [ ] Heat equation
 - [ ] Wave equation
 - [ ] Finite difference methods

@@ -31,6 +31,7 @@ All notable changes to this project will be documented here.
 - DC motor and RLC state-estimation examples with Kalman filtering
 - Nonlinear pendulum state-estimation example with an Extended Kalman Filter
 - Nonlinear pendulum state-estimation example with an Unscented Kalman Filter
+- Nonlinear pendulum particle-filter state-estimation example
 - 1D quadcopter altitude dynamics model
 - Quadcopter hover thrust and thrust-step examples
 - PID altitude control example for the 1D quadcopter altitude model
@@ -86,6 +87,7 @@ All notable changes to this project will be documented here.
 - Reusable linear discrete-time Kalman filter utility
 - Reusable Extended Kalman Filter utility for nonlinear state estimation
 - Reusable Unscented Kalman Filter implementation
+- Reusable bootstrap Particle Filter implementation
 - State-space examples for mass-spring-damper, RLC circuit, and DC motor
 - pytest test coverage for implemented models
 

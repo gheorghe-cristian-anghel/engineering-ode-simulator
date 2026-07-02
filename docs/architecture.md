@@ -71,6 +71,7 @@ Current example:
 - Kalman filter state-estimation utilities
 - Extended Kalman Filter nonlinear state-estimation utilities
 - Unscented Kalman Filter nonlinear state-estimation utilities
+- Particle Filter nonlinear and non-Gaussian state-estimation utilities
 - CSV export utilities
 
 `analysis/transfer_function.py` provides reusable continuous-time transfer
@@ -119,6 +120,12 @@ velocity from noisy angle measurements.
 infrastructure for nonlinear state estimation. The pendulum UKF example uses
 sigma points to estimate angle and hidden angular velocity from noisy angle
 measurements without manually deriving Jacobians.
+
+`analysis/particle_filter.py` provides reusable bootstrap Particle Filter
+infrastructure for nonlinear and non-Gaussian state estimation. The pendulum
+particle-filter example uses weighted particles, effective sample size, and
+systematic resampling to estimate angle and hidden angular velocity from noisy
+angle measurements.
 
 ### visualization/
 

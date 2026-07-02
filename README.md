@@ -23,6 +23,7 @@ The project currently includes:
 - Discrete Kalman filter state estimation examples
 - Extended Kalman Filter nonlinear pendulum state estimation
 - Unscented Kalman Filter nonlinear pendulum state estimation
+- Particle Filter nonlinear pendulum state estimation
 - Quadcopter altitude dynamics
 - Quadcopter altitude PID control
 - Quadcopter attitude dynamics
@@ -404,6 +405,13 @@ The Unscented Kalman Filter example estimates nonlinear pendulum angle and
 hidden angular velocity from noisy angle measurements without manually
 deriving Jacobians. It uses sigma points to propagate uncertainty through the
 nonlinear pendulum model.
+
+## Particle Filter / Nonlinear Observer
+
+The Particle Filter example estimates nonlinear pendulum angle and hidden
+angular velocity from noisy angle measurements using many weighted particles
+and systematic resampling. It demonstrates nonlinear state estimation without
+assuming a Gaussian state distribution.
 
 ## Quadcopter Altitude Dynamics
 
@@ -871,6 +879,15 @@ Run it with:
 
 ```powershell
 python examples/run_ukf_pendulum.py
+```
+
+The nonlinear pendulum particle-filter example demonstrates probabilistic
+state estimation with weighted particles and resampling.
+
+Run it with:
+
+```powershell
+python examples/run_particle_filter_pendulum.py
 ```
 
 ## Run the Quadcopter Altitude Examples

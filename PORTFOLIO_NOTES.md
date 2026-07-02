@@ -28,6 +28,7 @@ simulation, control-system analysis, and clean software engineering practices.
 - Kalman filtering and noisy-measurement state estimation
 - Extended Kalman filtering for nonlinear observer design
 - Unscented Kalman filtering without manually derived Jacobians
+- particle filtering with weighted particles and resampling
 - nonlinear instability and linearization
 - UAV altitude dynamics
 - UAV altitude PID control
@@ -94,6 +95,13 @@ Shows nonlinear state estimation by using an Unscented Kalman Filter to
 estimate pendulum angle and hidden angular velocity from noisy angle
 measurements. This demonstrates nonlinear observer design without manually
 deriving Jacobians.
+
+### Particle Filter / Nonlinear Observer
+
+Shows probabilistic nonlinear state estimation by using weighted particles and
+systematic resampling to estimate pendulum angle and hidden angular velocity
+from noisy angle measurements. This demonstrates an observer that does not
+assume the state uncertainty must stay Gaussian.
 
 ### Quadcopter Altitude
 
@@ -253,6 +261,8 @@ The project supports offers such as:
   estimation from noisy angle measurements.
 - I added an Unscented Kalman Filter example that estimates nonlinear pendulum
   state without manually deriving Jacobians.
+- I added a Particle Filter example that estimates nonlinear pendulum state
+  with weighted particles and resampling.
 - I added a 1D quadcopter altitude model as the foundation for future UAV
   control examples.
 - I added PID altitude control to show thrust-based target tracking and

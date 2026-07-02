@@ -2,7 +2,6 @@
 
 import sys
 from pathlib import Path
-from _tkinter import TclError
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +9,8 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from analysis.particle_filter import ParticleFilter
+from analysis.particle_filter import ParticleFilter  # noqa: E402
+from visualization.plot_style import apply_plot_style, format_axes, save_figure  # noqa: E402
 
 
 def _pendulum_derivative(states, L, g, damping):
@@ -122,10 +122,12 @@ def _draw_plots(
     effective_sample_sizes,
 ):
     """Draw nonlinear pendulum particle-filter state-estimation plots."""
+    apply_plot_style()
+
     estimated_theta = estimated_states[:, 0]
     estimated_omega = estimated_states[:, 1]
 
-    figure, axes = plt.subplots(4, 1, sharex=True)
+    figure, axes = plt.subplots(4, 1, figsize=(9, 9), sharex=True)
 
     axes[0].plot(t, np.degrees(true_theta), label="True angle")
     axes[0].plot(
@@ -136,17 +138,19 @@ def _draw_plots(
         label="Noisy angle measurement",
     )
     axes[0].plot(t, np.degrees(estimated_theta), "--", label="PF estimated angle")
-    axes[0].set_ylabel("Angle (deg)")
-    axes[0].set_title("Nonlinear Pendulum Particle Filter: Angle Estimate")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_axes(
+        axes[0],
+        title="Nonlinear Pendulum Particle Filter: Angle Estimate",
+        ylabel="Angle (deg)",
+    )
 
     axes[1].plot(t, true_omega, label="True angular velocity")
     axes[1].plot(t, estimated_omega, "--", label="PF estimated angular velocity")
-    axes[1].set_ylabel("Angular velocity (rad/s)")
-    axes[1].set_title("Hidden Angular Velocity Estimate")
-    axes[1].grid(True)
-    axes[1].legend()
+    format_axes(
+        axes[1],
+        title="Hidden Angular Velocity Estimate",
+        ylabel="Angular velocity (rad/s)",
+    )
 
     axes[2].plot(
         t,
@@ -154,19 +158,18 @@ def _draw_plots(
         label="Angle error",
     )
     axes[2].plot(t, true_omega - estimated_omega, label="Angular velocity error")
-    axes[2].set_ylabel("Error")
-    axes[2].set_title("Estimation Errors")
-    axes[2].grid(True)
-    axes[2].legend()
+    format_axes(axes[2], title="Estimation Errors", ylabel="Error")
 
     axes[3].plot(t, effective_sample_sizes, label="Effective sample size")
-    axes[3].set_xlabel("Time (s)")
-    axes[3].set_ylabel("Particles")
-    axes[3].set_title("Particle Diversity")
-    axes[3].grid(True)
-    axes[3].legend()
+    format_axes(
+        axes[3],
+        title="Particle Diversity",
+        xlabel="Time (s)",
+        ylabel="Particles",
+    )
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(
@@ -177,34 +180,20 @@ def _plot_response(
     estimated_states,
     effective_sample_sizes,
 ):
-    """Plot response, falling back gracefully if Tk is unavailable."""
+    """Save and display the pendulum particle-filter plots."""
     output_path = PROJECT_ROOT / "examples" / "particle_filter_pendulum.png"
 
-    try:
-        _draw_plots(
-            t,
-            true_theta,
-            true_omega,
-            measured_theta,
-            estimated_states,
-            effective_sample_sizes,
-        )
-        plt.savefig(output_path, dpi=150)
-        plt.show()
-    except TclError:
-        plt.switch_backend("Agg")
-        plt.close("all")
-        _draw_plots(
-            t,
-            true_theta,
-            true_omega,
-            measured_theta,
-            estimated_states,
-            effective_sample_sizes,
-        )
-        plt.savefig(output_path, dpi=150)
-        print("Interactive Matplotlib window is unavailable in this environment.")
-        print(f"Plot saved to: {output_path}")
+    figure = _draw_plots(
+        t,
+        true_theta,
+        true_omega,
+        measured_theta,
+        estimated_states,
+        effective_sample_sizes,
+    )
+    save_figure(figure, output_path)
+    print(f"Plot saved to: {output_path}")
+    plt.show()
 
 
 def main():

@@ -2,7 +2,6 @@
 
 import sys
 from pathlib import Path
-from _tkinter import TclError
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,10 +13,13 @@ from analysis.quadcopter_waypoint_following import (  # noqa: E402
     simulate_quadcopter_waypoint_following,
     total_waypoint_time,
 )
+from visualization.plot_style import apply_plot_style, format_axes, save_figure  # noqa: E402
 
 
 def _draw_plots(result):
     """Draw waypoint path, position tracking, error, and command plots."""
+    apply_plot_style()
+
     time = result["time"]
     states = result["states"]
     controls = result["controls"]
@@ -69,45 +71,36 @@ def _draw_plots(result):
             linestyle="--",
             label=f"{label} reference",
         )
-    axes_position.set_ylabel("Position (m)")
-    axes_position.set_title("Position Tracking")
-    axes_position.grid(True)
+    format_axes(axes_position, title="Position Tracking", ylabel="Position (m)")
     axes_position.legend(ncol=3)
 
     axes_error.plot(time, error_norm, color="tab:red", label="Position error norm")
-    axes_error.set_ylabel("Error (m)")
-    axes_error.set_title("Tracking Error")
-    axes_error.grid(True)
-    axes_error.legend()
+    format_axes(axes_error, title="Tracking Error", ylabel="Error (m)")
 
     axes_commands.plot(time, controls[:, 0], label="Thrust T")
     axes_commands.plot(time, attitude_commands_deg[:, 0], label="phi cmd (deg)")
     axes_commands.plot(time, attitude_commands_deg[:, 1], label="theta cmd (deg)")
     axes_commands.plot(time, attitude_commands_deg[:, 2], label="psi cmd (deg)")
-    axes_commands.set_xlabel("Time (s)")
-    axes_commands.set_ylabel("Command")
-    axes_commands.set_title("Thrust and Attitude Commands")
-    axes_commands.grid(True)
+    format_axes(
+        axes_commands,
+        title="Thrust and Attitude Commands",
+        xlabel="Time (s)",
+        ylabel="Command",
+    )
     axes_commands.legend(ncol=4)
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(result):
-    """Plot response, falling back gracefully if Tk is unavailable."""
+    """Save and display the waypoint-following plots."""
     output_path = PROJECT_ROOT / "examples" / "quadcopter_waypoint_following.png"
 
-    try:
-        _draw_plots(result)
-        plt.savefig(output_path, dpi=150)
-        plt.show()
-    except TclError:
-        plt.switch_backend("Agg")
-        plt.close("all")
-        _draw_plots(result)
-        plt.savefig(output_path, dpi=150)
-        print("Interactive Matplotlib window is unavailable in this environment.")
-        print(f"Plot saved to: {output_path}")
+    figure = _draw_plots(result)
+    save_figure(figure, output_path)
+    print(f"Plot saved to: {output_path}")
+    plt.show()
 
 
 def main():

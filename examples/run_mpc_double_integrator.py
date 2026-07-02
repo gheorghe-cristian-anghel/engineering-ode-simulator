@@ -2,7 +2,6 @@
 
 import sys
 from pathlib import Path
-from _tkinter import TclError
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +9,7 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from analysis.model_predictive_control import (
+from analysis.model_predictive_control import (  # noqa: E402
     LinearMPC,
     discrete_double_integrator,
     simulate_mpc_tracking,
@@ -77,21 +76,13 @@ def _draw_plots(result, dt, u_min, u_max):
 
 
 def _plot_response(result, dt, u_min, u_max):
-    """Plot response, falling back gracefully if Tk is unavailable."""
+    """Save and display the MPC tracking plots."""
     output_path = PROJECT_ROOT / "examples" / "mpc_double_integrator.png"
 
-    try:
-        figure = _draw_plots(result, dt, u_min, u_max)
-        save_figure(figure, output_path)
-        print(f"Plot saved to: {output_path}")
-        plt.show()
-    except TclError:
-        plt.switch_backend("Agg")
-        plt.close("all")
-        figure = _draw_plots(result, dt, u_min, u_max)
-        save_figure(figure, output_path)
-        print("Interactive Matplotlib window is unavailable in this environment.")
-        print(f"Plot saved to: {output_path}")
+    figure = _draw_plots(result, dt, u_min, u_max)
+    save_figure(figure, output_path)
+    print(f"Plot saved to: {output_path}")
+    plt.show()
 
 
 def main():

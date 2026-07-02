@@ -2,7 +2,6 @@
 
 import sys
 from pathlib import Path
-from _tkinter import TclError
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -10,7 +9,8 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from analysis.unscented_kalman_filter import UnscentedKalmanFilter
+from analysis.unscented_kalman_filter import UnscentedKalmanFilter  # noqa: E402
+from visualization.plot_style import apply_plot_style, format_axes, save_figure  # noqa: E402
 
 
 def _pendulum_derivative(state, L, g, damping):
@@ -86,10 +86,12 @@ def _run_pendulum_ukf(t, measurements, L, g, damping, initial_estimate):
 
 def _draw_plots(t, true_theta, true_omega, measured_theta, estimated_states):
     """Draw nonlinear pendulum UKF state-estimation plots."""
+    apply_plot_style()
+
     estimated_theta = estimated_states[:, 0]
     estimated_omega = estimated_states[:, 1]
 
-    figure, axes = plt.subplots(3, 1, sharex=True)
+    figure, axes = plt.subplots(3, 1, figsize=(9, 8), sharex=True)
 
     axes[0].plot(t, np.degrees(true_theta), label="True angle")
     axes[0].plot(
@@ -100,17 +102,19 @@ def _draw_plots(t, true_theta, true_omega, measured_theta, estimated_states):
         label="Noisy angle measurement",
     )
     axes[0].plot(t, np.degrees(estimated_theta), "--", label="UKF estimated angle")
-    axes[0].set_ylabel("Angle (deg)")
-    axes[0].set_title("Nonlinear Pendulum UKF: Angle Estimate")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_axes(
+        axes[0],
+        title="Nonlinear Pendulum UKF: Angle Estimate",
+        ylabel="Angle (deg)",
+    )
 
     axes[1].plot(t, true_omega, label="True angular velocity")
     axes[1].plot(t, estimated_omega, "--", label="UKF estimated angular velocity")
-    axes[1].set_ylabel("Angular velocity (rad/s)")
-    axes[1].set_title("Hidden Angular Velocity Estimate")
-    axes[1].grid(True)
-    axes[1].legend()
+    format_axes(
+        axes[1],
+        title="Hidden Angular Velocity Estimate",
+        ylabel="Angular velocity (rad/s)",
+    )
 
     axes[2].plot(
         t,
@@ -118,30 +122,25 @@ def _draw_plots(t, true_theta, true_omega, measured_theta, estimated_states):
         label="Angle error",
     )
     axes[2].plot(t, true_omega - estimated_omega, label="Angular velocity error")
-    axes[2].set_xlabel("Time (s)")
-    axes[2].set_ylabel("Error")
-    axes[2].set_title("Estimation Errors")
-    axes[2].grid(True)
-    axes[2].legend()
+    format_axes(
+        axes[2],
+        title="Estimation Errors",
+        xlabel="Time (s)",
+        ylabel="Error",
+    )
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(t, true_theta, true_omega, measured_theta, estimated_states):
-    """Plot response, falling back gracefully if Tk is unavailable."""
+    """Save and display the pendulum UKF plots."""
     output_path = PROJECT_ROOT / "examples" / "ukf_pendulum.png"
 
-    try:
-        _draw_plots(t, true_theta, true_omega, measured_theta, estimated_states)
-        plt.savefig(output_path, dpi=150)
-        plt.show()
-    except TclError:
-        plt.switch_backend("Agg")
-        plt.close("all")
-        _draw_plots(t, true_theta, true_omega, measured_theta, estimated_states)
-        plt.savefig(output_path, dpi=150)
-        print("Interactive Matplotlib window is unavailable in this environment.")
-        print(f"Plot saved to: {output_path}")
+    figure = _draw_plots(t, true_theta, true_omega, measured_theta, estimated_states)
+    save_figure(figure, output_path)
+    print(f"Plot saved to: {output_path}")
+    plt.show()
 
 
 def main():

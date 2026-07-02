@@ -9,7 +9,7 @@ import numpy as np
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from analysis.finite_difference import (
+from analysis.finite_difference import (  # noqa: E402
     backward_difference,
     central_difference,
     forward_difference,
@@ -18,6 +18,7 @@ from analysis.finite_difference import (
     second_derivative_central,
     uniform_grid_1d,
 )
+from visualization.plot_style import apply_plot_style, format_axes, save_figure  # noqa: E402
 
 
 def _function(x):
@@ -45,43 +46,50 @@ def _draw_plots(
     second,
 ):
     """Draw derivative comparison and absolute error plots."""
+    apply_plot_style()
+
     figure, axes = plt.subplots(2, 2, figsize=(11, 8))
 
     axes[0, 0].plot(x, exact_first, label="Exact f'(x)", linewidth=2)
     axes[0, 0].plot(x, forward, "--", label="Forward")
     axes[0, 0].plot(x, backward, "--", label="Backward")
     axes[0, 0].plot(x, central, "--", label="Central")
-    axes[0, 0].set_title("First Derivative")
-    axes[0, 0].set_xlabel("x")
-    axes[0, 0].set_ylabel("Derivative")
-    axes[0, 0].grid(True)
-    axes[0, 0].legend()
+    format_axes(
+        axes[0, 0],
+        title="First Derivative",
+        xlabel="x",
+        ylabel="Derivative",
+    )
 
     axes[0, 1].plot(x, np.abs(forward - exact_first), label="Forward")
     axes[0, 1].plot(x, np.abs(backward - exact_first), label="Backward")
     axes[0, 1].plot(x, np.abs(central - exact_first), label="Central")
-    axes[0, 1].set_title("First Derivative Absolute Error")
-    axes[0, 1].set_xlabel("x")
-    axes[0, 1].set_ylabel("Absolute error")
-    axes[0, 1].grid(True)
-    axes[0, 1].legend()
+    format_axes(
+        axes[0, 1],
+        title="First Derivative Absolute Error",
+        xlabel="x",
+        ylabel="Absolute error",
+    )
 
     axes[1, 0].plot(x, exact_second, label="Exact f''(x)", linewidth=2)
     axes[1, 0].plot(x, second, "--", label="Central")
-    axes[1, 0].set_title("Second Derivative")
-    axes[1, 0].set_xlabel("x")
-    axes[1, 0].set_ylabel("Second derivative")
-    axes[1, 0].grid(True)
-    axes[1, 0].legend()
+    format_axes(
+        axes[1, 0],
+        title="Second Derivative",
+        xlabel="x",
+        ylabel="Second derivative",
+    )
 
     axes[1, 1].plot(x, np.abs(second - exact_second), label="Second derivative")
-    axes[1, 1].set_title("Second Derivative Absolute Error")
-    axes[1, 1].set_xlabel("x")
-    axes[1, 1].set_ylabel("Absolute error")
-    axes[1, 1].grid(True)
-    axes[1, 1].legend()
+    format_axes(
+        axes[1, 1],
+        title="Second Derivative Absolute Error",
+        xlabel="x",
+        ylabel="Absolute error",
+    )
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(
@@ -96,7 +104,7 @@ def _plot_response(
     """Save and display the finite difference derivative comparison plots."""
     output_path = PROJECT_ROOT / "examples" / "finite_difference_derivatives.png"
 
-    _draw_plots(
+    figure = _draw_plots(
         x,
         exact_first,
         forward,
@@ -105,7 +113,7 @@ def _plot_response(
         exact_second,
         second,
     )
-    plt.savefig(output_path, dpi=150)
+    save_figure(figure, output_path)
     print(f"Plot saved to: {output_path}")
     plt.show()
 

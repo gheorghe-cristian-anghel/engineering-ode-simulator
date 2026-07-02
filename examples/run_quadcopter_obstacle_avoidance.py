@@ -2,7 +2,6 @@
 
 import sys
 from pathlib import Path
-from _tkinter import TclError
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -145,21 +144,13 @@ def _draw_plots(result, waypoints):
 
 
 def _plot_response(result, waypoints):
-    """Plot response, falling back gracefully if Tk is unavailable."""
+    """Save and display the obstacle-avoidance plots."""
     output_path = PROJECT_ROOT / "examples" / "quadcopter_obstacle_avoidance.png"
 
-    try:
-        figure = _draw_plots(result, waypoints)
-        save_figure(figure, output_path)
-        print(f"Plot saved to: {output_path}")
-        plt.show()
-    except TclError:
-        plt.switch_backend("Agg")
-        plt.close("all")
-        figure = _draw_plots(result, waypoints)
-        save_figure(figure, output_path)
-        print("Interactive Matplotlib window is unavailable in this environment.")
-        print(f"Plot saved to: {output_path}")
+    figure = _draw_plots(result, waypoints)
+    save_figure(figure, output_path)
+    print(f"Plot saved to: {output_path}")
+    plt.show()
 
 
 def main():

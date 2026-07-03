@@ -1,10 +1,10 @@
-# Engineering ODE Simulator
+# Engineering Simulation Toolkit
 
-An educational Python simulation toolkit for engineering dynamics, control systems, numerical methods, PDEs, and lightweight interactive visualization.
+A Python engineering simulation toolkit for control systems, numerical methods, PDEs, FEM basics, UAV dynamics, and scientific visualization.
 
 ## Overview
 
-Engineering ODE Simulator is a portfolio-oriented engineering simulation project. It models representative electrical, mechanical, thermal, control, UAV, state-estimation, and numerical-methods problems with clear Python modules, runnable examples, plots, tests, and documentation.
+Engineering Simulation Toolkit is a portfolio-oriented engineering simulation project. It started as an ODE simulator and has grown into a broader toolkit for representative electrical, mechanical, thermal, control, UAV, state-estimation, PDE, FEM, and numerical-methods problems with clear Python modules, runnable examples, plots, tests, and documentation.
 
 The project is intentionally educational: it emphasizes readable equations, reproducible examples, and engineering intuition. It is not production-grade industrial simulation, certified control software, or a replacement for specialized tools such as Simulink, ANSYS, COMSOL, or flight-control stacks.
 

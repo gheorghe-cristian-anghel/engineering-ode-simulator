@@ -2,7 +2,7 @@
 
 ## Project Pitch
 
-Engineering ODE Simulator is a Python-based simulation toolkit for modeling
+Engineering Simulation Toolkit is a Python-based simulation toolkit for modeling
 electrical, mechanical, thermal, control, UAV, state-estimation, PDE, and
 introductory FEM examples. It demonstrates scientific computing, numerical
 simulation, control-system analysis, and clean software engineering practices.

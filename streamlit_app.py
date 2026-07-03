@@ -107,7 +107,7 @@ def show_stability_status(label, value, limit):
 
 def render_home():
     """Render the app overview page."""
-    st.header("Engineering ODE Simulator")
+    st.header("Engineering Simulation Toolkit")
     st.write(
         "Interactive demonstrations for engineering dynamics, controls, "
         "partial differential equations, numerical methods, and FEM basics. "
@@ -1025,12 +1025,12 @@ def render_axial_bar_fem():
 
 def main():
     """Run the Streamlit application."""
-    st.set_page_config(page_title="Engineering ODE Simulator", layout="wide")
-    st.sidebar.title("Engineering ODE Simulator")
+    st.set_page_config(page_title="Engineering Simulation Toolkit", layout="wide")
+    st.sidebar.title("Engineering Simulation Toolkit")
     domain = st.sidebar.radio("Domain", tuple(DOMAIN_DEMOS.keys()))
     demo = st.sidebar.selectbox("Demo", DOMAIN_DEMOS[domain])
 
-    st.title("Engineering ODE Simulator")
+    st.title("Engineering Simulation Toolkit")
 
     if domain == "Home / overview":
         render_home()

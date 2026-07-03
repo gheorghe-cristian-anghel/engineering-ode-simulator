@@ -2,7 +2,7 @@
 
 ## Overview
 
-Engineering ODE Simulator is organized into models, analysis tools, examples,
+Engineering Simulation Toolkit is organized into models, analysis tools, examples,
 tests, and documentation. Model modules focus on equations and numerical
 simulation. Examples demonstrate usage and plotting. Tests verify numerical and
 engineering behavior. The Streamlit app provides a small browser-based UI over

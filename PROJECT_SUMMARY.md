@@ -1,8 +1,8 @@
-# Engineering ODE Simulator - Project Summary
+# Engineering Simulation Toolkit - Project Summary
 
 ## Purpose
 
-Engineering ODE Simulator is a Python engineering simulation toolkit for
+Engineering Simulation Toolkit is a Python engineering simulation toolkit for
 modeling physical systems, control systems, state estimation examples, PDEs,
 and introductory numerical methods.
 

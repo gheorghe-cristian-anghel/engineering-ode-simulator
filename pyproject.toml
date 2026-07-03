@@ -3,9 +3,9 @@ requires = ["setuptools>=64"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "engineering-ode-simulator"
+name = "engineering-simulation-toolkit"
 version = "0.1.0"
-description = "Educational engineering ODE, PDE, control, estimation, and visualization examples."
+description = "Educational engineering simulation toolkit for control, numerical methods, PDEs, FEM basics, UAV dynamics, and visualization."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [

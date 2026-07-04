@@ -39,24 +39,74 @@ from models.wave_equation_2d import (
     wave_stability_numbers_2d,
     zero_initial_velocity_2d,
 )
+from visualization.plot_style import apply_plot_style
 
+
+APP_TITLE = "Engineering Simulation Toolkit"
+APP_SUBTITLE = (
+    "Python scientific computing, control systems, PDEs, FEM, and UAV simulation"
+)
 
 DOMAIN_DEMOS = {
-    "Home / overview": ("Overview",),
-    "Circuits": ("RC Circuit", "RLC Circuit"),
-    "Mechanical systems": ("Portfolio examples",),
-    "Control systems": ("DC Motor PID Control",),
-    "State estimation": ("Portfolio examples",),
-    "UAV / quadcopter": ("Portfolio examples",),
-    "PDEs": (
+    "Home": ("Overview",),
+    "Control Systems": ("RC Circuit", "RLC Circuit", "DC Motor PID Control"),
+    "State Estimation": ("Portfolio Examples",),
+    "UAV / Quadcopter": ("Portfolio Examples",),
+    "PDE Solvers": (
         "1D Heat Equation",
         "1D Wave Equation",
         "2D Heat Equation",
         "2D Wave Equation",
     ),
-    "Numerical methods": ("Finite Difference Convergence",),
-    "FEM basics": ("1D Axial Bar FEM",),
+    "Numerical Methods": ("Finite Difference Convergence",),
+    "FEM Basics": ("1D Axial Bar FEM",),
+    "About": ("Project Scope",),
 }
+
+FEATURE_CARDS = (
+    (
+        "Control Systems",
+        "RC/RLC transients, discrete PID motor control, step-response thinking, "
+        "and classical engineering feedback concepts.",
+        "Interactive demos",
+    ),
+    (
+        "State Estimation",
+        "Kalman, Extended Kalman, Unscented Kalman, and Particle Filter examples "
+        "available through repository scripts and plots.",
+        "Portfolio examples",
+    ),
+    (
+        "UAV / Quadcopter",
+        "Altitude, attitude, 6-DOF motion, trajectory tracking, waypoint following, "
+        "and obstacle-avoidance examples.",
+        "Portfolio examples",
+    ),
+    (
+        "PDE Solvers",
+        "1D/2D heat diffusion and wave propagation with explicit finite-difference "
+        "stability checks.",
+        "Interactive demos",
+    ),
+    (
+        "Numerical Methods",
+        "Finite differences, RMS error, convergence-order estimation, and "
+        "stability-aware simulation workflows.",
+        "Interactive demo",
+    ),
+    (
+        "FEM Basics",
+        "A clear 1D axial bar finite element workflow with stiffness assembly, "
+        "displacement, reaction, and stress recovery.",
+        "Interactive demo",
+    ),
+    (
+        "Visualization / Streamlit",
+        "Matplotlib figures, saved portfolio screenshots, and a browser UI for "
+        "hands-on simulation exploration.",
+        "Presentation layer",
+    ),
+)
 
 
 def response_type(zeta):
@@ -86,6 +136,184 @@ def store_every_for_frame_cap(num_intervals, max_frames=30):
     return max(1, int(np.ceil(num_intervals / max_frames)))
 
 
+def inject_custom_css():
+    """Apply a lightweight local visual system for the Streamlit UI."""
+    st.markdown(
+        """
+        <style>
+        :root {
+            --est-bg-soft: #f8fafc;
+            --est-border: #d8dee9;
+            --est-text-muted: #475569;
+            --est-accent: #2563eb;
+            --est-accent-soft: #eff6ff;
+        }
+
+        .block-container {
+            padding-top: 1.75rem;
+            padding-bottom: 3rem;
+            max-width: 1240px;
+        }
+
+        .est-hero {
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid var(--est-border);
+            border-radius: 8px;
+            padding: 1.25rem 1.35rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .est-eyebrow {
+            color: var(--est-accent);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.3rem;
+            text-transform: uppercase;
+        }
+
+        .est-hero h1 {
+            margin: 0;
+            font-size: 2.1rem;
+            line-height: 1.15;
+        }
+
+        .est-subtitle {
+            color: var(--est-text-muted);
+            font-size: 1.02rem;
+            margin-top: 0.5rem;
+            max-width: 850px;
+        }
+
+        .est-card {
+            background: #ffffff;
+            border: 1px solid var(--est-border);
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 165px;
+            margin-bottom: 1rem;
+        }
+
+        .est-card-title {
+            font-weight: 700;
+            font-size: 1.02rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .est-card-body {
+            color: var(--est-text-muted);
+            font-size: 0.94rem;
+            line-height: 1.48;
+        }
+
+        .est-tag {
+            display: inline-block;
+            background: var(--est-accent-soft);
+            border: 1px solid #bfdbfe;
+            border-radius: 999px;
+            color: #1d4ed8;
+            font-size: 0.76rem;
+            font-weight: 650;
+            margin-top: 0.8rem;
+            padding: 0.16rem 0.55rem;
+        }
+
+        .est-info-box {
+            background: var(--est-bg-soft);
+            border: 1px solid var(--est-border);
+            border-radius: 8px;
+            padding: 0.9rem 1rem;
+            margin: 0.75rem 0 1rem;
+        }
+
+        .est-info-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .est-info-body {
+            color: var(--est-text-muted);
+            line-height: 1.5;
+        }
+
+        .est-divider {
+            border-top: 1px solid var(--est-border);
+            margin: 1.35rem 0 0.9rem;
+        }
+
+        [data-testid="stMetric"] {
+            background: #ffffff;
+            border: 1px solid var(--est-border);
+            border-radius: 8px;
+            padding: 0.75rem 0.85rem;
+        }
+
+        [data-testid="stMetricLabel"] {
+            color: var(--est-text-muted);
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_header(section=None):
+    """Render the app-level title and subtitle."""
+    eyebrow = "Portfolio engineering demo" if section is None else section
+    st.markdown(
+        f"""
+        <section class="est-hero">
+            <div class="est-eyebrow">{eyebrow}</div>
+            <h1>{APP_TITLE}</h1>
+            <div class="est-subtitle">{APP_SUBTITLE}</div>
+        </section>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_feature_card(title, body, tag=None):
+    """Render a compact visual feature card."""
+    tag_html = f'<div class="est-tag">{tag}</div>' if tag else ""
+    st.markdown(
+        f"""
+        <div class="est-card">
+            <div class="est-card-title">{title}</div>
+            <div class="est-card-body">{body}</div>
+            {tag_html}
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_metric_row(metrics):
+    """Render Streamlit metrics with consistent spacing."""
+    columns = st.columns(len(metrics))
+    for column, metric in zip(columns, metrics):
+        label, value = metric[:2]
+        delta = metric[2] if len(metric) > 2 else None
+        column.metric(label, value, delta=delta)
+
+
+def render_section_divider():
+    """Render a subtle horizontal section divider."""
+    st.markdown('<div class="est-divider"></div>', unsafe_allow_html=True)
+
+
+def render_info_box(title, body):
+    """Render a restrained information box."""
+    st.markdown(
+        f"""
+        <div class="est-info-box">
+            <div class="est-info-title">{title}</div>
+            <div class="est-info-body">{body}</div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def show_figure(figure):
     """Display a Matplotlib figure in Streamlit, then close it."""
     st.pyplot(figure)
@@ -107,63 +335,128 @@ def show_stability_status(label, value, limit):
 
 def render_home():
     """Render the app overview page."""
-    st.header("Engineering Simulation Toolkit")
-    st.write(
-        "Interactive demonstrations for engineering dynamics, controls, "
-        "partial differential equations, numerical methods, and FEM basics. "
-        "The app reuses the tested project modules and keeps the simulations "
-        "small enough for responsive exploration."
+    st.header("Home / Overview")
+    render_info_box(
+        "What this toolkit is",
+        "A portfolio-oriented Python engineering simulation project for "
+        "dynamics, control, state estimation, UAV motion, finite differences, "
+        "PDEs, FEM basics, and scientific visualization. The Streamlit app "
+        "reuses the tested project modules and keeps interactive demos small "
+        "enough for responsive exploration.",
     )
 
-    st.subheader("Best interactive demos in this app")
-    st.write(
-        "- PDEs: 1D/2D heat diffusion and 1D/2D wave propagation with explicit "
-        "finite-difference stability checks.\n"
-        "- Numerical methods: finite-difference convergence for forward, "
-        "backward, and central first derivatives.\n"
-        "- FEM basics: fixed-free 1D axial bar displacement, stress, support "
-        "reaction, and analytical comparison.\n"
-        "- Circuits/control: RC/RLC transients and discrete PID motor control."
+    st.subheader("Domains covered")
+    for row_start in range(0, len(FEATURE_CARDS), 3):
+        columns = st.columns(3)
+        for column, card in zip(columns, FEATURE_CARDS[row_start : row_start + 3]):
+            with column:
+                render_feature_card(*card)
+
+    render_section_divider()
+    st.subheader("Technologies and skills demonstrated")
+    col1, col2 = st.columns(2)
+    with col1:
+        render_info_box(
+            "Python scientific stack",
+            "NumPy, SciPy, Matplotlib, Streamlit, pytest, reusable model modules, "
+            "analysis helpers, and runnable example scripts.",
+        )
+    with col2:
+        render_info_box(
+            "Engineering workflow",
+            "Equation-based modeling, numerical stability checks, controller "
+            "experiments, estimator examples, FEM assembly, tests, documentation, "
+            "and portfolio-ready plots.",
+        )
+
+    st.subheader("Best interactive demos")
+    render_metric_row(
+        (
+            ("PDE pages", "4"),
+            ("Control pages", "3"),
+            ("Numerical demo", "1"),
+            ("FEM demo", "1"),
+        )
     )
 
-    st.subheader("Performance guardrails")
-    st.write(
+    render_info_box(
+        "Performance guardrails",
         "2D grids default to modest sizes, stored frames are capped, and "
         "explicit PDE solvers are blocked when the selected time step violates "
-        "the heat-equation stability limit or wave-equation CFL limit."
+        "the heat-equation stability limit or wave-equation CFL limit.",
     )
 
 
 def render_portfolio_examples(domain):
     """Render a lightweight page for domains available through scripts."""
     st.header(domain)
-    st.write(
+    render_info_box(
+        "Repository-backed examples",
         "This domain is represented in the repository through command-line "
         "examples, tests, and generated figures. The Streamlit polish pass "
         "keeps this page lightweight and focuses interactivity on the new PDE, "
-        "numerical-methods, and FEM demos."
+        "numerical-methods, and FEM demos.",
     )
 
     examples_by_domain = {
-        "Mechanical systems": (
-            "Mass-spring-damper vibration",
-            "Simple pendulum",
-            "Inverted pendulum open-loop and LQR examples",
-        ),
-        "State estimation": (
+        "State Estimation": (
             "Kalman filter for DC motor and RLC systems",
             "Extended Kalman Filter pendulum observer",
             "Unscented Kalman Filter and Particle Filter pendulum observers",
         ),
-        "UAV / quadcopter": (
+        "UAV / Quadcopter": (
             "Altitude and attitude dynamics",
             "Full 6-DOF quadcopter model",
             "Trajectory tracking, waypoint following, and obstacle avoidance",
         ),
     }
 
-    for item in examples_by_domain.get(domain, ()):
-        st.write(f"- {item}")
+    columns = st.columns(3)
+    for column, item in zip(columns, examples_by_domain.get(domain, ())):
+        with column:
+            render_feature_card(item, "Available through tested modules, examples, and saved figures.")
+
+
+def render_about():
+    """Render project scope and implementation notes."""
+    st.header("About")
+    render_info_box(
+        "Project scope",
+        "Engineering Simulation Toolkit is an educational and portfolio-focused "
+        "simulation project. It demonstrates readable equations, reproducible "
+        "examples, tested numerical behavior, and a practical Streamlit UI.",
+    )
+
+    st.subheader("What is intentionally included")
+    columns = st.columns(3)
+    included = (
+        (
+            "Models and analysis",
+            "ODE/PDE models, controls, estimators, MPC, finite differences, and "
+            "introductory FEM utilities.",
+        ),
+        (
+            "Presentation",
+            "Matplotlib plots, saved example figures, Streamlit controls, metrics, "
+            "and concise explanatory text.",
+        ),
+        (
+            "Quality signals",
+            "Focused tests, documentation, examples, and stability checks for "
+            "explicit numerical methods.",
+        ),
+    )
+    for column, card in zip(columns, included):
+        with column:
+            render_feature_card(card[0], card[1])
+
+    render_section_divider()
+    render_info_box(
+        "Educational limits",
+        "The app is not a certified control system, flight stack, CFD package, "
+        "or industrial FEM solver. The goal is clear engineering intuition and "
+        "credible software structure for demos, discussions, and portfolio use.",
+    )
 
 
 def render_rc_circuit():
@@ -220,9 +513,12 @@ def render_rc_circuit():
 
     tau = resistance * capacitance
 
-    col1, col2 = st.columns(2)
-    col1.metric("Time constant", format_value(tau, "s"))
-    col2.metric("Final capacitor voltage", format_value(capacitor_voltage[-1], "V"))
+    render_metric_row(
+        (
+            ("Time constant", format_value(tau, "s")),
+            ("Final capacitor voltage", format_value(capacitor_voltage[-1], "V")),
+        )
+    )
 
     figure, axis = plt.subplots(figsize=(8, 4.5))
     axis.plot(t, capacitor_voltage, label="Numerical solution")
@@ -299,10 +595,13 @@ def render_rlc_circuit():
     omega_n = natural_frequency(inductance, capacitance)
     zeta = damping_ratio(resistance, inductance, capacitance)
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Natural frequency", format_value(omega_n, "rad/s"))
-    col2.metric("Damping ratio", format_value(zeta))
-    col3.metric("Response type", response_type(zeta))
+    render_metric_row(
+        (
+            ("Natural frequency", format_value(omega_n, "rad/s")),
+            ("Damping ratio", format_value(zeta)),
+            ("Response type", response_type(zeta)),
+        )
+    )
 
     figure, axes = plt.subplots(2, 1, sharex=True, figsize=(8, 6))
     axes[0].plot(t, capacitor_voltage, label="Capacitor voltage")
@@ -409,18 +708,24 @@ def render_dc_motor_pid_control():
     peak_speed = float(np.max(speed))
     overshoot = max(0.0, (peak_speed - target_speed) / target_speed * 100.0)
 
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Final speed", format_value(speed[-1], "rad/s"))
-    col2.metric("Final error", format_value(final_error, "rad/s"))
-    col3.metric("Overshoot", format_value(overshoot, "%"))
-
-    col4, col5, col6 = st.columns(3)
-    col4.metric("Peak speed", format_value(peak_speed, "rad/s"))
-    col5.metric(
-        "Final speed in rpm",
-        format_value(rad_per_sec_to_rpm(speed[-1]), "rpm"),
+    render_metric_row(
+        (
+            ("Final speed", format_value(speed[-1], "rad/s")),
+            ("Final error", format_value(final_error, "rad/s")),
+            ("Overshoot", format_value(overshoot, "%")),
+        )
     )
-    col6.metric("Max voltage", format_value(np.max(voltage), "V"))
+
+    render_metric_row(
+        (
+            ("Peak speed", format_value(peak_speed, "rad/s")),
+            (
+                "Final speed in rpm",
+                format_value(rad_per_sec_to_rpm(speed[-1]), "rpm"),
+            ),
+            ("Max voltage", format_value(np.max(voltage), "V")),
+        )
+    )
 
     figure, axes = plt.subplots(3, 1, sharex=True, figsize=(8, 7))
     axes[0].plot(t, speed, label="Motor speed")
@@ -473,10 +778,13 @@ def render_heat_equation_1d():
 
     dx = length / (num_points - 1)
     r = heat_stability_number(alpha, dt, dx)
-    col1, col2, col3 = st.columns(3)
-    col1.metric("dx", format_value(dx, "m", 4))
-    col2.metric("Requested dt", format_value(dt, "s", 4))
-    col3.metric("Stability r", format_value(r, precision=4))
+    render_metric_row(
+        (
+            ("dx", format_value(dx, "m", 4)),
+            ("Requested dt", format_value(dt, "s", 4)),
+            ("Stability r", format_value(r, precision=4)),
+        )
+    )
 
     if not show_stability_status("Explicit heat stability r", r, 0.5):
         return
@@ -499,13 +807,16 @@ def render_heat_equation_1d():
     )
     temperature = result["temperature"]
 
-    cols = st.columns(4)
-    cols[0].metric("Actual dt", format_value(result["dt"], "s", 4))
-    cols[1].metric("Initial peak", format_value(np.max(temperature[0])))
-    cols[2].metric("Final peak", format_value(np.max(temperature[-1])))
-    cols[3].metric(
-        "Peak decay",
-        format_value(np.max(temperature[0]) - np.max(temperature[-1])),
+    render_metric_row(
+        (
+            ("Actual dt", format_value(result["dt"], "s", 4)),
+            ("Initial peak", format_value(np.max(temperature[0]))),
+            ("Final peak", format_value(np.max(temperature[-1]))),
+            (
+                "Peak decay",
+                format_value(np.max(temperature[0]) - np.max(temperature[-1])),
+            ),
+        )
     )
 
     x = result["x"]
@@ -555,10 +866,13 @@ def render_wave_equation_1d():
 
     dx = length / (num_points - 1)
     cfl = wave_cfl_number(c, dt, dx)
-    col1, col2, col3 = st.columns(3)
-    col1.metric("dx", format_value(dx, "m", 4))
-    col2.metric("Requested dt", format_value(dt, "s", 4))
-    col3.metric("CFL lambda", format_value(cfl, precision=4))
+    render_metric_row(
+        (
+            ("dx", format_value(dx, "m", 4)),
+            ("Requested dt", format_value(dt, "s", 4)),
+            ("CFL lambda", format_value(cfl, precision=4)),
+        )
+    )
 
     if not show_stability_status("Wave CFL lambda", cfl, 1.0):
         return
@@ -582,11 +896,14 @@ def render_wave_equation_1d():
     )
     displacement = result["displacement"]
 
-    cols = st.columns(4)
-    cols[0].metric("Actual dt", format_value(result["dt"], "s", 4))
-    cols[1].metric("Max |u|", format_value(np.max(np.abs(displacement))))
-    cols[2].metric("Final max", format_value(np.max(displacement[-1])))
-    cols[3].metric("Final min", format_value(np.min(displacement[-1])))
+    render_metric_row(
+        (
+            ("Actual dt", format_value(result["dt"], "s", 4)),
+            ("Max |u|", format_value(np.max(np.abs(displacement)))),
+            ("Final max", format_value(np.max(displacement[-1]))),
+            ("Final min", format_value(np.min(displacement[-1]))),
+        )
+    )
 
     x = result["x"]
     t = result["t"]
@@ -638,11 +955,14 @@ def render_heat_equation_2d():
     dx = width / (grid_size - 1)
     dy = height / (grid_size - 1)
     rx, ry, stability_sum = heat_stability_numbers_2d(alpha, dt, dx, dy)
-    cols = st.columns(4)
-    cols[0].metric("dx", format_value(dx, "m", 4))
-    cols[1].metric("dy", format_value(dy, "m", 4))
-    cols[2].metric("rx", format_value(rx, precision=4))
-    cols[3].metric("ry", format_value(ry, precision=4))
+    render_metric_row(
+        (
+            ("dx", format_value(dx, "m", 4)),
+            ("dy", format_value(dy, "m", 4)),
+            ("rx", format_value(rx, precision=4)),
+            ("ry", format_value(ry, precision=4)),
+        )
+    )
 
     if not show_stability_status("2D heat stability rx + ry", stability_sum, 0.5):
         return
@@ -671,11 +991,14 @@ def render_heat_equation_2d():
     )
     temperature = result["temperature"]
 
-    metric_cols = st.columns(4)
-    metric_cols[0].metric("Actual dt", format_value(result["dt"], "s", 4))
-    metric_cols[1].metric("Stored frames", str(len(result["t"])))
-    metric_cols[2].metric("Initial peak", format_value(np.max(temperature[0])))
-    metric_cols[3].metric("Final peak", format_value(np.max(temperature[-1])))
+    render_metric_row(
+        (
+            ("Actual dt", format_value(result["dt"], "s", 4)),
+            ("Stored frames", str(len(result["t"]))),
+            ("Initial peak", format_value(np.max(temperature[0]))),
+            ("Final peak", format_value(np.max(temperature[-1]))),
+        )
+    )
 
     draw_2d_heat_plots(result)
 
@@ -707,11 +1030,14 @@ def render_wave_equation_2d():
         dx,
         dy,
     )
-    cols = st.columns(4)
-    cols[0].metric("lambda x", format_value(lambda_x, precision=4))
-    cols[1].metric("lambda y", format_value(lambda_y, precision=4))
-    cols[2].metric("rx", format_value(rx, precision=4))
-    cols[3].metric("ry", format_value(ry, precision=4))
+    render_metric_row(
+        (
+            ("lambda x", format_value(lambda_x, precision=4)),
+            ("lambda y", format_value(lambda_y, precision=4)),
+            ("rx", format_value(rx, precision=4)),
+            ("ry", format_value(ry, precision=4)),
+        )
+    )
 
     if not show_stability_status("2D wave stability rx + ry", stability_sum, 1.0):
         return
@@ -741,11 +1067,14 @@ def render_wave_equation_2d():
     )
     displacement = result["displacement"]
 
-    metric_cols = st.columns(4)
-    metric_cols[0].metric("Actual dt", format_value(result["dt"], "s", 4))
-    metric_cols[1].metric("Stored frames", str(len(result["t"])))
-    metric_cols[2].metric("Max |u|", format_value(np.max(np.abs(displacement))))
-    metric_cols[3].metric("Final peak", format_value(np.max(displacement[-1])))
+    render_metric_row(
+        (
+            ("Actual dt", format_value(result["dt"], "s", 4)),
+            ("Stored frames", str(len(result["t"]))),
+            ("Max |u|", format_value(np.max(np.abs(displacement)))),
+            ("Final peak", format_value(np.max(displacement[-1]))),
+        )
+    )
 
     draw_2d_wave_plots(result)
 
@@ -884,10 +1213,13 @@ def render_finite_difference_convergence():
     backward_order = estimate_convergence_order(dx_values, backward_errors)
     central_order = estimate_convergence_order(dx_values, central_errors)
 
-    cols = st.columns(3)
-    cols[0].metric("Forward order", format_value(forward_order))
-    cols[1].metric("Backward order", format_value(backward_order))
-    cols[2].metric("Central order", format_value(central_order))
+    render_metric_row(
+        (
+            ("Forward order", format_value(forward_order)),
+            ("Backward order", format_value(backward_order)),
+            ("Central order", format_value(central_order)),
+        )
+    )
 
     figure, axis = plt.subplots(figsize=(8, 5))
     axis.loglog(dx_values, forward_errors, "o-", label="Forward")
@@ -963,14 +1295,20 @@ def render_axial_bar_fem():
     fixed_reaction = result["reactions"][0]
     average_stress = float(np.mean(stresses))
 
-    cols = st.columns(4)
-    cols[0].metric("FEM tip displacement", format_value(result["tip_displacement"], "m", 6))
-    cols[1].metric(
-        "Analytical tip",
-        format_value(result["analytical_tip_displacement"], "m", 6),
+    render_metric_row(
+        (
+            (
+                "FEM tip displacement",
+                format_value(result["tip_displacement"], "m", 6),
+            ),
+            (
+                "Analytical tip",
+                format_value(result["analytical_tip_displacement"], "m", 6),
+            ),
+            ("Reaction force", format_value(fixed_reaction, "N")),
+            ("Average stress", format_value(average_stress / 1e6, "MPa")),
+        )
     )
-    cols[2].metric("Reaction force", format_value(fixed_reaction, "N"))
-    cols[3].metric("Average stress", format_value(average_stress / 1e6, "MPa"))
 
     element_centers = 0.5 * (nodes[elements[:, 0]] + nodes[elements[:, 1]])
     max_displacement = max(float(np.max(np.abs(displacements))), 1e-15)
@@ -1025,15 +1363,25 @@ def render_axial_bar_fem():
 
 def main():
     """Run the Streamlit application."""
-    st.set_page_config(page_title="Engineering Simulation Toolkit", layout="wide")
-    st.sidebar.title("Engineering Simulation Toolkit")
-    domain = st.sidebar.radio("Domain", tuple(DOMAIN_DEMOS.keys()))
+    st.set_page_config(
+        page_title=APP_TITLE,
+        page_icon=":gear:",
+        layout="wide",
+    )
+    apply_plot_style()
+    inject_custom_css()
+
+    st.sidebar.title(APP_TITLE)
+    st.sidebar.caption("Interactive engineering simulations and portfolio examples.")
+    domain = st.sidebar.radio("Section", tuple(DOMAIN_DEMOS.keys()))
     demo = st.sidebar.selectbox("Demo", DOMAIN_DEMOS[domain])
 
-    st.title("Engineering Simulation Toolkit")
+    render_header(domain)
 
-    if domain == "Home / overview":
+    if domain == "Home":
         render_home()
+    elif domain == "About":
+        render_about()
     elif demo == "RC Circuit":
         render_rc_circuit()
     elif demo == "RLC Circuit":

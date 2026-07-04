@@ -15,6 +15,23 @@ from analysis.finite_difference import (
 from analysis.finite_element_1d import simulate_axial_bar_fem
 from analysis.kalman_filter import KalmanFilter, discretize_state_space
 from analysis.particle_filter import ParticleFilter
+from analysis.quadcopter_altitude_control import (
+    simulate_altitude_pid_control,
+    summarize_altitude_response,
+)
+from analysis.quadcopter_obstacle_avoidance import (
+    SphericalObstacle,
+    simulate_quadcopter_obstacle_avoidance,
+)
+from analysis.quadcopter_trajectory_tracking import (
+    circular_trajectory,
+    hover_trajectory,
+    simulate_quadcopter_trajectory_tracking,
+)
+from analysis.quadcopter_waypoint_following import (
+    simulate_quadcopter_waypoint_following,
+    waypoint_trajectory,
+)
 from analysis.state_space import dc_motor_state_space
 from analysis.unscented_kalman_filter import UnscentedKalmanFilter
 from examples.run_particle_filter_pendulum import (
@@ -71,7 +88,7 @@ DOMAIN_DEMOS = {
     "Home": ("Overview",),
     "Control Systems": ("RC Circuit", "RLC Circuit", "DC Motor PID Control"),
     "State Estimation": ("Interactive Filters",),
-    "UAV / Quadcopter": ("Portfolio Examples",),
+    "UAV / Quadcopter": ("UAV / Quadcopter Simulation",),
     "PDE Solvers": (
         "1D Heat Equation",
         "1D Wave Equation",
@@ -444,6 +461,674 @@ def render_portfolio_examples(domain):
     for column, item in zip(columns, examples_by_domain.get(domain, ())):
         with column:
             render_feature_card(item, "Available through tested modules, examples, and saved figures.")
+
+
+def render_metric_grid(metrics, columns=2):
+    """Render compact metrics inside a constrained column."""
+    metric_columns = st.columns(columns)
+    for index, metric in enumerate(metrics):
+        label, value = metric[:2]
+        delta = metric[2] if len(metric) > 2 else None
+        metric_columns[index % columns].metric(label, value, delta=delta)
+
+
+def settling_time_label(settling_time):
+    """Return a readable settling-time label."""
+    if settling_time is None:
+        return "Not settled"
+
+    return format_value(settling_time, "s")
+
+
+@st.cache_data(show_spinner=False)
+def run_uav_altitude_demo(
+    target_altitude,
+    mass,
+    Kp,
+    Ki,
+    Kd,
+    duration,
+    dt,
+):
+    """Run the existing altitude PID helper for Streamlit."""
+    result = simulate_altitude_pid_control(
+        target_altitude=target_altitude,
+        t_span=(0.0, duration),
+        dt=dt,
+        m=mass,
+        Kp=Kp,
+        Ki=Ki,
+        Kd=Kd,
+        thrust_limits=(0.0, 25.0),
+    )
+    metrics = summarize_altitude_response(result)
+    return result, metrics
+
+
+@st.cache_data(show_spinner=False)
+def run_uav_trajectory_demo(
+    trajectory_kind,
+    radius,
+    altitude,
+    angular_speed,
+    duration,
+    dt,
+):
+    """Run the existing 6-DOF trajectory tracker for Streamlit."""
+    initial_state = np.zeros(12)
+    if trajectory_kind == "Hover":
+        trajectory_func = hover_trajectory((0.0, 0.0, altitude))
+        initial_state[0:3] = [0.45, -0.35, 0.0]
+    else:
+        trajectory_func = circular_trajectory(
+            radius=radius,
+            altitude=altitude,
+            angular_speed=angular_speed,
+        )
+        initial_state[0:3] = [radius, 0.0, altitude]
+
+    return simulate_quadcopter_trajectory_tracking(
+        trajectory_func,
+        initial_state=initial_state,
+        t_span=(0.0, duration),
+        dt=dt,
+    )
+
+
+@st.cache_data(show_spinner=False)
+def run_uav_waypoint_demo(altitude, segment_time, smoothing, dt):
+    """Run the existing waypoint-following helper for Streamlit."""
+    waypoints = np.array(
+        [
+            [0.0, 0.0, altitude],
+            [1.0, 0.0, altitude + 0.35],
+            [1.0, 1.0, altitude + 0.15],
+            [0.2, 1.2, altitude + 0.45],
+        ]
+    )
+    return simulate_quadcopter_waypoint_following(
+        waypoints,
+        segment_time=segment_time,
+        smoothing=smoothing,
+        dt=dt,
+        hold_time=1.0,
+    )
+
+
+@st.cache_data(show_spinner=False)
+def run_uav_obstacle_demo(
+    altitude,
+    duration,
+    obstacle_y,
+    obstacle_radius,
+    influence_radius,
+    avoidance_gain,
+    max_avoidance_acceleration,
+    dt,
+):
+    """Run the existing static obstacle-avoidance helper for Streamlit."""
+    waypoints = np.array(
+        [
+            [0.0, 0.0, altitude],
+            [2.0, 0.0, altitude],
+        ]
+    )
+    obstacle = SphericalObstacle(
+        center=np.array([1.0, obstacle_y, altitude]),
+        radius=obstacle_radius,
+        influence_radius=influence_radius,
+    )
+    initial_state = np.zeros(12)
+    initial_state[0:3] = waypoints[0]
+    trajectory_func = waypoint_trajectory(
+        waypoints,
+        segment_time=max(0.5, duration - 1.0),
+        smoothing="smoothstep",
+    )
+
+    result = simulate_quadcopter_obstacle_avoidance(
+        trajectory_func,
+        [obstacle],
+        initial_state=initial_state,
+        t_span=(0.0, duration),
+        dt=dt,
+        Kd_pos=(2.0, 2.0, 3.2),
+        Kp_att=(0.25, 0.25, 0.16),
+        Kd_att=(0.12, 0.12, 0.08),
+        avoidance_gain=avoidance_gain,
+        max_avoidance_acceleration=max_avoidance_acceleration,
+    )
+    result["waypoints"] = waypoints
+    return result
+
+
+def plot_uav_altitude_response(result):
+    """Plot altitude tracking and thrust command."""
+    time = result["time"]
+    altitude = result["altitude"]
+    thrust = result["thrust"]
+    target = result["target_altitude"]
+    hover_thrust_value = result["hover_thrust"]
+
+    figure, axes = plt.subplots(2, 1, figsize=(8, 6.5), sharex=True)
+    axes[0].plot(time, altitude, label="Altitude")
+    axes[0].axhline(target, color="tab:orange", linestyle="--", label="Target")
+    format_engineering_axes(
+        axes[0],
+        title="Altitude PID Tracking",
+        ylabel="Altitude z (m)",
+    )
+
+    axes[1].plot(time, thrust, color="tab:green", label="Thrust command")
+    axes[1].axhline(
+        hover_thrust_value,
+        color="gray",
+        linestyle=":",
+        label="Hover thrust",
+    )
+    format_engineering_axes(
+        axes[1],
+        title="Control Effort",
+        xlabel="Time (s)",
+        ylabel="Thrust (N)",
+    )
+    return figure
+
+
+def plot_uav_tracking_response(result, title):
+    """Plot XY path and tracking error for a 6-DOF result."""
+    time = result["time"]
+    positions = result["states"][:, 0:3]
+    references = result["reference_positions"]
+    error_norm = result["tracking_error_norm"]
+
+    figure, axes = plt.subplots(2, 1, figsize=(8, 7))
+    axes[0].plot(references[:, 0], references[:, 1], "--", label="Reference")
+    axes[0].plot(positions[:, 0], positions[:, 1], label="Actual")
+    axes[0].scatter(
+        references[0, 0],
+        references[0, 1],
+        color="tab:green",
+        s=35,
+        label="Start",
+        zorder=3,
+    )
+    axes[0].scatter(
+        references[-1, 0],
+        references[-1, 1],
+        color="tab:red",
+        s=35,
+        label="Final reference",
+        zorder=3,
+    )
+    format_engineering_axes(
+        axes[0],
+        title=f"{title} XY Path",
+        xlabel="x (m)",
+        ylabel="y (m)",
+    )
+    set_equal_2d_axes(axes[0])
+
+    axes[1].plot(time, error_norm, color="tab:red", label="Position error norm")
+    axes[1].plot(
+        time,
+        positions[:, 2] - references[:, 2],
+        color="tab:purple",
+        linestyle="--",
+        label="z error",
+    )
+    axes[1].axhline(0.0, color="gray", linestyle=":")
+    format_engineering_axes(
+        axes[1],
+        title="Tracking Error",
+        xlabel="Time (s)",
+        ylabel="Error (m)",
+    )
+    return figure
+
+
+def plot_uav_waypoint_response(result):
+    """Plot waypoint-following path and position error."""
+    figure = plot_uav_tracking_response(result, "Waypoint Following")
+    axis = figure.axes[0]
+    waypoints = result["waypoints"]
+    axis.plot(
+        waypoints[:, 0],
+        waypoints[:, 1],
+        "o:",
+        color="tab:orange",
+        label="Waypoints",
+    )
+    axis.legend()
+    return figure
+
+
+def plot_uav_obstacle_response(result):
+    """Plot obstacle-avoidance path, clearance, and avoidance command."""
+    time = result["time"]
+    positions = result["states"][:, 0:3]
+    references = result["reference_positions"]
+    clearances = result["nearest_clearances"]
+    avoidance_norm = result["avoidance_acceleration_norm"]
+    obstacle = result["obstacles"][0]
+    waypoints = result["waypoints"]
+
+    figure, axes = plt.subplots(3, 1, figsize=(8, 9))
+    axes[0].plot(references[:, 0], references[:, 1], "--", label="Reference")
+    axes[0].plot(positions[:, 0], positions[:, 1], label="Actual")
+    axes[0].plot(
+        waypoints[:, 0],
+        waypoints[:, 1],
+        "o:",
+        color="tab:green",
+        label="Waypoints",
+    )
+    obstacle_patch = plt.Circle(
+        (obstacle.center[0], obstacle.center[1]),
+        obstacle.radius,
+        color="tab:red",
+        alpha=0.22,
+        label="Obstacle",
+    )
+    influence_patch = plt.Circle(
+        (obstacle.center[0], obstacle.center[1]),
+        obstacle.influence_radius,
+        color="tab:red",
+        alpha=0.08,
+        label="Influence radius",
+    )
+    axes[0].add_patch(influence_patch)
+    axes[0].add_patch(obstacle_patch)
+    format_engineering_axes(
+        axes[0],
+        title="Obstacle Avoidance XY Projection",
+        xlabel="x (m)",
+        ylabel="y (m)",
+    )
+    set_equal_2d_axes(axes[0])
+
+    axes[1].plot(time, clearances, color="tab:red", label="Nearest clearance")
+    axes[1].axhline(0.0, color="black", linestyle=":", label="Obstacle surface")
+    format_engineering_axes(
+        axes[1],
+        title="Obstacle Clearance",
+        ylabel="Clearance (m)",
+    )
+
+    axes[2].plot(
+        time,
+        avoidance_norm,
+        color="tab:purple",
+        label="Avoidance acceleration",
+    )
+    format_engineering_axes(
+        axes[2],
+        title="Repulsive Avoidance Command",
+        xlabel="Time (s)",
+        ylabel="Acceleration (m/s^2)",
+    )
+    return figure
+
+
+def render_uav_altitude_tab(is_active):
+    """Render the altitude-control Streamlit tab."""
+    st.subheader("Altitude Control Demo")
+    controls, metrics_column = st.columns([1, 1])
+    with controls:
+        st.caption("Controls")
+        target_altitude = st.slider(
+            "Target altitude (m)",
+            min_value=0.5,
+            max_value=8.0,
+            value=3.0,
+            step=0.25,
+            key="uav_altitude_target",
+        )
+        mass = st.slider("Mass (kg)", 0.6, 1.8, 1.0, 0.1, key="uav_altitude_mass")
+        Kp = st.slider("PID Kp", 0.0, 8.0, 4.0, 0.25, key="uav_altitude_kp")
+        Ki = st.slider("PID Ki", 0.0, 3.0, 1.0, 0.1, key="uav_altitude_ki")
+        Kd = st.slider("PID Kd", 0.0, 6.0, 3.0, 0.25, key="uav_altitude_kd")
+        duration = st.slider(
+            "Simulation duration (s)",
+            4.0,
+            12.0,
+            8.0,
+            1.0,
+            key="uav_altitude_duration",
+        )
+        st.caption("Fixed sample time: 0.02 s; thrust is saturated at 25 N.")
+
+    with metrics_column:
+        st.caption("Metrics")
+        if not is_active:
+            st.info("Select Altitude Control as the active simulation to run it.")
+            return
+
+        result, metrics = run_uav_altitude_demo(
+            target_altitude,
+            mass,
+            Kp,
+            Ki,
+            Kd,
+            duration,
+            0.02,
+        )
+        render_metric_grid(
+            (
+                ("Final altitude", format_value(metrics.final_altitude, "m")),
+                ("Final error", format_value(metrics.final_error, "m")),
+                ("Overshoot", format_value(metrics.overshoot_percent, "%", 2)),
+                ("Settling time", settling_time_label(metrics.settling_time)),
+                ("Max thrust", format_value(metrics.max_thrust, "N")),
+                ("Min thrust", format_value(metrics.min_thrust, "N")),
+            )
+        )
+
+    figure = plot_uav_altitude_response(result)
+    show_figure(
+        figure,
+        "Altitude is simulated with the existing 1D quadcopter altitude plant "
+        "and discrete PID controller; thrust is shown as the control effort.",
+    )
+
+
+def render_uav_trajectory_tab(is_active):
+    """Render the trajectory-tracking Streamlit tab."""
+    st.subheader("Trajectory Tracking Demo")
+    controls, metrics_column = st.columns([1, 1])
+    with controls:
+        st.caption("Controls")
+        trajectory_kind = st.radio(
+            "Reference trajectory",
+            ("Hover", "Circle"),
+            horizontal=True,
+            key="uav_trajectory_kind",
+        )
+        radius = st.slider(
+            "Circle radius (m)",
+            0.5,
+            2.0,
+            1.0,
+            0.1,
+            key="uav_trajectory_radius",
+        )
+        altitude = st.slider(
+            "Reference altitude (m)",
+            1.0,
+            4.0,
+            2.0,
+            0.25,
+            key="uav_trajectory_altitude",
+        )
+        angular_speed = st.slider(
+            "Angular speed (rad/s)",
+            0.1,
+            0.6,
+            0.3,
+            0.05,
+            key="uav_trajectory_angular_speed",
+        )
+        duration = st.slider(
+            "Simulation duration (s)",
+            4.0,
+            14.0,
+            8.0,
+            1.0,
+            key="uav_trajectory_duration",
+        )
+        st.caption("Fixed sample time: 0.04 s for responsive 6-DOF simulation.")
+
+    with metrics_column:
+        st.caption("Metrics")
+        if not is_active:
+            st.info("Select Trajectory Tracking as the active simulation to run it.")
+            return
+
+        result = run_uav_trajectory_demo(
+            trajectory_kind,
+            radius,
+            altitude,
+            angular_speed,
+            duration,
+            0.04,
+        )
+        metrics = result["tracking_metrics"]
+        render_metric_grid(
+            (
+                (
+                    "Final position error",
+                    format_value(metrics["final_position_error_norm"], "m"),
+                ),
+                ("RMS position error", format_value(metrics["rms_position_error"], "m")),
+                ("Max position error", format_value(metrics["max_position_error"], "m")),
+                ("Max thrust", format_value(metrics["max_thrust"], "N")),
+                ("Max torque", format_value(metrics["max_abs_torque"], "N*m", 4)),
+            )
+        )
+
+    figure = plot_uav_tracking_response(result, f"{trajectory_kind} Tracking")
+    show_figure(
+        figure,
+        "The path and error plots use the repository's cascaded PD tracker "
+        "around the full 6-DOF quadcopter model.",
+    )
+
+
+def render_uav_waypoint_tab(is_active):
+    """Render the waypoint-following Streamlit tab."""
+    st.subheader("Waypoint Following Demo")
+    controls, metrics_column = st.columns([1, 1])
+    with controls:
+        st.caption("Controls")
+        altitude = st.slider(
+            "Base waypoint altitude (m)",
+            0.8,
+            3.0,
+            1.2,
+            0.1,
+            key="uav_waypoint_altitude",
+        )
+        segment_time = st.slider(
+            "Segment time (s)",
+            2.0,
+            5.0,
+            3.0,
+            0.5,
+            key="uav_waypoint_segment_time",
+        )
+        smoothing = st.radio(
+            "Waypoint interpolation",
+            ("smoothstep", "linear"),
+            horizontal=True,
+            key="uav_waypoint_smoothing",
+        )
+        st.caption(
+            "A predefined four-waypoint path keeps this tab lightweight while "
+            "still exercising the waypoint helper."
+        )
+
+    with metrics_column:
+        st.caption("Metrics")
+        if not is_active:
+            st.info("Select Waypoint Following as the active simulation to run it.")
+            return
+
+        result = run_uav_waypoint_demo(altitude, segment_time, smoothing, 0.05)
+        metrics = result["waypoint_metrics"]
+        render_metric_grid(
+            (
+                ("Final waypoint error", format_value(metrics["final_waypoint_error"], "m")),
+                ("RMS position error", format_value(metrics["rms_position_error"], "m")),
+                ("Max position error", format_value(metrics["max_position_error"], "m")),
+                ("Waypoints", str(metrics["number_of_waypoints"])),
+                ("Max thrust", format_value(metrics["max_thrust"], "N")),
+                ("Max torque", format_value(metrics["max_abs_torque"], "N*m", 4)),
+            )
+        )
+
+    figure = plot_uav_waypoint_response(result)
+    show_figure(
+        figure,
+        "The waypoint follower converts fixed 3D waypoints into a time-based "
+        "reference and reuses the 6-DOF trajectory tracker.",
+    )
+
+
+def render_uav_obstacle_tab(is_active):
+    """Render the obstacle-avoidance Streamlit tab."""
+    st.subheader("Obstacle Avoidance Demo")
+    controls, metrics_column = st.columns([1, 1])
+    with controls:
+        st.caption("Controls")
+        altitude = st.slider(
+            "Path altitude (m)",
+            1.0,
+            3.0,
+            1.5,
+            0.1,
+            key="uav_obstacle_altitude",
+        )
+        duration = st.slider(
+            "Simulation duration (s)",
+            5.0,
+            10.0,
+            8.0,
+            0.5,
+            key="uav_obstacle_duration",
+        )
+        obstacle_y = st.slider(
+            "Obstacle y offset (m)",
+            0.0,
+            0.6,
+            0.28,
+            0.02,
+            key="uav_obstacle_y",
+        )
+        obstacle_radius = st.slider(
+            "Obstacle radius (m)",
+            0.15,
+            0.4,
+            0.25,
+            0.01,
+            key="uav_obstacle_radius",
+        )
+        influence_radius = st.slider(
+            "Influence radius (m)",
+            0.6,
+            1.4,
+            1.0,
+            0.05,
+            key="uav_obstacle_influence",
+        )
+        avoidance_gain = st.slider(
+            "Avoidance gain",
+            0.0,
+            0.08,
+            0.03,
+            0.005,
+            key="uav_obstacle_gain",
+        )
+        max_avoidance_acceleration = st.slider(
+            "Max avoidance acceleration (m/s^2)",
+            0.5,
+            3.0,
+            1.5,
+            0.25,
+            key="uav_obstacle_max_accel",
+        )
+        st.caption("Fixed sample time: 0.04 s; obstacle is a static sphere.")
+
+    with metrics_column:
+        st.caption("Metrics")
+        if not is_active:
+            st.info("Select Obstacle Avoidance as the active simulation to run it.")
+            return
+
+        result = run_uav_obstacle_demo(
+            altitude,
+            duration,
+            obstacle_y,
+            obstacle_radius,
+            influence_radius,
+            avoidance_gain,
+            max_avoidance_acceleration,
+            0.04,
+        )
+        metrics = result["obstacle_metrics"]
+        render_metric_grid(
+            (
+                (
+                    "Final position error",
+                    format_value(metrics["final_position_error_norm"], "m"),
+                ),
+                ("Minimum clearance", format_value(metrics["min_clearance"], "m")),
+                ("RMS position error", format_value(metrics["rms_position_error"], "m")),
+                (
+                    "Max avoidance accel.",
+                    format_value(metrics["max_avoidance_acceleration"], "m/s^2"),
+                ),
+                ("Max thrust", format_value(metrics["max_thrust"], "N")),
+                ("Max torque", format_value(metrics["max_abs_torque"], "N*m", 4)),
+            )
+        )
+
+    figure = plot_uav_obstacle_response(result)
+    show_figure(
+        figure,
+        "The obstacle projection shows the static obstacle and its influence "
+        "radius; clearance and avoidance acceleration are plotted over time.",
+    )
+
+
+def render_uav_quadcopter():
+    """Render interactive UAV and quadcopter demos."""
+    st.title("UAV / Quadcopter Simulation")
+    st.write(
+        "This section demonstrates dynamic simulation, control, trajectory "
+        "tracking, and obstacle avoidance for simplified quadcopter models."
+    )
+    st.info(
+        "These are simplified educational and prototype simulations, not "
+        "flight-ready UAV control software."
+    )
+
+    tab_names = (
+        "Altitude Control",
+        "Trajectory Tracking",
+        "Waypoint Following",
+        "Obstacle Avoidance",
+    )
+    active_demo = st.radio(
+        "Active simulation",
+        tab_names,
+        horizontal=True,
+        key="uav_active_demo",
+        help=(
+            "Streamlit renders tab contents eagerly, so this selector keeps the "
+            "page responsive by running only one UAV simulation at a time."
+        ),
+    )
+
+    altitude_tab, trajectory_tab, waypoint_tab, obstacle_tab = st.tabs(tab_names)
+    with altitude_tab:
+        render_uav_altitude_tab(active_demo == "Altitude Control")
+    with trajectory_tab:
+        render_uav_trajectory_tab(active_demo == "Trajectory Tracking")
+    with waypoint_tab:
+        render_uav_waypoint_tab(active_demo == "Waypoint Following")
+    with obstacle_tab:
+        render_uav_obstacle_tab(active_demo == "Obstacle Avoidance")
+
+    with st.expander("Assumptions and limitations"):
+        st.write(
+            "The altitude demo uses the existing 1D vertical model and PID "
+            "controller. The trajectory, waypoint, and obstacle demos use the "
+            "repository's simplified 6-DOF model and cascaded educational "
+            "tracking controller. The obstacle helper is local reactive "
+            "avoidance around static spherical obstacles; it is not global path "
+            "planning, certified guidance, rotor-level motor mixing, hardware "
+            "validation, or real-world deployment software."
+        )
 
 
 def _simulate_discrete_linear_system(A, B, x0, input_value, num_points):
@@ -2357,6 +3042,8 @@ def main():
         render_home()
     elif domain == "State Estimation":
         render_state_estimation()
+    elif domain == "UAV / Quadcopter":
+        render_uav_quadcopter()
     elif domain == "About":
         render_about()
     elif demo == "RC Circuit":

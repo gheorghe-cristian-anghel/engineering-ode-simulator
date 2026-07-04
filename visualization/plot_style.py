@@ -32,6 +32,29 @@ def apply_plot_style():
     )
 
 
+def apply_engineering_plot_style():
+    """Apply polished engineering plot defaults without changing the backend."""
+    apply_plot_style()
+    plt.rcParams.update(
+        {
+            "figure.facecolor": "white",
+            "axes.facecolor": "white",
+            "axes.edgecolor": "0.35",
+            "axes.linewidth": 0.8,
+            "axes.titlepad": 10,
+            "axes.labelpad": 7,
+            "grid.color": "0.86",
+            "grid.linestyle": "--",
+            "grid.linewidth": 0.65,
+            "grid.alpha": 0.85,
+            "legend.borderpad": 0.6,
+            "legend.handlelength": 2.2,
+            "legend.labelspacing": 0.45,
+            "lines.linewidth": 2.0,
+        }
+    )
+
+
 def format_axes(ax, title=None, xlabel=None, ylabel=None, grid=True):
     """Format one Matplotlib axes object with shared labels, grid, and legend."""
     if title is not None:
@@ -54,6 +77,28 @@ def format_axes(ax, title=None, xlabel=None, ylabel=None, grid=True):
         ax.legend()
 
     return ax
+
+
+def format_engineering_axes(ax, title=None, xlabel=None, ylabel=None, grid=True):
+    """Format one axes object for clean engineering dashboard plots."""
+    format_axes(ax, title=title, xlabel=xlabel, ylabel=ylabel, grid=grid)
+    ax.tick_params(axis="both", which="major", colors="0.25", length=4, width=0.8)
+    ax.tick_params(axis="both", which="minor", colors="0.35", length=2, width=0.6)
+    for spine in ax.spines.values():
+        spine.set_color("0.45")
+        spine.set_linewidth(0.8)
+    return ax
+
+
+def format_heatmap_axes(ax, title=None, xlabel="x (m)", ylabel="y (m)"):
+    """Format image-style axes without overlaying grid lines."""
+    return format_engineering_axes(
+        ax,
+        title=title,
+        xlabel=xlabel,
+        ylabel=ylabel,
+        grid=False,
+    )
 
 
 def save_figure(fig, path, dpi=200):
@@ -85,3 +130,21 @@ def add_colorbar(fig, image, ax, label=None):
     if label is not None:
         colorbar.set_label(label)
     return colorbar
+
+
+def add_clean_colorbar(fig, image, ax, label=None):
+    """Add a compact, consistently styled colorbar for Streamlit figures."""
+    colorbar = fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
+    if label is not None:
+        colorbar.set_label(label)
+    colorbar.ax.tick_params(labelsize=9, colors="0.25")
+    colorbar.outline.set_edgecolor("0.65")
+    colorbar.outline.set_linewidth(0.8)
+    return colorbar
+
+
+def finalize_streamlit_figure(fig):
+    """Apply final layout cleanup before showing a figure in Streamlit."""
+    fig.patch.set_facecolor("white")
+    fig.tight_layout()
+    return fig

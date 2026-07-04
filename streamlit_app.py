@@ -39,7 +39,14 @@ from models.wave_equation_2d import (
     wave_stability_numbers_2d,
     zero_initial_velocity_2d,
 )
-from visualization.plot_style import apply_plot_style
+from visualization.plot_style import (
+    add_clean_colorbar,
+    apply_engineering_plot_style,
+    finalize_streamlit_figure,
+    format_engineering_axes,
+    format_heatmap_axes,
+    set_equal_2d_axes,
+)
 
 
 APP_TITLE = "Engineering Simulation Toolkit"
@@ -314,9 +321,12 @@ def render_info_box(title, body):
     )
 
 
-def show_figure(figure):
+def show_figure(figure, caption=None):
     """Display a Matplotlib figure in Streamlit, then close it."""
-    st.pyplot(figure)
+    finalize_streamlit_figure(figure)
+    st.pyplot(figure, use_container_width=True)
+    if caption is not None:
+        st.caption(caption)
     plt.close(figure)
 
 
@@ -523,13 +533,17 @@ def render_rc_circuit():
     figure, axis = plt.subplots(figsize=(8, 4.5))
     axis.plot(t, capacitor_voltage, label="Numerical solution")
     axis.plot(t, analytical_voltage, "--", label="Analytical solution")
-    axis.set_title("RC Circuit Charging")
-    axis.set_xlabel("Time (s)")
-    axis.set_ylabel("Capacitor voltage (V)")
-    axis.grid(True)
-    axis.legend()
-    figure.tight_layout()
-    show_figure(figure)
+    format_engineering_axes(
+        axis,
+        title="RC Circuit Charging",
+        xlabel="Time (s)",
+        ylabel="Capacitor voltage (V)",
+    )
+    show_figure(
+        figure,
+        "Capacitor voltage approaches the input voltage with the expected "
+        "first-order charging curve.",
+    )
 
     st.write("Equation: `dVc/dt = (Vin - Vc) / (R*C)`")
 
@@ -606,19 +620,24 @@ def render_rlc_circuit():
     figure, axes = plt.subplots(2, 1, sharex=True, figsize=(8, 6))
     axes[0].plot(t, capacitor_voltage, label="Capacitor voltage")
     axes[0].axhline(input_voltage, color="gray", linestyle=":", label="DC steady state")
-    axes[0].set_title("RLC Capacitor Voltage Step Response")
-    axes[0].set_ylabel("Voltage (V)")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_engineering_axes(
+        axes[0],
+        title="RLC Capacitor Voltage Step Response",
+        ylabel="Voltage (V)",
+    )
 
     axes[1].plot(t, current, color="tab:orange", label="Current")
-    axes[1].set_title("RLC Circuit Current")
-    axes[1].set_xlabel("Time (s)")
-    axes[1].set_ylabel("Current (A)")
-    axes[1].grid(True)
-    axes[1].legend()
-    figure.tight_layout()
-    show_figure(figure)
+    format_engineering_axes(
+        axes[1],
+        title="RLC Circuit Current",
+        xlabel="Time (s)",
+        ylabel="Current (A)",
+    )
+    show_figure(
+        figure,
+        "Voltage and current show the second-order transient behavior of the "
+        "series RLC circuit.",
+    )
 
     st.write(
         "The voltage plot shows how the capacitor approaches the DC input "
@@ -730,26 +749,32 @@ def render_dc_motor_pid_control():
     figure, axes = plt.subplots(3, 1, sharex=True, figsize=(8, 7))
     axes[0].plot(t, speed, label="Motor speed")
     axes[0].axhline(target_speed, color="gray", linestyle=":", label="Target speed")
-    axes[0].set_title("Discrete PID DC Motor Speed Control")
-    axes[0].set_ylabel("Speed (rad/s)")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_engineering_axes(
+        axes[0],
+        title="Discrete PID DC Motor Speed Control",
+        ylabel="Speed (rad/s)",
+    )
 
     axes[1].plot(t, voltage, color="tab:orange", label="Control voltage")
     axes[1].axhline(voltage_limit, color="gray", linestyle=":", label="Voltage limit")
-    axes[1].set_title("Held Voltage Command")
-    axes[1].set_ylabel("Voltage (V)")
-    axes[1].grid(True)
-    axes[1].legend()
+    format_engineering_axes(
+        axes[1],
+        title="Held Voltage Command",
+        ylabel="Voltage (V)",
+    )
 
     axes[2].plot(t, current, color="tab:green", label="Armature current")
-    axes[2].set_title("Armature Current")
-    axes[2].set_xlabel("Time (s)")
-    axes[2].set_ylabel("Current (A)")
-    axes[2].grid(True)
-    axes[2].legend()
-    figure.tight_layout()
-    show_figure(figure)
+    format_engineering_axes(
+        axes[2],
+        title="Armature Current",
+        xlabel="Time (s)",
+        ylabel="Current (A)",
+    )
+    show_figure(
+        figure,
+        "The PID controller tracks motor speed while the voltage command and "
+        "armature current show actuator effort.",
+    )
 
     st.write(
         "The controller compares target speed with measured speed, computes a "
@@ -824,11 +849,12 @@ def render_heat_equation_1d():
     figure, axes = plt.subplots(2, 1, figsize=(8, 7))
     for index in profile_indices(t, [0.0, 0.25, 0.5, 1.0]):
         axes[0].plot(x, temperature[index], label=f"t = {t[index]:.2f} s")
-    axes[0].set_title("Temperature Profiles")
-    axes[0].set_xlabel("Position x (m)")
-    axes[0].set_ylabel("Temperature")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_engineering_axes(
+        axes[0],
+        title="Temperature Profiles",
+        xlabel="Position x (m)",
+        ylabel="Temperature",
+    )
 
     heatmap = axes[1].imshow(
         temperature,
@@ -837,12 +863,18 @@ def render_heat_equation_1d():
         extent=[x[0], x[-1], t[0], t[-1]],
         cmap="inferno",
     )
-    axes[1].set_title("Temperature History")
-    axes[1].set_xlabel("Position x (m)")
-    axes[1].set_ylabel("Time (s)")
-    figure.colorbar(heatmap, ax=axes[1], label="Temperature")
-    figure.tight_layout()
-    show_figure(figure)
+    format_heatmap_axes(
+        axes[1],
+        title="Temperature History",
+        xlabel="Position x (m)",
+        ylabel="Time (s)",
+    )
+    add_clean_colorbar(figure, heatmap, axes[1], label="Temperature")
+    show_figure(
+        figure,
+        "The upper plot compares temperature profiles over time; the heatmap "
+        "shows diffusion across the rod history.",
+    )
 
 
 def render_wave_equation_1d():
@@ -910,11 +942,12 @@ def render_wave_equation_1d():
     figure, axes = plt.subplots(2, 1, figsize=(8, 7))
     for index in profile_indices(t, [0.0, 0.25, 0.5, 0.75, 1.0]):
         axes[0].plot(x, displacement[index], label=f"t = {t[index]:.2f} s")
-    axes[0].set_title("Displacement Profiles")
-    axes[0].set_xlabel("Position x (m)")
-    axes[0].set_ylabel("Displacement")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_engineering_axes(
+        axes[0],
+        title="Displacement Profiles",
+        xlabel="Position x (m)",
+        ylabel="Displacement",
+    )
 
     color_limit = max(float(np.max(np.abs(displacement))), 1e-12)
     heatmap = axes[1].imshow(
@@ -926,12 +959,18 @@ def render_wave_equation_1d():
         vmin=-color_limit,
         vmax=color_limit,
     )
-    axes[1].set_title("Displacement History")
-    axes[1].set_xlabel("Position x (m)")
-    axes[1].set_ylabel("Time (s)")
-    figure.colorbar(heatmap, ax=axes[1], label="Displacement")
-    figure.tight_layout()
-    show_figure(figure)
+    format_heatmap_axes(
+        axes[1],
+        title="Displacement History",
+        xlabel="Position x (m)",
+        ylabel="Time (s)",
+    )
+    add_clean_colorbar(figure, heatmap, axes[1], label="Displacement")
+    show_figure(
+        figure,
+        "The line profiles show wave motion at selected times; the diverging "
+        "heatmap is centered around zero displacement.",
+    )
 
 
 def render_heat_equation_2d():
@@ -1102,10 +1141,14 @@ def draw_2d_heat_plots(result):
             vmin=color_min,
             vmax=color_max,
         )
-        axis.set_title(f"Temperature at t = {t[index]:.2f} s")
-        axis.set_xlabel("x (m)")
-        axis.set_ylabel("y (m)")
-        figure.colorbar(heatmap, ax=axis, label="Temperature")
+        format_heatmap_axes(
+            axis,
+            title=f"Temperature at t = {t[index]:.2f} s",
+            xlabel="x (m)",
+            ylabel="y (m)",
+        )
+        set_equal_2d_axes(axis)
+        add_clean_colorbar(figure, heatmap, axis, label="Temperature")
 
     centerline_axis = flat_axes[3]
     center_y_index = len(y) // 2
@@ -1115,13 +1158,17 @@ def draw_2d_heat_plots(result):
             temperature[index, center_y_index, :],
             label=f"t = {t[index]:.2f} s",
         )
-    centerline_axis.set_title("Centerline Temperature")
-    centerline_axis.set_xlabel("x (m)")
-    centerline_axis.set_ylabel("Temperature")
-    centerline_axis.grid(True)
-    centerline_axis.legend()
-    figure.tight_layout()
-    show_figure(figure)
+    format_engineering_axes(
+        centerline_axis,
+        title="Centerline Temperature",
+        xlabel="x (m)",
+        ylabel="Temperature",
+    )
+    show_figure(
+        figure,
+        "Snapshots show the hot spot diffusing across the plate; the centerline "
+        "plot compares temperature profiles through the plate midpoint.",
+    )
 
 
 def draw_2d_wave_plots(result):
@@ -1150,10 +1197,14 @@ def draw_2d_wave_plots(result):
             vmin=-color_limit,
             vmax=color_limit,
         )
-        axis.set_title(f"Displacement at t = {t[index]:.2f} s")
-        axis.set_xlabel("x (m)")
-        axis.set_ylabel("y (m)")
-        figure.colorbar(heatmap, ax=axis, label="Displacement")
+        format_heatmap_axes(
+            axis,
+            title=f"Displacement at t = {t[index]:.2f} s",
+            xlabel="x (m)",
+            ylabel="y (m)",
+        )
+        set_equal_2d_axes(axis)
+        add_clean_colorbar(figure, heatmap, axis, label="Displacement")
 
     centerline_axis = flat_axes[4]
     center_y_index = len(y) // 2
@@ -1163,14 +1214,18 @@ def draw_2d_wave_plots(result):
             displacement[index, center_y_index, :],
             label=f"t = {t[index]:.2f} s",
         )
-    centerline_axis.set_title("Centerline Displacement")
-    centerline_axis.set_xlabel("x (m)")
-    centerline_axis.set_ylabel("Displacement")
-    centerline_axis.grid(True)
-    centerline_axis.legend()
+    format_engineering_axes(
+        centerline_axis,
+        title="Centerline Displacement",
+        xlabel="x (m)",
+        ylabel="Displacement",
+    )
     figure.delaxes(flat_axes[5])
-    figure.tight_layout()
-    show_figure(figure)
+    show_figure(
+        figure,
+        "Wave snapshots use a symmetric diverging color scale so positive and "
+        "negative membrane displacement are visually balanced.",
+    )
 
 
 def render_finite_difference_convergence():
@@ -1238,14 +1293,19 @@ def render_finite_difference_convergence():
         "--",
         label="O(dx^2)",
     )
-    axis.set_title("Finite Difference Error Convergence")
-    axis.set_xlabel("Grid spacing dx")
-    axis.set_ylabel("RMS derivative error")
-    axis.grid(True, which="both")
-    axis.legend()
+    format_engineering_axes(
+        axis,
+        title="Finite Difference Error Convergence",
+        xlabel="Grid spacing dx",
+        ylabel="RMS derivative error",
+    )
+    axis.grid(True, which="both", linestyle="--", linewidth=0.65, alpha=0.85)
     axis.invert_xaxis()
-    figure.tight_layout()
-    show_figure(figure)
+    show_figure(
+        figure,
+        "Log-log error trends show first-order forward/backward differences "
+        "and second-order central differences.",
+    )
 
     st.dataframe(
         {
@@ -1318,11 +1378,12 @@ def render_axial_bar_fem():
     figure, axes = plt.subplots(3, 1, figsize=(8, 9))
     axes[0].plot(nodes, displacements, "o-", label="FEM displacement")
     axes[0].plot(nodes, analytical, "--", label="Analytical displacement")
-    axes[0].set_title("Nodal Displacement")
-    axes[0].set_xlabel("Position x (m)")
-    axes[0].set_ylabel("Displacement u (m)")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_engineering_axes(
+        axes[0],
+        title="Nodal Displacement",
+        xlabel="Position x (m)",
+        ylabel="Displacement u (m)",
+    )
 
     axes[1].step(element_centers, stresses / 1e6, where="mid", label="Element stress")
     axes[1].axhline(
@@ -1331,11 +1392,12 @@ def render_axial_bar_fem():
         linestyle="--",
         label="Analytical stress",
     )
-    axes[1].set_title("Element Stress")
-    axes[1].set_xlabel("Element center x (m)")
-    axes[1].set_ylabel("Stress (MPa)")
-    axes[1].grid(True)
-    axes[1].legend()
+    format_engineering_axes(
+        axes[1],
+        title="Element Stress",
+        xlabel="Element center x (m)",
+        ylabel="Stress (MPa)",
+    )
 
     axes[2].plot(nodes, np.zeros_like(nodes), "o-", label="Original bar")
     axes[2].plot(
@@ -1344,13 +1406,19 @@ def render_axial_bar_fem():
         "o-",
         label=f"Deformed shape ({scale:.2e}x)",
     )
-    axes[2].set_title("Exaggerated Deformed Shape")
-    axes[2].set_xlabel("Position x (m)")
     axes[2].set_yticks([])
-    axes[2].grid(True, axis="x")
-    axes[2].legend()
-    figure.tight_layout()
-    show_figure(figure)
+    format_engineering_axes(
+        axes[2],
+        title="Exaggerated Deformed Shape",
+        xlabel="Position x (m)",
+        ylabel=None,
+    )
+    axes[2].grid(True, axis="x", linestyle="--", linewidth=0.65, alpha=0.85)
+    show_figure(
+        figure,
+        "The FEM plots compare displacement with the analytical solution, show "
+        "element stress in MPa, and exaggerate the deformed shape for visibility.",
+    )
 
     st.write(
         f"Relative tip displacement error: "
@@ -1368,7 +1436,7 @@ def main():
         page_icon=":gear:",
         layout="wide",
     )
-    apply_plot_style()
+    apply_engineering_plot_style()
     inject_custom_css()
 
     st.sidebar.title(APP_TITLE)

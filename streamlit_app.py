@@ -321,6 +321,12 @@ def render_info_box(title, body):
     )
 
 
+def render_parameter_summary(parameters):
+    """Render selected user inputs as a compact metric row."""
+    st.caption("Selected setup")
+    render_metric_row(parameters)
+
+
 def show_figure(figure, caption=None):
     """Display a Matplotlib figure in Streamlit, then close it."""
     finalize_streamlit_figure(figure)
@@ -786,9 +792,10 @@ def render_dc_motor_pid_control():
 def render_heat_equation_1d():
     """Render the 1D heat equation simulation."""
     st.header("1D Heat Equation")
-    st.write(
+    render_info_box(
+        "Diffusion on a rod",
         "Heat diffusion smooths temperature gradients. A localized hot pulse "
-        "spreads along the rod while its peak temperature decays."
+        "spreads along the rod while its peak temperature decays over time.",
     )
 
     with st.sidebar:
@@ -803,15 +810,31 @@ def render_heat_equation_1d():
 
     dx = length / (num_points - 1)
     r = heat_stability_number(alpha, dt, dx)
+    render_parameter_summary(
+        (
+            ("Length", format_value(length, "m")),
+            ("Grid points", str(num_points)),
+            ("alpha", format_value(alpha, precision=4)),
+            ("Final time", format_value(t_final, "s")),
+        )
+    )
+    st.subheader("Stability and numerical metrics")
     render_metric_row(
         (
             ("dx", format_value(dx, "m", 4)),
             ("Requested dt", format_value(dt, "s", 4)),
             ("Stability r", format_value(r, precision=4)),
+            ("Limit", "<= 0.5000"),
         )
     )
 
     if not show_stability_status("Explicit heat stability r", r, 0.5):
+        with st.expander("Why this was blocked"):
+            st.write(
+                "The explicit 1D heat scheme is stable only when "
+                "`r = alpha*dt/dx^2 <= 0.5`. Reducing `dt`, reducing `alpha`, "
+                "or using a coarser grid lowers the stability number."
+            )
         return
 
     def initial_condition(x):
@@ -835,8 +858,8 @@ def render_heat_equation_1d():
     render_metric_row(
         (
             ("Actual dt", format_value(result["dt"], "s", 4)),
-            ("Initial peak", format_value(np.max(temperature[0]))),
-            ("Final peak", format_value(np.max(temperature[-1]))),
+            ("Initial max", format_value(np.max(temperature[0]))),
+            ("Final max", format_value(np.max(temperature[-1]))),
             (
                 "Peak decay",
                 format_value(np.max(temperature[0]) - np.max(temperature[-1])),
@@ -844,6 +867,7 @@ def render_heat_equation_1d():
         )
     )
 
+    st.subheader("Main plot")
     x = result["x"]
     t = result["t"]
     figure, axes = plt.subplots(2, 1, figsize=(8, 7))
@@ -875,15 +899,29 @@ def render_heat_equation_1d():
         "The upper plot compares temperature profiles over time; the heatmap "
         "shows diffusion across the rod history.",
     )
+    render_info_box(
+        "Engineering interpretation",
+        "The hot pulse spreads because heat flows from high-temperature regions "
+        "toward cooler neighboring points. The peak temperature decays while "
+        "the profile becomes smoother.",
+    )
+    with st.expander("Limitations and assumptions"):
+        st.write(
+            "This page uses a constant thermal diffusivity, a uniform grid, and "
+            "an explicit finite-difference scheme with simple boundary handling. "
+            "The stability check only validates the implemented numerical "
+            "scheme; it is not a material-model fidelity check."
+        )
 
 
 def render_wave_equation_1d():
     """Render the 1D wave equation simulation."""
     st.header("1D Wave Equation")
-    st.write(
+    render_info_box(
+        "Propagation on a string",
         "A displacement pulse propagates through the domain, oscillates, and "
-        "reflects from fixed boundaries. The explicit scheme is controlled by "
-        "the CFL number."
+        "reflects from fixed boundaries. This is wave motion, not diffusion: "
+        "the pulse travels and changes sign instead of simply smoothing out.",
     )
 
     with st.sidebar:
@@ -898,15 +936,31 @@ def render_wave_equation_1d():
 
     dx = length / (num_points - 1)
     cfl = wave_cfl_number(c, dt, dx)
+    render_parameter_summary(
+        (
+            ("Length", format_value(length, "m")),
+            ("Wave speed", format_value(c, "m/s")),
+            ("Grid points", str(num_points)),
+            ("Final time", format_value(t_final, "s")),
+        )
+    )
+    st.subheader("CFL and numerical metrics")
     render_metric_row(
         (
             ("dx", format_value(dx, "m", 4)),
             ("Requested dt", format_value(dt, "s", 4)),
             ("CFL lambda", format_value(cfl, precision=4)),
+            ("Limit", "<= 1.0000"),
         )
     )
 
     if not show_stability_status("Wave CFL lambda", cfl, 1.0):
+        with st.expander("Why this was blocked"):
+            st.write(
+                "The explicit 1D wave scheme is stable only when "
+                "`lambda = c*dt/dx <= 1`. Reducing `dt`, reducing wave speed, "
+                "or using a coarser grid lowers the CFL number."
+            )
         return
 
     def initial_displacement(x):
@@ -937,6 +991,7 @@ def render_wave_equation_1d():
         )
     )
 
+    st.subheader("Main plot")
     x = result["x"]
     t = result["t"]
     figure, axes = plt.subplots(2, 1, figsize=(8, 7))
@@ -971,14 +1026,29 @@ def render_wave_equation_1d():
         "The line profiles show wave motion at selected times; the diverging "
         "heatmap is centered around zero displacement.",
     )
+    render_info_box(
+        "Engineering interpretation",
+        "The displacement pulse moves through the string and reflects from the "
+        "boundaries. Positive and negative displacement are shown symmetrically "
+        "because oscillatory wave motion is centered around zero.",
+    )
+    with st.expander("Limitations and assumptions"):
+        st.write(
+            "This page uses a constant wave speed, a uniform grid, zero initial "
+            "velocity, and an explicit finite-difference scheme. The CFL check "
+            "guards numerical stability; it does not model damping, forcing, or "
+            "material heterogeneity."
+        )
 
 
 def render_heat_equation_2d():
     """Render the 2D heat equation simulation."""
     st.header("2D Heat Equation")
-    st.write(
-        "A hot spot diffuses across a rectangular plate. The explicit 2D heat "
-        "scheme requires `rx + ry <= 0.5`, so unstable choices are blocked."
+    render_info_box(
+        "Diffusion on a plate",
+        "A hot spot diffuses across a rectangular plate. The peak temperature "
+        "decays as the temperature field spreads outward from the initial "
+        "localized source.",
     )
 
     with st.sidebar:
@@ -994,6 +1064,15 @@ def render_heat_equation_2d():
     dx = width / (grid_size - 1)
     dy = height / (grid_size - 1)
     rx, ry, stability_sum = heat_stability_numbers_2d(alpha, dt, dx, dy)
+    render_parameter_summary(
+        (
+            ("Plate", f"{width:.1f} x {height:.1f} m"),
+            ("Grid", f"{grid_size} x {grid_size}"),
+            ("alpha", format_value(alpha, precision=4)),
+            ("Final time", format_value(t_final, "s")),
+        )
+    )
+    st.subheader("Stability and numerical metrics")
     render_metric_row(
         (
             ("dx", format_value(dx, "m", 4)),
@@ -1002,8 +1081,22 @@ def render_heat_equation_2d():
             ("ry", format_value(ry, precision=4)),
         )
     )
+    render_metric_row(
+        (
+            ("Requested dt", format_value(dt, "s", 4)),
+            ("Stability rx + ry", format_value(stability_sum, precision=4)),
+            ("Limit", "<= 0.5000"),
+        )
+    )
 
     if not show_stability_status("2D heat stability rx + ry", stability_sum, 0.5):
+        with st.expander("Why this was blocked"):
+            st.write(
+                "The explicit 2D heat scheme is stable only when "
+                "`rx + ry <= 0.5`, where `rx = alpha*dt/dx^2` and "
+                "`ry = alpha*dt/dy^2`. Lower `dt`, lower `alpha`, or a coarser "
+                "grid will reduce the stability sum."
+            )
         return
 
     num_intervals = max(1, int(np.ceil(t_final / dt)))
@@ -1034,21 +1127,36 @@ def render_heat_equation_2d():
         (
             ("Actual dt", format_value(result["dt"], "s", 4)),
             ("Stored frames", str(len(result["t"]))),
-            ("Initial peak", format_value(np.max(temperature[0]))),
-            ("Final peak", format_value(np.max(temperature[-1]))),
+            ("Initial max", format_value(np.max(temperature[0]))),
+            ("Final max", format_value(np.max(temperature[-1]))),
         )
     )
 
+    st.subheader("Main plot")
     draw_2d_heat_plots(result)
+    render_info_box(
+        "Engineering interpretation",
+        "The hot spot loses peak intensity as heat diffuses in both spatial "
+        "directions. The shared color scale makes the decay from the initial "
+        "maximum to the final snapshot easy to compare.",
+    )
+    with st.expander("Limitations, assumptions, and performance"):
+        st.write(
+            "This demo uses a square uniform grid, constant thermal diffusivity, "
+            "and an explicit finite-difference update. Stored frames are capped "
+            "so the Streamlit page remains responsive with the default 41 x 41 "
+            "grid."
+        )
 
 
 def render_wave_equation_2d():
     """Render the 2D wave equation simulation."""
     st.header("2D Wave Equation")
-    st.write(
+    render_info_box(
+        "Propagation on a membrane",
         "A membrane displacement propagates outward, oscillates, and reflects "
-        "from fixed edges. The explicit 2D wave scheme requires "
-        "`rx + ry <= 1`."
+        "from fixed edges. This is not diffusion: displacement travels through "
+        "the domain and changes sign around zero.",
     )
 
     with st.sidebar:
@@ -1069,6 +1177,15 @@ def render_wave_equation_2d():
         dx,
         dy,
     )
+    render_parameter_summary(
+        (
+            ("Membrane", f"{width:.1f} x {height:.1f} m"),
+            ("Grid", f"{grid_size} x {grid_size}"),
+            ("Wave speed", format_value(c, "m/s")),
+            ("Final time", format_value(t_final, "s")),
+        )
+    )
+    st.subheader("CFL and numerical metrics")
     render_metric_row(
         (
             ("lambda x", format_value(lambda_x, precision=4)),
@@ -1077,8 +1194,22 @@ def render_wave_equation_2d():
             ("ry", format_value(ry, precision=4)),
         )
     )
+    render_metric_row(
+        (
+            ("Requested dt", format_value(dt, "s", 4)),
+            ("Stability rx + ry", format_value(stability_sum, precision=4)),
+            ("Limit", "<= 1.0000"),
+        )
+    )
 
     if not show_stability_status("2D wave stability rx + ry", stability_sum, 1.0):
+        with st.expander("Why this was blocked"):
+            st.write(
+                "The explicit 2D wave scheme is stable only when "
+                "`rx + ry <= 1`, where `rx = (c*dt/dx)^2` and "
+                "`ry = (c*dt/dy)^2`. Lower `dt`, lower wave speed, or a coarser "
+                "grid will reduce the stability sum."
+            )
         return
 
     num_intervals = max(1, int(np.ceil(t_final / dt)))
@@ -1111,11 +1242,25 @@ def render_wave_equation_2d():
             ("Actual dt", format_value(result["dt"], "s", 4)),
             ("Stored frames", str(len(result["t"]))),
             ("Max |u|", format_value(np.max(np.abs(displacement)))),
-            ("Final peak", format_value(np.max(displacement[-1]))),
+            ("Final max", format_value(np.max(displacement[-1]))),
+            ("Final min", format_value(np.min(displacement[-1]))),
         )
     )
 
+    st.subheader("Main plot")
     draw_2d_wave_plots(result)
+    render_info_box(
+        "Engineering interpretation",
+        "The displacement field remains oscillatory rather than smoothing out. "
+        "The plot uses symmetric color limits around zero so positive and "
+        "negative membrane motion have equal visual weight.",
+    )
+    with st.expander("Limitations, assumptions, and performance"):
+        st.write(
+            "This demo uses a square uniform grid, constant wave speed, zero "
+            "initial velocity, fixed boundaries, and an explicit update. Stored "
+            "frames are capped to keep the default 41 x 41 simulation responsive."
+        )
 
 
 def draw_2d_heat_plots(result):
@@ -1230,17 +1375,25 @@ def draw_2d_wave_plots(result):
 
 def render_finite_difference_convergence():
     """Render finite-difference convergence analysis."""
-    st.header("Finite Difference Convergence")
-    st.write(
+    st.header("Finite Difference Methods")
+    render_info_box(
+        "Grid refinement and derivative error",
         "This demo differentiates `f(x) = sin(2*pi*x)` on successively finer "
         "uniform grids. Forward and backward differences are first-order; "
-        "central differences are second-order in the interior."
+        "central differences are second-order in the interior.",
     )
 
     with st.sidebar:
         st.subheader("Convergence Inputs")
         max_points = st.slider("Finest grid points", 81, 641, 321, 80)
         frequency = st.slider("Sine frequency multiplier", 1, 4, 1, 1)
+
+    render_parameter_summary(
+        (
+            ("Finest grid", str(max_points)),
+            ("Frequency", f"{frequency}x"),
+        )
+    )
 
     base_points = [21, 41, 81, 161, 321, 641]
     num_points_values = [value for value in base_points if value <= max_points]
@@ -1268,14 +1421,21 @@ def render_finite_difference_convergence():
     backward_order = estimate_convergence_order(dx_values, backward_errors)
     central_order = estimate_convergence_order(dx_values, central_errors)
 
+    st.subheader("Estimated convergence order")
     render_metric_row(
         (
-            ("Forward order", format_value(forward_order)),
-            ("Backward order", format_value(backward_order)),
-            ("Central order", format_value(central_order)),
+            ("Forward difference", format_value(forward_order)),
+            ("Backward difference", format_value(backward_order)),
+            ("Central difference", format_value(central_order)),
         )
     )
+    st.info(
+        "Central difference is usually more accurate for smooth interior points "
+        "because its leading truncation error scales with `dx^2`, while forward "
+        "and backward differences scale with `dx`."
+    )
 
+    st.subheader("Main plot")
     figure, axis = plt.subplots(figsize=(8, 5))
     axis.loglog(dx_values, forward_errors, "o-", label="Forward")
     axis.loglog(dx_values, backward_errors, "s-", label="Backward")
@@ -1317,16 +1477,23 @@ def render_finite_difference_convergence():
         },
         use_container_width=True,
     )
+    with st.expander("Limitations and assumptions"):
+        st.write(
+            "The convergence estimate uses smooth analytical data on uniform 1D "
+            "grids. Boundary effects are avoided by comparing derivative errors "
+            "on interior points only."
+        )
 
 
 def render_axial_bar_fem():
     """Render the 1D axial bar FEM demo."""
     st.header("1D FEM Axial Bar")
-    st.write(
+    render_info_box(
+        "Fixed-free axial bar",
         "A fixed-free axial bar is split into linear finite elements. The app "
         "assembles the stiffness matrix, applies the fixed support, solves "
         "nodal displacements, and compares the tip displacement with "
-        "`F*L/(E*A)`."
+        "`F*L/(E*A)`.",
     )
 
     with st.sidebar:
@@ -1336,6 +1503,16 @@ def render_axial_bar_fem():
         area_mm2 = st.slider("Area A (mm^2)", 10.0, 1000.0, 100.0, 10.0)
         force = st.slider("End force F (N)", 100.0, 10000.0, 1000.0, 100.0)
         num_elements = st.slider("Number of elements", 1, 40, 8, 1)
+
+    render_parameter_summary(
+        (
+            ("Length", format_value(length, "m")),
+            ("Young's modulus", format_value(youngs_modulus_gpa, "GPa")),
+            ("Area", format_value(area_mm2, "mm^2")),
+            ("Applied force", format_value(force, "N")),
+            ("Elements", str(num_elements)),
+        )
+    )
 
     E = youngs_modulus_gpa * 1e9
     A = area_mm2 * 1e-6
@@ -1355,6 +1532,7 @@ def render_axial_bar_fem():
     fixed_reaction = result["reactions"][0]
     average_stress = float(np.mean(stresses))
 
+    st.subheader("FEM solution metrics")
     render_metric_row(
         (
             (
@@ -1365,6 +1543,7 @@ def render_axial_bar_fem():
                 "Analytical tip",
                 format_value(result["analytical_tip_displacement"], "m", 6),
             ),
+            ("Relative error", f"{result['relative_tip_error']:.3e}"),
             ("Reaction force", format_value(fixed_reaction, "N")),
             ("Average stress", format_value(average_stress / 1e6, "MPa")),
         )
@@ -1375,6 +1554,7 @@ def render_axial_bar_fem():
     scale = 0.1 * length / max_displacement
     deformed_nodes = nodes + scale * displacements
 
+    st.subheader("Main plot")
     figure, axes = plt.subplots(3, 1, figsize=(8, 9))
     axes[0].plot(nodes, displacements, "o-", label="FEM displacement")
     axes[0].plot(nodes, analytical, "--", label="Analytical displacement")
@@ -1420,13 +1600,20 @@ def render_axial_bar_fem():
         "element stress in MPa, and exaggerate the deformed shape for visibility.",
     )
 
-    st.write(
-        f"Relative tip displacement error: "
-        f"`{result['relative_tip_error']:.3e}`. "
-        "For this uniform axial bar with a tip load, the linear FEM solution "
-        "matches the analytical linear displacement field up to numerical "
-        "roundoff."
+    render_info_box(
+        "Engineering interpretation",
+        "FEM assembles element stiffness matrices into a global system, applies "
+        "the fixed displacement boundary condition, solves nodal displacements, "
+        "and recovers element stress. For this uniform axial bar with a tip "
+        "load, the linear FEM solution matches the analytical linear "
+        "displacement field up to numerical roundoff.",
     )
+    with st.expander("Limitations and assumptions"):
+        st.write(
+            "This is a small-displacement, linear-elastic, static 1D axial bar "
+            "model with constant `E` and `A`. It does not include beam bending, "
+            "2D trusses, nonlinear materials, buckling, dynamics, or contact."
+        )
 
 
 def main():

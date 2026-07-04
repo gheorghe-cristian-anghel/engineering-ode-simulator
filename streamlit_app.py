@@ -13,6 +13,19 @@ from analysis.finite_difference import (
     uniform_grid_1d,
 )
 from analysis.finite_element_1d import simulate_axial_bar_fem
+from analysis.kalman_filter import KalmanFilter, discretize_state_space
+from analysis.particle_filter import ParticleFilter
+from analysis.state_space import dc_motor_state_space
+from analysis.unscented_kalman_filter import UnscentedKalmanFilter
+from examples.run_particle_filter_pendulum import (
+    _rk4_pendulum_step as pf_rk4_pendulum_step,
+    _simulate_true_pendulum as simulate_pf_true_pendulum,
+)
+from examples.run_ukf_pendulum import (
+    _pendulum_measurement as ukf_pendulum_measurement,
+    _rk4_pendulum_step as ukf_rk4_pendulum_step,
+    _simulate_true_pendulum as simulate_ukf_true_pendulum,
+)
 from models.dc_motor import rad_per_sec_to_rpm
 from models.discrete_pid import DiscretePID, simulate_discrete_pid_motor_control
 from models.heat_equation_1d import (
@@ -57,7 +70,7 @@ APP_SUBTITLE = (
 DOMAIN_DEMOS = {
     "Home": ("Overview",),
     "Control Systems": ("RC Circuit", "RLC Circuit", "DC Motor PID Control"),
-    "State Estimation": ("Portfolio Examples",),
+    "State Estimation": ("Interactive Filters",),
     "UAV / Quadcopter": ("Portfolio Examples",),
     "PDE Solvers": (
         "1D Heat Equation",
@@ -79,9 +92,9 @@ FEATURE_CARDS = (
     ),
     (
         "State Estimation",
-        "Kalman, Extended Kalman, Unscented Kalman, and Particle Filter examples "
-        "available through repository scripts and plots.",
-        "Portfolio examples",
+        "Interactive Kalman, Unscented Kalman, and Particle Filter demos for "
+        "reconstructing hidden states from noisy measurements.",
+        "Interactive demos",
     ),
     (
         "UAV / Quadcopter",
@@ -431,6 +444,713 @@ def render_portfolio_examples(domain):
     for column, item in zip(columns, examples_by_domain.get(domain, ())):
         with column:
             render_feature_card(item, "Available through tested modules, examples, and saved figures.")
+
+
+def _simulate_discrete_linear_system(A, B, x0, input_value, num_points):
+    """Simulate a small discrete linear system for estimator demos."""
+    states = np.zeros((num_points, len(x0)))
+    states[0] = np.asarray(x0, dtype=float)
+    input_vector = np.asarray([input_value], dtype=float)
+
+    for index in range(num_points - 1):
+        states[index + 1] = A @ states[index] + B @ input_vector
+
+    return states
+
+
+@st.cache_data(show_spinner=False)
+def run_linear_kalman_motor_demo(
+    voltage,
+    measurement_noise_std,
+    process_noise_scale,
+    simulation_time,
+    sample_time,
+):
+    """Run the existing linear Kalman filter on the DC motor state-space model."""
+    R = 1.0
+    L = 0.5
+    J = 0.01
+    b = 0.001
+    Kt = 0.01
+    Ke = 0.01
+    num_points = int(simulation_time / sample_time) + 1
+    rng = np.random.default_rng(0)
+
+    A, B, _, _ = dc_motor_state_space(R, L, J, b, Kt, Ke)
+    A_d, B_d = discretize_state_space(A, B, sample_time)
+    measurement_matrix = np.array([[0.0, 1.0]])
+
+    time = np.linspace(0.0, simulation_time, num_points)
+    true_states = _simulate_discrete_linear_system(
+        A_d,
+        B_d,
+        [0.0, 0.0],
+        voltage,
+        num_points,
+    )
+    measured_speed = true_states[:, 1] + rng.normal(
+        0.0,
+        measurement_noise_std,
+        num_points,
+    )
+
+    kalman_filter = KalmanFilter(
+        A=A_d,
+        B=B_d,
+        C=measurement_matrix,
+        Q=process_noise_scale * np.diag([1e-4, 1e-3]),
+        R=np.array([[measurement_noise_std**2]]),
+        x_hat=np.array([0.0, 0.0]),
+        P=np.diag([10.0, 100.0]),
+        name="DC motor speed Kalman filter",
+    )
+
+    estimates = np.zeros_like(true_states)
+    estimates[0], _ = kalman_filter.update(measured_speed[0], voltage)
+    for index in range(1, num_points):
+        estimates[index], _ = kalman_filter.step(measured_speed[index], voltage)
+
+    errors = true_states - estimates
+
+    return {
+        "time": time,
+        "true_current": true_states[:, 0],
+        "true_speed": true_states[:, 1],
+        "measured_speed": measured_speed,
+        "estimated_current": estimates[:, 0],
+        "estimated_speed": estimates[:, 1],
+        "current_error": errors[:, 0],
+        "speed_error": errors[:, 1],
+        "measurement_noise_std": measurement_noise_std,
+        "process_noise_scale": process_noise_scale,
+    }
+
+
+@st.cache_data(show_spinner=False)
+def run_ukf_pendulum_demo(
+    initial_angle_deg,
+    measurement_noise_deg,
+    process_noise_scale,
+    initial_estimate_offset_deg,
+    simulation_time,
+):
+    """Run the existing UKF class on the pendulum example dynamics."""
+    L = 1.0
+    g = 9.81
+    damping = 0.08
+    sample_time = 0.02
+    num_points = int(simulation_time / sample_time) + 1
+    time = np.linspace(0.0, simulation_time, num_points)
+    rng = np.random.default_rng(4)
+    measurement_noise_rad = np.radians(measurement_noise_deg)
+    initial_state = np.array([np.radians(initial_angle_deg), 0.0])
+
+    true_states = simulate_ukf_true_pendulum(
+        initial_state,
+        sample_time,
+        num_points,
+        L,
+        g,
+        damping,
+    )
+    measured_theta = true_states[:, 0] + rng.normal(
+        0.0,
+        measurement_noise_rad,
+        len(time),
+    )
+    initial_estimate = np.array(
+        [np.radians(initial_angle_deg + initial_estimate_offset_deg), 0.0]
+    )
+
+    ukf = UnscentedKalmanFilter(
+        x0=initial_estimate,
+        P0=np.diag([0.1, 1.0]),
+        Q=process_noise_scale * np.diag([1e-7, 1e-5]),
+        R=np.array([[measurement_noise_rad**2]]),
+        process_model=lambda x, dt: ukf_rk4_pendulum_step(x, dt, L, g, damping),
+        measurement_model=ukf_pendulum_measurement,
+        dt=sample_time,
+        alpha=1e-3,
+        beta=2.0,
+        kappa=0.0,
+    )
+
+    estimates = np.zeros_like(true_states)
+    estimates[0] = ukf.update(measured_theta[0])
+    for index in range(1, len(time)):
+        estimates[index] = ukf.step(measured_theta[index])
+
+    errors = true_states - estimates
+
+    return {
+        "time": time,
+        "true_theta": true_states[:, 0],
+        "true_omega": true_states[:, 1],
+        "measured_theta": measured_theta,
+        "estimated_theta": estimates[:, 0],
+        "estimated_omega": estimates[:, 1],
+        "angle_error": errors[:, 0],
+        "omega_error": errors[:, 1],
+        "measurement_noise_deg": measurement_noise_deg,
+        "process_noise_scale": process_noise_scale,
+        "sample_time": sample_time,
+    }
+
+
+@st.cache_data(show_spinner=False)
+def run_particle_filter_pendulum_demo(
+    initial_angle_deg,
+    measurement_noise_deg,
+    num_particles,
+    simulation_time,
+):
+    """Run the existing ParticleFilter class on the pendulum example dynamics."""
+    L = 1.0
+    g = 9.81
+    damping = 0.08
+    sample_time = 0.02
+    num_points = int(simulation_time / sample_time) + 1
+    time = np.linspace(0.0, simulation_time, num_points)
+    rng = np.random.default_rng(5)
+    measurement_noise_rad = np.radians(measurement_noise_deg)
+    process_noise_std = np.array([np.radians(0.04), 0.015])
+    initial_state = np.array([np.radians(initial_angle_deg), 0.0])
+
+    true_states = simulate_pf_true_pendulum(
+        initial_state,
+        sample_time,
+        num_points,
+        L,
+        g,
+        damping,
+    )
+    measured_theta = true_states[:, 0] + rng.normal(
+        0.0,
+        measurement_noise_rad,
+        len(time),
+    )
+    particles = np.column_stack(
+        [
+            rng.normal(
+                np.radians(initial_angle_deg - 10.0),
+                np.radians(10.0),
+                num_particles,
+            ),
+            rng.normal(0.0, 0.5, num_particles),
+        ]
+    )
+
+    def process_model(particle_states, dt):
+        return pf_rk4_pendulum_step(particle_states, dt, L, g, damping)
+
+    def process_noise_sampler(n_particles, state_dim, random_generator):
+        return random_generator.normal(
+            0.0,
+            process_noise_std,
+            size=(n_particles, state_dim),
+        )
+
+    def measurement_likelihood(measurement, particle_states):
+        measured_angle = np.asarray(measurement, dtype=float).reshape(-1)[0]
+        angle_error = measured_angle - particle_states[:, 0]
+        return np.exp(-0.5 * (angle_error / measurement_noise_rad) ** 2)
+
+    particle_filter = ParticleFilter(
+        particles=particles,
+        process_model=process_model,
+        measurement_likelihood=measurement_likelihood,
+        process_noise_sampler=process_noise_sampler,
+        rng=rng,
+    )
+
+    estimates = np.zeros_like(true_states)
+    effective_sample_sizes = np.zeros(len(time))
+    resample_threshold = 0.5
+
+    particle_filter.update(measured_theta[0])
+    effective_sample_sizes[0] = particle_filter.effective_sample_size()
+    if effective_sample_sizes[0] < resample_threshold * num_particles:
+        particle_filter.systematic_resample()
+    estimates[0] = particle_filter.estimate()
+
+    for index in range(1, len(time)):
+        particle_filter.predict(sample_time)
+        particle_filter.update(measured_theta[index])
+        effective_sample_sizes[index] = particle_filter.effective_sample_size()
+        if effective_sample_sizes[index] < resample_threshold * num_particles:
+            particle_filter.systematic_resample()
+        estimates[index] = particle_filter.estimate()
+
+    errors = true_states - estimates
+
+    return {
+        "time": time,
+        "true_theta": true_states[:, 0],
+        "true_omega": true_states[:, 1],
+        "measured_theta": measured_theta,
+        "estimated_theta": estimates[:, 0],
+        "estimated_omega": estimates[:, 1],
+        "angle_error": errors[:, 0],
+        "omega_error": errors[:, 1],
+        "effective_sample_sizes": effective_sample_sizes,
+        "measurement_noise_deg": measurement_noise_deg,
+        "num_particles": num_particles,
+    }
+
+
+def render_linear_kalman_filter_demo():
+    """Render the linear Kalman Filter Streamlit demo."""
+    st.subheader("Linear Kalman Filter: DC Motor Speed")
+    st.write(
+        "A linear Kalman Filter estimates hidden armature current and smooths "
+        "noisy speed measurements from the existing DC motor state-space model."
+    )
+
+    parameter_col, metric_col = st.columns([1, 1])
+    with parameter_col:
+        st.caption("Parameters")
+        voltage = st.slider(
+            "Input voltage (V)",
+            2.0,
+            24.0,
+            12.0,
+            1.0,
+            key="kf_voltage",
+        )
+        measurement_noise = st.slider(
+            "Measurement noise std (rad/s)",
+            0.2,
+            5.0,
+            2.0,
+            0.1,
+            key="kf_measurement_noise",
+        )
+        process_noise_scale = st.slider(
+            "Process noise scale",
+            0.1,
+            10.0,
+            1.0,
+            0.1,
+            key="kf_process_noise_scale",
+        )
+        simulation_time = st.slider(
+            "Simulation time (s)",
+            2.0,
+            10.0,
+            8.0,
+            0.5,
+            key="kf_simulation_time",
+        )
+        sample_time = st.slider(
+            "Sample time dt (s)",
+            0.005,
+            0.05,
+            0.01,
+            0.005,
+            format="%.3f",
+            key="kf_sample_time",
+        )
+
+    result = run_linear_kalman_motor_demo(
+        voltage,
+        measurement_noise,
+        process_noise_scale,
+        simulation_time,
+        sample_time,
+    )
+    speed_error = result["speed_error"]
+    current_error = result["current_error"]
+
+    with metric_col:
+        st.caption("Metrics")
+        render_metric_row(
+            (
+                (
+                    "RMS speed error",
+                    format_value(np.sqrt(np.mean(speed_error**2)), "rad/s"),
+                ),
+                ("Final speed error", format_value(speed_error[-1], "rad/s")),
+            )
+        )
+        render_metric_row(
+            (
+                (
+                    "RMS current error",
+                    format_value(np.sqrt(np.mean(current_error**2)), "A"),
+                ),
+                ("Measurement noise", format_value(measurement_noise, "rad/s")),
+            )
+        )
+        render_metric_row(
+            (
+                ("Process noise scale", format_value(process_noise_scale)),
+                (
+                    "Final estimate",
+                    format_value(result["estimated_speed"][-1], "rad/s"),
+                ),
+            )
+        )
+
+    time = result["time"]
+    figure, axes = plt.subplots(3, 1, sharex=True, figsize=(8, 8))
+    axes[0].plot(time, result["true_speed"], label="True speed")
+    axes[0].plot(
+        time,
+        result["measured_speed"],
+        ".",
+        alpha=0.25,
+        label="Noisy speed measurement",
+    )
+    axes[0].plot(time, result["estimated_speed"], "--", label="Kalman estimate")
+    format_engineering_axes(
+        axes[0],
+        title="Speed Estimate from Noisy Measurements",
+        ylabel="Speed (rad/s)",
+    )
+
+    axes[1].plot(time, result["true_current"], label="True current")
+    axes[1].plot(
+        time,
+        result["estimated_current"],
+        "--",
+        label="Estimated hidden current",
+    )
+    format_engineering_axes(
+        axes[1],
+        title="Hidden Current Estimate",
+        ylabel="Current (A)",
+    )
+
+    axes[2].plot(time, speed_error, label="Speed error")
+    axes[2].plot(time, current_error, label="Current error")
+    axes[2].axhline(0.0, color="gray", linestyle=":")
+    format_engineering_axes(
+        axes[2],
+        title="Estimation Errors",
+        xlabel="Time (s)",
+        ylabel="True - estimate",
+    )
+    show_figure(
+        figure,
+        "The filter combines the motor model with noisy speed measurements to "
+        "estimate both measured speed and hidden armature current.",
+    )
+
+    with st.expander("Engineering interpretation"):
+        st.write(
+            "The measurement only observes motor speed. The Kalman Filter uses "
+            "the linear state-space model to infer current, while the process "
+            "and measurement noise settings tune how strongly it trusts the "
+            "model versus the sensor."
+        )
+
+
+def render_ukf_pendulum_demo():
+    """Render the Unscented Kalman Filter pendulum demo."""
+    st.subheader("Unscented Kalman Filter: Nonlinear Pendulum")
+    st.write(
+        "The UKF estimates pendulum angle and hidden angular velocity from "
+        "noisy angle measurements using sigma points instead of Jacobians."
+    )
+
+    parameter_col, metric_col = st.columns([1, 1])
+    with parameter_col:
+        st.caption("Parameters")
+        initial_angle = st.slider(
+            "Initial angle (deg)",
+            5.0,
+            60.0,
+            25.0,
+            1.0,
+            key="ukf_initial_angle",
+        )
+        measurement_noise = st.slider(
+            "Measurement noise std (deg)",
+            0.2,
+            8.0,
+            2.0,
+            0.1,
+            key="ukf_measurement_noise",
+        )
+        process_noise_scale = st.slider(
+            "Process noise scale",
+            0.1,
+            10.0,
+            1.0,
+            0.1,
+            key="ukf_process_noise_scale",
+        )
+        initial_estimate_offset = st.slider(
+            "Initial estimate offset (deg)",
+            -20.0,
+            20.0,
+            -10.0,
+            1.0,
+            key="ukf_initial_estimate_offset",
+        )
+        simulation_time = st.slider(
+            "Simulation time (s)",
+            3.0,
+            10.0,
+            8.0,
+            0.5,
+            key="ukf_simulation_time",
+        )
+
+    result = run_ukf_pendulum_demo(
+        initial_angle,
+        measurement_noise,
+        process_noise_scale,
+        initial_estimate_offset,
+        simulation_time,
+    )
+    angle_error_deg = np.degrees(result["angle_error"])
+    omega_error = result["omega_error"]
+
+    with metric_col:
+        st.caption("Metrics")
+        render_metric_row(
+            (
+                (
+                    "RMS angle error",
+                    format_value(np.sqrt(np.mean(angle_error_deg**2)), "deg"),
+                ),
+                ("Final angle error", format_value(angle_error_deg[-1], "deg")),
+            )
+        )
+        render_metric_row(
+            (
+                (
+                    "RMS omega error",
+                    format_value(np.sqrt(np.mean(omega_error**2)), "rad/s"),
+                ),
+                ("Final omega error", format_value(omega_error[-1], "rad/s")),
+            )
+        )
+        render_metric_row(
+            (
+                ("Measurement noise", format_value(measurement_noise, "deg")),
+                ("Sample time", format_value(result["sample_time"], "s", 3)),
+            )
+        )
+
+    time = result["time"]
+    figure, axes = plt.subplots(2, 1, sharex=True, figsize=(8, 6))
+    axes[0].plot(time, np.degrees(result["true_theta"]), label="True angle")
+    axes[0].plot(
+        time,
+        np.degrees(result["measured_theta"]),
+        ".",
+        alpha=0.25,
+        label="Noisy angle measurement",
+    )
+    axes[0].plot(
+        time,
+        np.degrees(result["estimated_theta"]),
+        "--",
+        label="UKF estimate",
+    )
+    format_engineering_axes(
+        axes[0],
+        title="Nonlinear Pendulum Angle Estimate",
+        ylabel="Angle (deg)",
+    )
+
+    axes[1].plot(time, angle_error_deg, label="Angle error")
+    axes[1].axhline(0.0, color="gray", linestyle=":")
+    format_engineering_axes(
+        axes[1],
+        title="Angle Estimation Error",
+        xlabel="Time (s)",
+        ylabel="True - estimate (deg)",
+    )
+    show_figure(
+        figure,
+        "The UKF tracks the nonlinear pendulum angle while estimating angular "
+        "velocity internally from angle-only measurements.",
+    )
+
+    with st.expander("Engineering interpretation"):
+        st.write(
+            "The pendulum measurement observes angle only. The Unscented Kalman "
+            "Filter propagates sigma points through the nonlinear pendulum "
+            "dynamics, so it can estimate angular velocity without requiring "
+            "a measured velocity signal."
+        )
+
+
+def render_particle_filter_pendulum_demo():
+    """Render the optional Particle Filter pendulum demo."""
+    st.subheader("Particle Filter: Nonlinear Pendulum")
+    st.write(
+        "The Particle Filter represents uncertainty with weighted pendulum "
+        "state hypotheses. It is optional here because particle count directly "
+        "affects runtime."
+    )
+
+    parameter_col, metric_col = st.columns([1, 1])
+    with parameter_col:
+        st.caption("Parameters")
+        run_demo = st.checkbox(
+            "Run Particle Filter simulation",
+            value=False,
+            key="pf_run_demo",
+        )
+        num_particles = st.slider(
+            "Number of particles",
+            200,
+            2000,
+            600,
+            100,
+            key="pf_num_particles",
+        )
+        initial_angle = st.slider(
+            "Initial angle (deg)",
+            5.0,
+            60.0,
+            25.0,
+            1.0,
+            key="pf_initial_angle",
+        )
+        measurement_noise = st.slider(
+            "Measurement noise std (deg)",
+            0.5,
+            8.0,
+            2.0,
+            0.1,
+            key="pf_measurement_noise",
+        )
+        simulation_time = st.slider(
+            "Simulation time (s)",
+            3.0,
+            8.0,
+            6.0,
+            0.5,
+            key="pf_simulation_time",
+        )
+
+    if not run_demo:
+        with metric_col:
+            st.info(
+                "Enable the checkbox to run the particle simulation. The "
+                "default is off so routine page reruns stay quick."
+            )
+        return
+
+    result = run_particle_filter_pendulum_demo(
+        initial_angle,
+        measurement_noise,
+        num_particles,
+        simulation_time,
+    )
+    angle_error_deg = np.degrees(result["angle_error"])
+    effective_sample_sizes = result["effective_sample_sizes"]
+
+    with metric_col:
+        st.caption("Metrics")
+        render_metric_row(
+            (
+                (
+                    "RMS angle error",
+                    format_value(np.sqrt(np.mean(angle_error_deg**2)), "deg"),
+                ),
+                ("Final angle error", format_value(angle_error_deg[-1], "deg")),
+            )
+        )
+        render_metric_row(
+            (
+                ("Average ESS", format_value(np.mean(effective_sample_sizes))),
+                ("Minimum ESS", format_value(np.min(effective_sample_sizes))),
+            )
+        )
+        render_metric_row(
+            (
+                ("Particles", str(num_particles)),
+                ("Measurement noise", format_value(measurement_noise, "deg")),
+            )
+        )
+
+    time = result["time"]
+    figure, axes = plt.subplots(3, 1, sharex=True, figsize=(8, 8))
+    axes[0].plot(time, np.degrees(result["true_theta"]), label="True angle")
+    axes[0].plot(
+        time,
+        np.degrees(result["measured_theta"]),
+        ".",
+        alpha=0.2,
+        label="Noisy angle measurement",
+    )
+    axes[0].plot(
+        time,
+        np.degrees(result["estimated_theta"]),
+        "--",
+        label="Particle estimate",
+    )
+    format_engineering_axes(
+        axes[0],
+        title="Particle Filter Angle Estimate",
+        ylabel="Angle (deg)",
+    )
+
+    axes[1].plot(time, angle_error_deg, label="Angle error")
+    axes[1].axhline(0.0, color="gray", linestyle=":")
+    format_engineering_axes(
+        axes[1],
+        title="Angle Estimation Error",
+        ylabel="True - estimate (deg)",
+    )
+
+    axes[2].plot(time, effective_sample_sizes, label="Effective sample size")
+    axes[2].axhline(
+        0.5 * num_particles,
+        color="gray",
+        linestyle=":",
+        label="Resampling threshold",
+    )
+    format_engineering_axes(
+        axes[2],
+        title="Particle Diversity",
+        xlabel="Time (s)",
+        ylabel="Particles",
+    )
+    show_figure(
+        figure,
+        "Effective sample size drops when particle weights concentrate; "
+        "systematic resampling restores diversity when it falls below the "
+        "threshold.",
+    )
+
+    with st.expander("Engineering interpretation"):
+        st.write(
+            "Particle Filters can represent non-Gaussian uncertainty, but they "
+            "trade that flexibility for compute cost. The particle cap and "
+            "short default simulation keep this page responsive."
+        )
+
+
+def render_state_estimation():
+    """Render interactive state-estimation demos."""
+    st.header("State Estimation")
+    st.info("State estimation reconstructs hidden system states from noisy measurements.")
+    render_info_box(
+        "Interactive filters",
+        "These demos reuse the repository's tested estimator classes and "
+        "example dynamics. They keep sample counts modest and use fixed random "
+        "seeds so slider changes produce repeatable comparisons.",
+    )
+
+    kalman_tab, ukf_tab, particle_tab = st.tabs(
+        ("Kalman Filter", "Unscented Kalman Filter", "Particle Filter")
+    )
+
+    with kalman_tab:
+        render_linear_kalman_filter_demo()
+
+    with ukf_tab:
+        render_ukf_pendulum_demo()
+
+    with particle_tab:
+        render_particle_filter_pendulum_demo()
 
 
 def render_about():
@@ -1635,6 +2355,8 @@ def main():
 
     if domain == "Home":
         render_home()
+    elif domain == "State Estimation":
+        render_state_estimation()
     elif domain == "About":
         render_about()
     elif demo == "RC Circuit":

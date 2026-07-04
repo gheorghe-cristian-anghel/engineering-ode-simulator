@@ -409,9 +409,9 @@ def render_portfolio_examples(domain):
     render_info_box(
         "Repository-backed examples",
         "This domain is represented in the repository through command-line "
-        "examples, tests, and generated figures. The Streamlit polish pass "
-        "keeps this page lightweight and focuses interactivity on the new PDE, "
-        "numerical-methods, and FEM demos.",
+        "examples, tests, and generated figures. This page stays lightweight "
+        "while the interactive app focuses on control, PDE, numerical-methods, "
+        "and FEM demos.",
     )
 
     examples_by_domain = {

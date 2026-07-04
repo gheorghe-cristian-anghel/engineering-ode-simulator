@@ -180,13 +180,12 @@ streamlit run streamlit_app.py
 
 The app currently includes selected demos for:
 
-- RC and RLC circuits.
-- DC motor PID control.
-- 1D and 2D heat equations.
-- 1D and 2D wave equations.
-- Finite-difference convergence.
-- 1D axial bar FEM.
-- Portfolio overview pages for mechanical systems, state estimation, and UAV examples.
+- Home and About overview pages.
+- Control-system demos for RC/RLC circuits and DC motor PID control.
+- PDE solver demos for 1D/2D heat equations and 1D/2D wave equations.
+- Numerical-methods demo for finite-difference convergence.
+- FEM basics demo for a 1D axial bar.
+- Portfolio overview pages for state-estimation and UAV/quadcopter examples.
 
 ## Testing
 

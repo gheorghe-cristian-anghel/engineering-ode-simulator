@@ -44,11 +44,16 @@ def test_voltage_at_one_time_constant_is_63_percent_of_vin():
 
 def test_invalid_rc_parameters_raise_value_error():
     """Resistance and capacitance must be positive."""
-    with pytest.raises(ValueError):
-        simulate_rc(0.0, 0.001, 5.0, 0.0, (0, 1), 10)
+    invalid_parameters = [
+        (0.0, 0.001),
+        (-1.0, 0.001),
+        (1000.0, 0.0),
+        (1000.0, -0.001),
+    ]
 
-    with pytest.raises(ValueError):
-        simulate_rc(1000.0, 0.0, 5.0, 0.0, (0, 1), 10)
+    for R, C in invalid_parameters:
+        with pytest.raises(ValueError):
+            simulate_rc(R, C, 5.0, 0.0, (0, 1), 10)
 
 
 def test_solve_ivp_failure_raises_runtime_error(monkeypatch):

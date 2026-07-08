@@ -89,6 +89,20 @@ def test_simulation_returns_arrays_of_equal_length():
     assert thrust.shape == (50,)
 
 
+def test_default_hover_simulation_remains_finite_and_physically_plausible():
+    """Default hover thrust should hold altitude and keep states finite."""
+    _, z, v, thrust = simulate_quadcopter_altitude(
+        t_span=(0.0, 1.0),
+        num_points=50,
+    )
+
+    assert np.all(np.isfinite(z))
+    assert np.all(np.isfinite(v))
+    assert np.all(np.isfinite(thrust))
+    assert z[-1] == pytest.approx(z[0], abs=1e-9)
+    assert v[-1] == pytest.approx(0.0, abs=1e-9)
+
+
 def test_initial_altitude_and_velocity_match_inputs():
     """First simulated sample should preserve initial altitude and velocity."""
     t, z, v, _ = simulate_quadcopter_altitude(

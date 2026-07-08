@@ -218,6 +218,7 @@ def test_solution_contains_only_finite_values():
     """The stable solver should produce finite displacement values."""
     result = simulate_wave_equation_1d(t_final=0.5, num_points=101)
 
+    assert result["cfl_number"] <= 1.0
     assert np.all(np.isfinite(result["displacement"]))
 
 
@@ -228,6 +229,21 @@ def test_default_pulse_evolves_over_time():
     displacement = result["displacement"]
 
     assert not np.allclose(displacement[0], displacement[-1])
+
+
+def test_nonzero_initial_velocity_changes_first_step_in_expected_direction():
+    """Positive initial velocity should move the first interior step upward."""
+    result = simulate_wave_equation_1d(
+        t_final=0.05,
+        num_points=21,
+        initial_displacement=lambda x: np.zeros_like(x),
+        initial_velocity=lambda x: np.ones_like(x),
+        boundary_values=(0.0, 0.0),
+    )
+
+    displacement = result["displacement"]
+
+    assert np.all(displacement[1, 1:-1] > displacement[0, 1:-1])
 
 
 def test_initial_displacement_wrong_shape_raises_value_error():

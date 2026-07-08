@@ -128,6 +128,23 @@ def test_hover_tracking_final_error_is_smaller_than_initial_error():
     assert result["tracking_error_norm"][-1] < result["tracking_error_norm"][0]
 
 
+def test_default_hover_tracking_errors_and_command_metrics_are_plausible():
+    """Default hover tracking should remain finite and settle near target."""
+    result = simulate_quadcopter_trajectory_tracking(
+        hover_trajectory((0.0, 0.0, 2.0)),
+        t_span=(0.0, 3.0),
+        dt=0.05,
+    )
+    metrics = summarize_trajectory_tracking(result)
+
+    assert np.all(np.isfinite(result["states"]))
+    assert np.all(np.isfinite(result["controls"]))
+    assert metrics["final_position_error_norm"] < 0.1
+    assert metrics["rms_position_error"] < 1.0
+    assert np.isfinite(metrics["max_thrust"])
+    assert np.isfinite(metrics["max_abs_torque"])
+
+
 def test_invalid_dt_raises_value_error():
     """Sample time must be positive."""
     with pytest.raises(ValueError):

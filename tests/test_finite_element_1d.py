@@ -171,6 +171,21 @@ def test_computed_stress_matches_force_over_area():
     )
 
 
+def test_computed_strain_matches_stress_over_youngs_modulus():
+    """Recovered strain should be consistent with Hooke's law."""
+    result = simulate_axial_bar_fem(
+        length=1.0,
+        E=200e9,
+        A=1e-4,
+        force=1000.0,
+        num_elements=8,
+    )
+
+    assert result["strains"] == pytest.approx(
+        result["stresses"] / result["parameters"]["E"]
+    )
+
+
 def test_reaction_force_at_fixed_node_balances_applied_force():
     """The fixed support reaction should balance the applied end force."""
     result = simulate_axial_bar_fem(

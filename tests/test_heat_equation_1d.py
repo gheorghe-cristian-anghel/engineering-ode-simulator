@@ -156,6 +156,14 @@ def test_gaussian_pulse_peak_decreases_over_time():
     assert np.max(temperature[-1]) < np.max(temperature[0])
 
 
+def test_stable_solution_remains_finite_and_reports_stable_r():
+    """A stable diffusion solve should not produce NaN or Inf values."""
+    result = simulate_heat_equation_1d(t_final=0.2, num_points=41)
+
+    assert result["stability_number"] <= 0.5
+    assert np.all(np.isfinite(result["temperature"]))
+
+
 def test_invalid_length_raises_value_error():
     """Rod length must be positive."""
     with pytest.raises(ValueError):

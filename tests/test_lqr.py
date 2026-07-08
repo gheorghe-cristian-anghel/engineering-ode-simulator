@@ -45,6 +45,20 @@ def test_lqr_closed_loop_eigenvalues_are_stable_for_simple_system():
     assert np.all(np.real(closed_loop_eigenvalues) < 0.0)
 
 
+def test_valid_lqr_weight_matrices_are_accepted():
+    """Symmetric PSD Q and positive definite R should produce finite gains."""
+    A = np.array([[0.0, 1.0], [-2.0, -0.5]])
+    B = np.array([[0.0], [1.0]])
+    Q = np.diag([4.0, 0.5])
+    R = np.array([[0.25]])
+
+    K, P, closed_loop_eigenvalues = lqr(A, B, Q, R)
+
+    assert np.all(np.isfinite(K))
+    assert np.all(np.isfinite(P))
+    assert np.all(np.isfinite(closed_loop_eigenvalues))
+
+
 def test_invalid_a_dimensions_raise_value_error():
     """A must be square."""
     with pytest.raises(ValueError):

@@ -261,3 +261,33 @@ def test_measurement_dimension_mismatch_raises_value_error():
             measurement_model=lambda x: np.array([x[0], x[0]]),
             dt=0.1,
         )
+
+
+def test_ukf_error_is_lower_than_raw_measurement_error_and_covariance_is_valid():
+    """A scalar UKF should smooth noisy direct measurements."""
+    rng = np.random.default_rng(2)
+    true_value = 1.0
+    measurements = true_value + rng.normal(0.0, 0.15, 80)
+    ukf = UnscentedKalmanFilter(
+        x0=np.array([0.0]),
+        P0=np.array([[1.0]]),
+        Q=np.array([[1e-4]]),
+        R=np.array([[0.04]]),
+        process_model=_identity_process_model,
+        measurement_model=_identity_measurement_model,
+        dt=0.1,
+    )
+
+    estimates = []
+    for measurement in measurements:
+        estimate = ukf.step(measurement)
+        estimates.append(estimate[0])
+
+        assert np.all(np.isfinite(ukf.P))
+        assert np.allclose(ukf.P, ukf.P.T)
+
+    estimate_error = np.mean(np.abs(true_value - np.array(estimates[-40:])))
+    measurement_error = np.mean(np.abs(true_value - measurements[-40:]))
+
+    assert estimate_error < measurement_error
+    assert np.all(np.isfinite(estimates))

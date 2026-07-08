@@ -101,6 +101,61 @@ def test_central_difference_is_more_accurate_than_forward_for_sine():
     assert central_error < forward_error
 
 
+def test_central_difference_has_second_order_convergence():
+    """Central differences should converge at approximately second order."""
+    dx_values = []
+    errors = []
+
+    for num_points in [51, 101, 201, 401]:
+        x, dx = uniform_grid_1d(0.0, 1.0, num_points)
+        y = np.sin(2.0 * np.pi * x)
+        exact = 2.0 * np.pi * np.cos(2.0 * np.pi * x)
+        interior = slice(2, -2)
+
+        dx_values.append(dx)
+        errors.append(rms_error(central_difference(y, dx)[interior], exact[interior]))
+
+    order = estimate_convergence_order(dx_values, errors)
+
+    assert 1.8 < order < 2.2
+
+
+def test_forward_difference_has_first_order_convergence():
+    """Forward differences should converge at approximately first order."""
+    dx_values = []
+    errors = []
+
+    for num_points in [51, 101, 201, 401]:
+        x, dx = uniform_grid_1d(0.0, 1.0, num_points)
+        y = np.sin(2.0 * np.pi * x)
+        exact = 2.0 * np.pi * np.cos(2.0 * np.pi * x)
+
+        dx_values.append(dx)
+        errors.append(rms_error(forward_difference(y, dx)[:-1], exact[:-1]))
+
+    order = estimate_convergence_order(dx_values, errors)
+
+    assert 0.9 < order < 1.1
+
+
+def test_backward_difference_has_first_order_convergence():
+    """Backward differences should converge at approximately first order."""
+    dx_values = []
+    errors = []
+
+    for num_points in [51, 101, 201, 401]:
+        x, dx = uniform_grid_1d(0.0, 1.0, num_points)
+        y = np.sin(2.0 * np.pi * x)
+        exact = 2.0 * np.pi * np.cos(2.0 * np.pi * x)
+
+        dx_values.append(dx)
+        errors.append(rms_error(backward_difference(y, dx)[1:], exact[1:]))
+
+    order = estimate_convergence_order(dx_values, errors)
+
+    assert 0.9 < order < 1.1
+
+
 def test_max_abs_error_returns_expected_value():
     """Max absolute error should return the largest absolute difference."""
     numerical = np.array([1.0, 2.5, 4.0])

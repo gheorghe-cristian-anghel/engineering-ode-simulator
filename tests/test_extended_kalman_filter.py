@@ -183,3 +183,23 @@ def test_simple_nonlinear_estimation_error_remains_finite_and_bounded():
 
     assert np.all(np.isfinite(errors))
     assert errors[-1] < 0.1
+
+
+def test_ekf_outputs_and_covariance_remain_finite_and_symmetric():
+    """Repeated EKF steps should keep outputs finite and covariance symmetric."""
+    true_state = 1.0
+    dt = 0.05
+    ekf = _simple_nonlinear_filter()
+
+    estimates = []
+    for _ in range(40):
+        true_state = true_state + dt * (-0.5 * true_state)
+        measurement = true_state**2
+        x_hat, gain = ekf.step(measurement, dt=dt)
+        estimates.append(x_hat[0])
+
+        assert np.all(np.isfinite(gain))
+        assert np.all(np.isfinite(ekf.P))
+        assert np.allclose(ekf.P, ekf.P.T)
+
+    assert np.all(np.isfinite(estimates))

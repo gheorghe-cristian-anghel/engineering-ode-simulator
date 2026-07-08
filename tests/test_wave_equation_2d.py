@@ -184,6 +184,8 @@ def test_solution_contains_only_finite_values_for_stable_cfl():
     """The stable solver should produce finite displacement values."""
     result = simulate_wave_equation_2d(t_final=0.2, nx=31, ny=31)
 
+    assert result["stability_sum"] <= 1.0
+    assert result["rx"] + result["ry"] == pytest.approx(result["stability_sum"])
     assert np.all(np.isfinite(result["displacement"]))
 
 
@@ -306,3 +308,19 @@ def test_default_gaussian_evolves_over_time():
     displacement = result["displacement"]
 
     assert not np.allclose(displacement[0], displacement[-1])
+
+
+def test_nonzero_initial_velocity_changes_first_step_in_expected_direction():
+    """Positive initial velocity should move the first interior step upward."""
+    result = simulate_wave_equation_2d(
+        t_final=0.05,
+        nx=21,
+        ny=19,
+        initial_displacement=lambda X, Y: np.zeros_like(X),
+        initial_velocity=lambda X, Y: np.ones_like(X),
+        boundary_values=0.0,
+    )
+
+    displacement = result["displacement"]
+
+    assert np.all(displacement[1, 1:-1, 1:-1] > displacement[0, 1:-1, 1:-1])

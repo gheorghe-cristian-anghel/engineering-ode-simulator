@@ -61,11 +61,13 @@ def test_numerical_and_analytical_solutions_match():
 
 def test_invalid_r_raises_value_error():
     """Resistance must be positive."""
-    with pytest.raises(ValueError):
-        simulate_rl(0, 2, 5, 0, (0, 1.5), 100)
+    for resistance in [0.0, -1.0]:
+        with pytest.raises(ValueError):
+            simulate_rl(resistance, 2, 5, 0, (0, 1.5), 100)
 
 
 def test_invalid_l_raises_value_error():
     """Inductance must be positive."""
-    with pytest.raises(ValueError):
-        simulate_rl(10, 0, 5, 0, (0, 1.5), 100)
+    for inductance in [0.0, -1.0]:
+        with pytest.raises(ValueError):
+            simulate_rl(10, inductance, 5, 0, (0, 1.5), 100)

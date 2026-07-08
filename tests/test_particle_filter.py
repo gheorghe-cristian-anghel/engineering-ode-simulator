@@ -232,3 +232,35 @@ def test_simple_scalar_tracking_case_improves_estimate_toward_measurement():
 
     assert estimate[0] > 0.0
     assert updated_error < initial_error
+
+
+def test_particle_filter_outputs_remain_finite_and_smooth_noisy_measurements():
+    """A simple particle filter should produce finite smoothed estimates."""
+    rng = np.random.default_rng(3)
+    true_value = 1.0
+    measurements = true_value + rng.normal(0.0, 0.3, 40)
+    particle_filter = ParticleFilter(
+        particles=np.linspace(-1.0, 3.0, 81).reshape(-1, 1),
+        process_model=_identity_process_model,
+        measurement_likelihood=_direct_measurement_likelihood,
+        rng=1,
+    )
+
+    estimates = []
+    for measurement in measurements:
+        estimate = particle_filter.step(
+            measurement,
+            dt=0.1,
+            resample_threshold=0.0,
+        )
+        estimates.append(estimate[0])
+
+        assert np.all(np.isfinite(particle_filter.particles))
+        assert np.all(np.isfinite(particle_filter.weights))
+        assert np.sum(particle_filter.weights) == pytest.approx(1.0)
+
+    estimate_error = np.mean(np.abs(true_value - np.array(estimates[-20:])))
+    measurement_error = np.mean(np.abs(true_value - measurements[-20:]))
+
+    assert estimate_error < measurement_error
+    assert np.all(np.isfinite(estimates))

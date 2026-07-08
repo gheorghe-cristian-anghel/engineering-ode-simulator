@@ -62,11 +62,13 @@ def test_invalid_negative_r_raises_value_error():
 
 def test_invalid_zero_l_raises_value_error():
     """Inductance must be positive."""
-    with pytest.raises(ValueError):
-        simulate_rlc(2, 0, 0.25, 5, 0, 0, (0, 10), 200)
+    for inductance in [0.0, -1.0]:
+        with pytest.raises(ValueError):
+            simulate_rlc(2, inductance, 0.25, 5, 0, 0, (0, 10), 200)
 
 
 def test_invalid_zero_c_raises_value_error():
     """Capacitance must be positive."""
-    with pytest.raises(ValueError):
-        simulate_rlc(2, 1, 0, 5, 0, 0, (0, 10), 200)
+    for capacitance in [0.0, -0.25]:
+        with pytest.raises(ValueError):
+            simulate_rlc(2, 1, capacitance, 5, 0, 0, (0, 10), 200)

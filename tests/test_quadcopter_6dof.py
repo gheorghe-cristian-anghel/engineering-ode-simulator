@@ -142,6 +142,21 @@ def test_simulate_quadcopter_6dof_returns_expected_shapes():
     assert controls.shape == (50, 4)
 
 
+def test_default_hover_simulation_remains_finite_and_near_hover():
+    """Default 6-DOF hover control should keep the vehicle near rest."""
+    _, states, controls = simulate_quadcopter_6dof(
+        t_span=(0.0, 1.0),
+        num_points=50,
+    )
+
+    assert np.all(np.isfinite(states))
+    assert np.all(np.isfinite(controls))
+    assert_allclose(states[-1, 0:6], np.zeros(6), atol=1e-9)
+    assert_allclose(states[-1, 6:12], np.zeros(6), atol=1e-9)
+    assert controls[-1, 0] == pytest.approx(9.81)
+    assert_allclose(controls[-1, 1:4], np.zeros(3), atol=1e-12)
+
+
 def test_initial_state_is_preserved():
     """The first simulated state sample should match the initial state."""
     initial_state = np.array(

@@ -89,11 +89,14 @@ def test_energy_decreases_with_damping():
 
 def test_invalid_physical_parameters_raise_value_error():
     """Mass, damping, and stiffness should reject unphysical values."""
-    with pytest.raises(ValueError):
-        simulate_mass_spring_damper(0, 0.1, 4, 1, 0, (0, 1), 10)
+    invalid_parameters = [
+        (0.0, 0.1, 4.0),
+        (-1.0, 0.1, 4.0),
+        (1.0, -0.1, 4.0),
+        (1.0, 0.1, 0.0),
+        (1.0, 0.1, -4.0),
+    ]
 
-    with pytest.raises(ValueError):
-        simulate_mass_spring_damper(1, -0.1, 4, 1, 0, (0, 1), 10)
-
-    with pytest.raises(ValueError):
-        simulate_mass_spring_damper(1, 0.1, 0, 1, 0, (0, 1), 10)
+    for m, c, k in invalid_parameters:
+        with pytest.raises(ValueError):
+            simulate_mass_spring_damper(m, c, k, 1, 0, (0, 1), 10)

@@ -181,6 +181,15 @@ def test_gaussian_hotspot_peak_decreases_over_time():
     assert np.max(temperature[-1]) < np.max(temperature[0])
 
 
+def test_stable_solution_remains_finite_and_respects_rx_plus_ry_limit():
+    """Stable 2D diffusion should remain finite with rx + ry <= 0.5."""
+    result = simulate_heat_equation_2d(t_final=0.05, nx=21, ny=19)
+
+    assert result["stability_sum"] <= 0.5
+    assert result["rx"] + result["ry"] == pytest.approx(result["stability_sum"])
+    assert np.all(np.isfinite(result["temperature"]))
+
+
 def test_unstable_dt_raises_value_error_when_enforced():
     """The solver should reject unstable explicit time steps by default."""
     with pytest.raises(ValueError):

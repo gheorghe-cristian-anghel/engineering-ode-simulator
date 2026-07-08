@@ -253,3 +253,31 @@ def test_estimation_error_decreases_for_simple_noisy_measurements():
 
     assert late_error < 0.1
     assert errors[-1] < abs(true_value)
+
+
+def test_filter_error_is_lower_than_raw_measurement_error():
+    """A tuned scalar Kalman filter should smooth noisy direct measurements."""
+    rng = np.random.default_rng(0)
+    true_value = 1.0
+    measurements = true_value + rng.normal(0.0, 0.2, 80)
+    kalman_filter = KalmanFilter(
+        A=[[1.0]],
+        B=[[0.0]],
+        C=[[1.0]],
+        Q=[[1e-4]],
+        R=[[0.04]],
+        x_hat=[0.0],
+        P=[[1.0]],
+    )
+
+    estimates = []
+    for measurement in measurements:
+        x_hat, _ = kalman_filter.step(measurement)
+        estimates.append(x_hat[0])
+
+    estimate_error = np.mean(np.abs(true_value - np.array(estimates[-40:])))
+    measurement_error = np.mean(np.abs(true_value - measurements[-40:]))
+
+    assert estimate_error < measurement_error
+    assert np.all(np.isfinite(kalman_filter.P))
+    assert np.allclose(kalman_filter.P, kalman_filter.P.T)

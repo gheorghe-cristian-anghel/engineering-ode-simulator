@@ -162,6 +162,24 @@ def test_nearest_clearances_are_stored():
     assert np.all(np.isfinite(result["nearest_clearances"]))
 
 
+def test_default_obstacle_case_keeps_positive_clearance_and_finite_metrics():
+    """A simple default avoidance case should stay outside the obstacle."""
+    obstacle = SphericalObstacle(center=[5.0, 0.0, 1.0], radius=0.2, influence_radius=1.0)
+    result = simulate_quadcopter_obstacle_avoidance(
+        hover_trajectory((0.0, 0.0, 1.0)),
+        [obstacle],
+        t_span=(0.0, 1.0),
+        dt=0.05,
+    )
+    metrics = summarize_obstacle_avoidance(result)
+
+    assert np.all(np.isfinite(result["states"]))
+    assert np.all(np.isfinite(result["controls"]))
+    assert metrics["min_clearance"] > 0.0
+    assert np.isfinite(metrics["max_thrust"])
+    assert np.isfinite(metrics["max_abs_torque"])
+
+
 def test_summarize_obstacle_avoidance_returns_expected_keys():
     """Obstacle avoidance metrics should include expected summary values."""
     obstacle = SphericalObstacle(center=[5.0, 0.0, 1.0], radius=0.2, influence_radius=1.0)

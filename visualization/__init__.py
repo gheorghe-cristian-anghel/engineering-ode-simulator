@@ -1,16 +1,22 @@
 """Reusable visualization helpers for engineering simulations."""
 
 from visualization.plot_style import (
-    add_colorbar,
     add_clean_colorbar,
+    add_colorbar,
     apply_engineering_plot_style,
     apply_plot_style,
+    create_streamlit_figure,
+    create_streamlit_subplots,
+    display_streamlit_figure,
+    ensure_readable_axes,
+    finalize_streamlit_figure,
     format_axes,
     format_engineering_axes,
     format_heatmap_axes,
-    finalize_streamlit_figure,
+    place_legend_outside,
     save_figure,
     set_equal_2d_axes,
+    set_xy_plot_limits_with_margin,
 )
 
 __all__ = [
@@ -18,10 +24,16 @@ __all__ = [
     "add_clean_colorbar",
     "apply_engineering_plot_style",
     "apply_plot_style",
+    "create_streamlit_figure",
+    "create_streamlit_subplots",
+    "display_streamlit_figure",
+    "ensure_readable_axes",
     "format_axes",
     "format_engineering_axes",
     "format_heatmap_axes",
     "finalize_streamlit_figure",
+    "place_legend_outside",
     "save_figure",
     "set_equal_2d_axes",
+    "set_xy_plot_limits_with_margin",
 ]

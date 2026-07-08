@@ -36,11 +36,17 @@ from analysis.state_space import dc_motor_state_space
 from analysis.unscented_kalman_filter import UnscentedKalmanFilter
 from examples.run_particle_filter_pendulum import (
     _rk4_pendulum_step as pf_rk4_pendulum_step,
+)
+from examples.run_particle_filter_pendulum import (
     _simulate_true_pendulum as simulate_pf_true_pendulum,
 )
 from examples.run_ukf_pendulum import (
     _pendulum_measurement as ukf_pendulum_measurement,
+)
+from examples.run_ukf_pendulum import (
     _rk4_pendulum_step as ukf_rk4_pendulum_step,
+)
+from examples.run_ukf_pendulum import (
     _simulate_true_pendulum as simulate_ukf_true_pendulum,
 )
 from models.dc_motor import rad_per_sec_to_rpm
@@ -72,12 +78,14 @@ from models.wave_equation_2d import (
 from visualization.plot_style import (
     add_clean_colorbar,
     apply_engineering_plot_style,
-    finalize_streamlit_figure,
+    create_streamlit_subplots,
+    display_streamlit_figure,
     format_engineering_axes,
     format_heatmap_axes,
+    place_legend_outside,
     set_equal_2d_axes,
+    set_xy_plot_limits_with_margin,
 )
-
 
 APP_TITLE = "Engineering Simulation Toolkit"
 APP_SUBTITLE = (
@@ -327,7 +335,7 @@ def render_feature_card(title, body, tag=None):
 def render_metric_row(metrics):
     """Render Streamlit metrics with consistent spacing."""
     columns = st.columns(len(metrics))
-    for column, metric in zip(columns, metrics):
+    for column, metric in zip(columns, metrics, strict=True):
         label, value = metric[:2]
         delta = metric[2] if len(metric) > 2 else None
         column.metric(label, value, delta=delta)
@@ -359,11 +367,7 @@ def render_parameter_summary(parameters):
 
 def show_figure(figure, caption=None):
     """Display a Matplotlib figure in Streamlit, then close it."""
-    finalize_streamlit_figure(figure)
-    st.pyplot(figure, width="stretch")
-    if caption is not None:
-        st.caption(caption)
-    plt.close(figure)
+    display_streamlit_figure(figure, caption=caption)
 
 
 def show_stability_status(label, value, limit):
@@ -394,7 +398,11 @@ def render_home():
     st.subheader("Domains covered")
     for row_start in range(0, len(FEATURE_CARDS), 3):
         columns = st.columns(3)
-        for column, card in zip(columns, FEATURE_CARDS[row_start : row_start + 3]):
+        for column, card in zip(
+            columns,
+            FEATURE_CARDS[row_start : row_start + 3],
+            strict=False,
+        ):
             with column:
                 render_feature_card(*card)
 
@@ -458,7 +466,7 @@ def render_portfolio_examples(domain):
     }
 
     columns = st.columns(3)
-    for column, item in zip(columns, examples_by_domain.get(domain, ())):
+    for column, item in zip(columns, examples_by_domain.get(domain, ()), strict=False):
         with column:
             render_feature_card(item, "Available through tested modules, examples, and saved figures.")
 
@@ -610,7 +618,7 @@ def plot_uav_altitude_response(result):
     target = result["target_altitude"]
     hover_thrust_value = result["hover_thrust"]
 
-    figure, axes = plt.subplots(2, 1, figsize=(8, 6.5), sharex=True)
+    figure, axes = create_streamlit_subplots(2, 1, width=9, height=6.8, sharex=True)
     axes[0].plot(time, altitude, label="Altitude")
     axes[0].axhline(target, color="tab:orange", linestyle="--", label="Target")
     format_engineering_axes(
@@ -642,7 +650,7 @@ def plot_uav_tracking_response(result, title):
     references = result["reference_positions"]
     error_norm = result["tracking_error_norm"]
 
-    figure, axes = plt.subplots(2, 1, figsize=(8, 7))
+    figure, axes = create_streamlit_subplots(2, 1, width=9, height=7.2)
     axes[0].plot(references[:, 0], references[:, 1], "--", label="Reference")
     axes[0].plot(positions[:, 0], positions[:, 1], label="Actual")
     axes[0].scatter(
@@ -667,7 +675,12 @@ def plot_uav_tracking_response(result, title):
         xlabel="x (m)",
         ylabel="y (m)",
     )
-    set_equal_2d_axes(axes[0])
+    set_xy_plot_limits_with_margin(
+        axes[0],
+        np.concatenate((references[:, 0], positions[:, 0])),
+        np.concatenate((references[:, 1], positions[:, 1])),
+        margin_fraction=0.12,
+    )
 
     axes[1].plot(time, error_norm, color="tab:red", label="Position error norm")
     axes[1].plot(
@@ -689,11 +702,7 @@ def plot_uav_tracking_response(result, title):
 
 def place_uav_xy_legend(axis):
     """Place UAV XY plot legends outside the data area."""
-    axis.legend(
-        loc="center left",
-        bbox_to_anchor=(1.02, 0.5),
-        frameon=True,
-    )
+    place_legend_outside(axis, location="bottom", ncol=3)
 
 
 def plot_uav_waypoint_response(result):
@@ -707,6 +716,14 @@ def plot_uav_waypoint_response(result):
         "o:",
         color="tab:orange",
         label="Waypoints",
+    )
+    positions = result["states"][:, 0:3]
+    references = result["reference_positions"]
+    set_xy_plot_limits_with_margin(
+        axis,
+        np.concatenate((references[:, 0], positions[:, 0], waypoints[:, 0])),
+        np.concatenate((references[:, 1], positions[:, 1], waypoints[:, 1])),
+        margin_fraction=0.12,
     )
     place_uav_xy_legend(axis)
     return figure
@@ -722,7 +739,7 @@ def plot_uav_obstacle_response(result):
     obstacle = result["obstacles"][0]
     waypoints = result["waypoints"]
 
-    figure, axes = plt.subplots(3, 1, figsize=(8, 9))
+    figure, axes = create_streamlit_subplots(3, 1, width=9.5, height=9.5)
     axes[0].plot(references[:, 0], references[:, 1], "--", label="Reference")
     axes[0].plot(positions[:, 0], positions[:, 1], label="Actual")
     axes[0].plot(
@@ -754,7 +771,24 @@ def plot_uav_obstacle_response(result):
         xlabel="x (m)",
         ylabel="y (m)",
     )
-    set_equal_2d_axes(axes[0])
+    obstacle_x = np.array(
+        [
+            obstacle.center[0] - obstacle.influence_radius,
+            obstacle.center[0] + obstacle.influence_radius,
+        ]
+    )
+    obstacle_y = np.array(
+        [
+            obstacle.center[1] - obstacle.influence_radius,
+            obstacle.center[1] + obstacle.influence_radius,
+        ]
+    )
+    set_xy_plot_limits_with_margin(
+        axes[0],
+        np.concatenate((references[:, 0], positions[:, 0], waypoints[:, 0], obstacle_x)),
+        np.concatenate((references[:, 1], positions[:, 1], waypoints[:, 1], obstacle_y)),
+        margin_fraction=0.12,
+    )
     place_uav_xy_legend(axes[0])
 
     axes[1].plot(time, clearances, color="tab:red", label="Nearest clearance")
@@ -1487,7 +1521,7 @@ def render_linear_kalman_filter_demo():
         )
 
     time = result["time"]
-    figure, axes = plt.subplots(3, 1, sharex=True, figsize=(8, 8))
+    figure, axes = create_streamlit_subplots(3, 1, sharex=True, width=9, height=8.4)
     axes[0].plot(time, result["true_speed"], label="True speed")
     axes[0].plot(
         time,
@@ -1630,7 +1664,7 @@ def render_ukf_pendulum_demo():
         )
 
     time = result["time"]
-    figure, axes = plt.subplots(2, 1, sharex=True, figsize=(8, 6))
+    figure, axes = create_streamlit_subplots(2, 1, sharex=True, width=9, height=6.5)
     axes[0].plot(time, np.degrees(result["true_theta"]), label="True angle")
     axes[0].plot(
         time,
@@ -1766,7 +1800,7 @@ def render_particle_filter_pendulum_demo():
         )
 
     time = result["time"]
-    figure, axes = plt.subplots(3, 1, sharex=True, figsize=(8, 8))
+    figure, axes = create_streamlit_subplots(3, 1, sharex=True, width=9, height=8.4)
     axes[0].plot(time, np.degrees(result["true_theta"]), label="True angle")
     axes[0].plot(
         time,
@@ -1877,7 +1911,7 @@ def render_about():
             "explicit numerical methods.",
         ),
     )
-    for column, card in zip(columns, included):
+    for column, card in zip(columns, included, strict=True):
         with column:
             render_feature_card(card[0], card[1])
 
@@ -1951,7 +1985,7 @@ def render_rc_circuit():
         )
     )
 
-    figure, axis = plt.subplots(figsize=(8, 4.5))
+    figure, axis = create_streamlit_subplots(width=9, height=5)
     axis.plot(t, capacitor_voltage, label="Numerical solution")
     axis.plot(t, analytical_voltage, "--", label="Analytical solution")
     format_engineering_axes(
@@ -2038,7 +2072,7 @@ def render_rlc_circuit():
         )
     )
 
-    figure, axes = plt.subplots(2, 1, sharex=True, figsize=(8, 6))
+    figure, axes = create_streamlit_subplots(2, 1, sharex=True, width=9, height=6.5)
     axes[0].plot(t, capacitor_voltage, label="Capacitor voltage")
     axes[0].axhline(input_voltage, color="gray", linestyle=":", label="DC steady state")
     format_engineering_axes(
@@ -2167,7 +2201,7 @@ def render_dc_motor_pid_control():
         )
     )
 
-    figure, axes = plt.subplots(3, 1, sharex=True, figsize=(8, 7))
+    figure, axes = create_streamlit_subplots(3, 1, sharex=True, width=9, height=8)
     axes[0].plot(t, speed, label="Motor speed")
     axes[0].axhline(target_speed, color="gray", linestyle=":", label="Target speed")
     format_engineering_axes(
@@ -2285,7 +2319,7 @@ def render_heat_equation_1d():
     st.subheader("Main plot")
     x = result["x"]
     t = result["t"]
-    figure, axes = plt.subplots(2, 1, figsize=(8, 7))
+    figure, axes = create_streamlit_subplots(2, 1, width=9, height=7.4)
     for index in profile_indices(t, [0.0, 0.25, 0.5, 1.0]):
         axes[0].plot(x, temperature[index], label=f"t = {t[index]:.2f} s")
     format_engineering_axes(
@@ -2409,7 +2443,7 @@ def render_wave_equation_1d():
     st.subheader("Main plot")
     x = result["x"]
     t = result["t"]
-    figure, axes = plt.subplots(2, 1, figsize=(8, 7))
+    figure, axes = create_streamlit_subplots(2, 1, width=9, height=7.4)
     for index in profile_indices(t, [0.0, 0.25, 0.5, 0.75, 1.0]):
         axes[0].plot(x, displacement[index], label=f"t = {t[index]:.2f} s")
     format_engineering_axes(
@@ -2686,12 +2720,12 @@ def draw_2d_heat_plots(result):
     temperature = result["temperature"]
     snapshot_indices = [0, int(round(0.5 * (len(t) - 1))), len(t) - 1]
 
-    figure, axes = plt.subplots(2, 2, figsize=(10, 8))
+    figure, axes = create_streamlit_subplots(2, 2, width=12, height=8.8)
     flat_axes = axes.ravel()
     color_min = float(np.min(temperature))
     color_max = float(np.max(temperature))
 
-    for axis, index in zip(flat_axes[:3], snapshot_indices):
+    for axis, index in zip(flat_axes[:3], snapshot_indices, strict=True):
         heatmap = axis.imshow(
             temperature[index],
             origin="lower",
@@ -2745,9 +2779,9 @@ def draw_2d_wave_plots(result):
     ]
     color_limit = max(float(np.max(np.abs(displacement))), 1e-12)
 
-    figure, axes = plt.subplots(2, 3, figsize=(13, 8))
+    figure, axes = create_streamlit_subplots(2, 3, width=13.5, height=8.8)
     flat_axes = axes.ravel()
-    for axis, index in zip(flat_axes[:4], snapshot_indices):
+    for axis, index in zip(flat_axes[:4], snapshot_indices, strict=True):
         heatmap = axis.imshow(
             displacement[index],
             origin="lower",
@@ -2851,7 +2885,7 @@ def render_finite_difference_convergence():
     )
 
     st.subheader("Main plot")
-    figure, axis = plt.subplots(figsize=(8, 5))
+    figure, axis = create_streamlit_subplots(width=9, height=5.6)
     axis.loglog(dx_values, forward_errors, "o-", label="Forward")
     axis.loglog(dx_values, backward_errors, "s-", label="Backward")
     axis.loglog(dx_values, central_errors, "^-", label="Central")
@@ -2970,7 +3004,7 @@ def render_axial_bar_fem():
     deformed_nodes = nodes + scale * displacements
 
     st.subheader("Main plot")
-    figure, axes = plt.subplots(3, 1, figsize=(8, 9))
+    figure, axes = create_streamlit_subplots(3, 1, width=9, height=9.4)
     axes[0].plot(nodes, displacements, "o-", label="FEM displacement")
     axes[0].plot(nodes, analytical, "--", label="Analytical displacement")
     format_engineering_axes(

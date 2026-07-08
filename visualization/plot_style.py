@@ -3,6 +3,12 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
+
+STREAMLIT_LINE_FIGSIZE = (9, 5)
+STREAMLIT_HEATMAP_FIGSIZE = (8, 6)
+STREAMLIT_XY_FIGSIZE = (9, 6)
+STREAMLIT_MULTIPANEL_FIGSIZE = (10, 7)
 
 
 def apply_plot_style():
@@ -143,8 +149,130 @@ def add_clean_colorbar(fig, image, ax, label=None):
     return colorbar
 
 
+def create_streamlit_figure(width=9, height=5, constrained=True):
+    """Create a Streamlit-sized Matplotlib figure."""
+    return plt.figure(figsize=(width, height), constrained_layout=constrained)
+
+
+def create_streamlit_subplots(
+    *args,
+    width=9,
+    height=5,
+    constrained=True,
+    **kwargs,
+):
+    """Create Streamlit-sized subplots with explicit figure dimensions."""
+    kwargs.setdefault("figsize", (width, height))
+    kwargs.setdefault("constrained_layout", constrained)
+    return plt.subplots(*args, **kwargs)
+
+
+def _finite_values(values):
+    """Return finite flattened numeric values for layout limit helpers."""
+    array = np.asarray(values, dtype=float).ravel()
+    return array[np.isfinite(array)]
+
+
+def set_xy_plot_limits_with_margin(
+    ax,
+    x_values,
+    y_values,
+    margin_fraction=0.08,
+    equal_aspect=True,
+):
+    """Set readable 2D limits around path-like data with optional equal aspect."""
+    x = _finite_values(x_values)
+    y = _finite_values(y_values)
+    if x.size == 0 or y.size == 0:
+        return ax
+
+    x_min, x_max = float(np.min(x)), float(np.max(x))
+    y_min, y_max = float(np.min(y)), float(np.max(y))
+    x_range = max(x_max - x_min, 1e-9)
+    y_range = max(y_max - y_min, 1e-9)
+
+    if equal_aspect:
+        span = max(x_range, y_range)
+        x_mid = 0.5 * (x_min + x_max)
+        y_mid = 0.5 * (y_min + y_max)
+        padding = span * margin_fraction
+        ax.set_xlim(x_mid - 0.5 * span - padding, x_mid + 0.5 * span + padding)
+        ax.set_ylim(y_mid - 0.5 * span - padding, y_mid + 0.5 * span + padding)
+        ax.set_aspect("equal", adjustable="box")
+        return ax
+
+    ax.set_xlim(x_min - x_range * margin_fraction, x_max + x_range * margin_fraction)
+    ax.set_ylim(y_min - y_range * margin_fraction, y_max + y_range * margin_fraction)
+    return ax
+
+
+def place_legend_outside(ax, location="right", ncol=1):
+    """Place a legend outside an axes while reserving predictable figure space."""
+    handles, labels = ax.get_legend_handles_labels()
+    visible = [
+        (handle, label)
+        for handle, label in zip(handles, labels, strict=True)
+        if label and not label.startswith("_")
+    ]
+    if not visible:
+        return None
+
+    handles, labels = zip(*visible, strict=True)
+    fig = ax.figure
+    if fig.get_constrained_layout():
+        fig.set_constrained_layout(False)
+    if hasattr(fig, "set_layout_engine"):
+        fig.set_layout_engine(None)
+
+    if location == "bottom":
+        legend = ax.legend(
+            handles,
+            labels,
+            loc="upper center",
+            bbox_to_anchor=(0.5, -0.16),
+            ncol=ncol,
+            frameon=True,
+        )
+        fig.subplots_adjust(bottom=0.24)
+        return legend
+
+    legend = ax.legend(
+        handles,
+        labels,
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        ncol=ncol,
+        frameon=True,
+    )
+    fig.subplots_adjust(right=0.78)
+    return legend
+
+
+def ensure_readable_axes(ax):
+    """Apply final axis readability settings without changing plotted data."""
+    ax.tick_params(axis="both", which="major", labelsize=10)
+    ax.tick_params(axis="both", which="minor", labelsize=9)
+    title = ax.title
+    title.set_wrap(True)
+    ax.xaxis.label.set_wrap(True)
+    ax.yaxis.label.set_wrap(True)
+    return ax
+
+
 def finalize_streamlit_figure(fig):
-    """Apply final layout cleanup before showing a figure in Streamlit."""
+    """Apply final cleanup before showing a figure in Streamlit."""
     fig.patch.set_facecolor("white")
-    fig.tight_layout()
+    for ax in fig.axes:
+        ensure_readable_axes(ax)
     return fig
+
+
+def display_streamlit_figure(fig, caption=None):
+    """Display a Matplotlib figure in Streamlit and close it afterwards."""
+    import streamlit as st
+
+    finalize_streamlit_figure(fig)
+    st.pyplot(fig, use_container_width=True)
+    if caption is not None:
+        st.caption(caption)
+    plt.close(fig)

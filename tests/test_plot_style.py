@@ -1,22 +1,27 @@
 """Tests for shared plotting style helpers."""
 
 import matplotlib
+import pytest
 
 matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 
 from visualization.plot_style import (
-    add_colorbar,
     add_clean_colorbar,
+    add_colorbar,
     apply_engineering_plot_style,
     apply_plot_style,
+    create_streamlit_figure,
+    create_streamlit_subplots,
+    finalize_streamlit_figure,
     format_axes,
     format_engineering_axes,
     format_heatmap_axes,
-    finalize_streamlit_figure,
+    place_legend_outside,
     save_figure,
     set_equal_2d_axes,
+    set_xy_plot_limits_with_margin,
 )
 
 
@@ -102,7 +107,7 @@ def test_set_equal_2d_axes_uses_matching_ranges():
 
     x_range = ax.get_xlim()[1] - ax.get_xlim()[0]
     y_range = ax.get_ylim()[1] - ax.get_ylim()[0]
-    assert x_range == y_range
+    assert x_range == pytest.approx(y_range)
 
     plt.close(fig)
 
@@ -126,6 +131,51 @@ def test_add_clean_colorbar_returns_labeled_colorbar():
 
     assert colorbar.ax.get_ylabel() == "Temperature"
     assert colorbar.outline.get_linewidth() == 0.8
+
+    plt.close(fig)
+
+
+def test_create_streamlit_figure_uses_requested_size():
+    fig = create_streamlit_figure(width=9, height=5)
+
+    assert tuple(fig.get_size_inches()) == (9.0, 5.0)
+    assert fig.get_constrained_layout()
+
+    plt.close(fig)
+
+
+def test_create_streamlit_subplots_uses_streamlit_defaults():
+    fig, axes = create_streamlit_subplots(2, 1, width=10, height=7)
+
+    assert tuple(fig.get_size_inches()) == (10.0, 7.0)
+    assert len(axes) == 2
+    assert fig.get_constrained_layout()
+
+    plt.close(fig)
+
+
+def test_place_legend_outside_reserves_right_space():
+    fig, ax = plt.subplots()
+    ax.plot([0, 1], [0, 1], label="Response")
+
+    legend = place_legend_outside(ax, location="right")
+
+    assert legend is not None
+    assert ax.get_position().x1 <= 0.78
+
+    plt.close(fig)
+
+
+def test_set_xy_plot_limits_with_margin_keeps_equal_span():
+    fig, ax = plt.subplots()
+
+    set_xy_plot_limits_with_margin(ax, [0, 2], [0, 1], margin_fraction=0.1)
+
+    x_range = ax.get_xlim()[1] - ax.get_xlim()[0]
+    y_range = ax.get_ylim()[1] - ax.get_ylim()[0]
+    assert x_range == pytest.approx(y_range)
+    assert ax.get_xlim()[0] < 0
+    assert ax.get_xlim()[1] > 2
 
     plt.close(fig)
 

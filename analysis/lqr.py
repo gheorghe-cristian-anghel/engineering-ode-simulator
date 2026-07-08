@@ -23,6 +23,14 @@ def _validate_symmetric(matrix, name):
         raise ValueError(f"{name} must be symmetric")
 
 
+def _validate_positive_semidefinite(matrix, name):
+    """Validate that a symmetric matrix is positive semidefinite."""
+    eigenvalues = np.linalg.eigvalsh(matrix)
+
+    if np.min(eigenvalues) < -1e-10:
+        raise ValueError(f"{name} must be positive semidefinite")
+
+
 def validate_lqr_matrices(A, B, Q, R):
     """Validate continuous-time LQR matrix dimensions and properties."""
     A = _as_2d_matrix(A, "A")
@@ -47,6 +55,7 @@ def validate_lqr_matrices(A, B, Q, R):
 
     _validate_symmetric(Q, "Q")
     _validate_symmetric(R, "R")
+    _validate_positive_semidefinite(Q, "Q")
 
     try:
         np.linalg.cholesky(R)

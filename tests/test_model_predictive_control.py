@@ -97,6 +97,48 @@ def test_invalid_r_shape_raises_value_error():
         )
 
 
+def test_invalid_q_properties_raise_value_error():
+    """Q must be symmetric positive semidefinite."""
+    with pytest.raises(ValueError):
+        LinearMPC(
+            A=np.eye(2),
+            B=[[0.0], [0.1]],
+            Q=[[1.0, 2.0], [0.0, 1.0]],
+            R=np.eye(1),
+            horizon=10,
+        )
+
+    with pytest.raises(ValueError):
+        LinearMPC(
+            A=np.eye(2),
+            B=[[0.0], [0.1]],
+            Q=[[1.0, 0.0], [0.0, -1.0]],
+            R=np.eye(1),
+            horizon=10,
+        )
+
+
+def test_invalid_r_properties_raise_value_error():
+    """R must be symmetric positive definite."""
+    with pytest.raises(ValueError):
+        LinearMPC(
+            A=np.eye(2),
+            B=np.eye(2),
+            Q=np.eye(2),
+            R=[[1.0, 1.0], [0.0, 1.0]],
+            horizon=10,
+        )
+
+    with pytest.raises(ValueError):
+        LinearMPC(
+            A=np.eye(2),
+            B=[[0.0], [0.1]],
+            Q=np.eye(2),
+            R=[[0.0]],
+            horizon=10,
+        )
+
+
 def test_invalid_horizon_raises_value_error():
     """Prediction horizon must be a positive integer."""
     A, B = discrete_double_integrator()
@@ -162,6 +204,25 @@ def test_simulate_mpc_tracking_returns_expected_shapes():
     assert result["costs"].shape == (20,)
     assert result["success"].shape == (20,)
     assert result["predicted_trajectories"].shape == (20, 11, 2)
+
+
+def test_simulate_mpc_tracking_preserves_time_varying_reference():
+    """A full-length reference trajectory should not collapse to its first value."""
+    mpc = _simple_mpc()
+    reference_positions = np.linspace(0.0, 2.0, 21)
+    references = np.column_stack([reference_positions, np.zeros_like(reference_positions)])
+
+    result = simulate_mpc_tracking(
+        mpc=mpc,
+        x0=[0.0, 0.0],
+        x_ref=references,
+        num_steps=20,
+    )
+
+    assert np.allclose(result["references"], references)
+    assert result["predicted_trajectories"][0, -1, 0] > result[
+        "predicted_trajectories"
+    ][0, 1, 0]
 
 
 def test_mpc_moves_double_integrator_position_toward_target():

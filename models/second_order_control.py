@@ -162,4 +162,7 @@ def simulate_second_order_system(
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"second-order integration failed: {solution.message}")
+
     return solution.t, solution.y[0], solution.y[1]

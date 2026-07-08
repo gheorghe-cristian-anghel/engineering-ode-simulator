@@ -460,7 +460,7 @@ def render_portfolio_examples(domain):
         ),
         "UAV / Quadcopter": (
             "Altitude and attitude dynamics",
-            "Full 6-DOF quadcopter model",
+            "Simplified 6-DOF quadcopter model",
             "Trajectory tracking, waypoint following, and obstacle avoidance",
         ),
     }
@@ -920,7 +920,7 @@ def render_uav_trajectory_tab(is_active):
             1.0,
             key="uav_trajectory_duration",
         )
-        st.caption("Fixed sample time: 0.04 s for responsive 6-DOF simulation.")
+        st.caption("Fixed sample time: 0.04 s for responsive simplified 6-DOF simulation.")
 
     with metrics_column:
         st.caption("Metrics")
@@ -954,7 +954,7 @@ def render_uav_trajectory_tab(is_active):
     show_figure(
         figure,
         "The path and error plots use the repository's cascaded PD tracker "
-        "around the full 6-DOF quadcopter model.",
+        "around the simplified 6-DOF quadcopter model.",
     )
 
 

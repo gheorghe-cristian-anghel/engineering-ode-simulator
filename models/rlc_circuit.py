@@ -110,4 +110,7 @@ def simulate_rlc(R, L, C, Vin, Vc0, i0, t_span, num_points):
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"RLC integration failed: {solution.message}")
+
     return solution.t, solution.y[0], solution.y[1]

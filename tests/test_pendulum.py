@@ -79,6 +79,12 @@ def test_invalid_g_raises_value_error():
         simulate_pendulum(1.0, 0.1, 0, (0, 10), 200, g=0)
 
 
+def test_invalid_mass_raises_value_error():
+    """Pendulum energy requires positive mass."""
+    with pytest.raises(ValueError):
+        pendulum_energy(0.1, 0.0, 1.0, m=0.0)
+
+
 def test_invalid_num_points_raises_value_error():
     """Number of samples must be positive."""
     with pytest.raises(ValueError):

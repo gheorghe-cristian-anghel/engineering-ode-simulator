@@ -1,11 +1,11 @@
 # UAV Models
 
-The UAV examples demonstrate simplified quadcopter dynamics, control, tracking,
-waypoint following, and local obstacle avoidance.
+The UAV examples demonstrate simplified educational/prototype quadcopter
+dynamics, control, tracking, waypoint following, and local obstacle avoidance.
 
 ## Governing Equations
 
-The full 6-DOF model uses the state:
+The simplified 6-DOF quadcopter model uses the state:
 
 ```text
 [x, y, z, vx, vy, vz, phi, theta, psi, p, q, r]
@@ -33,8 +33,8 @@ approximated from commanded body torques and diagonal inertias.
 - Rigid-body dynamics with ZYX Euler angles.
 - Total thrust and body torques are direct commands.
 - Inertias are diagonal and aerodynamic effects are simplified.
-- Rotor dynamics, motor mixing, propeller aerodynamics, sensor fusion, and
-  autopilot firmware are outside scope.
+- High-fidelity rotor/motor allocation, rotor dynamics, motor mixing, propeller
+  aerodynamics, sensor fusion, and autopilot firmware are outside scope.
 
 ## Numerical Method
 
@@ -74,7 +74,8 @@ approximated from commanded body torques and diagonal inertias.
 
 ## Limitations
 
-- The simulations are simplified and not a flight stack.
+- The simulations are simplified educational/prototype models and are not
+  flight-ready or a flight stack.
 - Euler angles have singularities near extreme pitch.
 - The obstacle avoidance method is local and reactive, so it can fail in
   cluttered or adversarial environments.

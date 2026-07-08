@@ -176,6 +176,9 @@ def simulate_quadcopter_attitude(
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"quadcopter attitude integration failed: {solution.message}")
+
     torques = np.array(
         [_validate_torque_vector(torque_func(sample_time)) for sample_time in solution.t]
     )

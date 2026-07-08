@@ -1,5 +1,6 @@
 import pytest
 
+import models.rc_circuit as rc_circuit
 from models.rc_circuit import simulate_rc
 
 
@@ -39,3 +40,26 @@ def test_voltage_at_one_time_constant_is_63_percent_of_vin():
     _, voltage = simulate_rc(R, C, Vin, V0, (0, tau), 50)
 
     assert voltage[-1] == pytest.approx(0.632 * Vin, rel=0.01)
+
+
+def test_invalid_rc_parameters_raise_value_error():
+    """Resistance and capacitance must be positive."""
+    with pytest.raises(ValueError):
+        simulate_rc(0.0, 0.001, 5.0, 0.0, (0, 1), 10)
+
+    with pytest.raises(ValueError):
+        simulate_rc(1000.0, 0.0, 5.0, 0.0, (0, 1), 10)
+
+
+def test_solve_ivp_failure_raises_runtime_error(monkeypatch):
+    """Integration failures should not be returned as valid RC responses."""
+    class FailedSolution:
+        success = False
+        message = "forced failure"
+        t = []
+        y = [[]]
+
+    monkeypatch.setattr(rc_circuit, "solve_ivp", lambda *args, **kwargs: FailedSolution())
+
+    with pytest.raises(RuntimeError, match="RC integration failed"):
+        simulate_rc(1000.0, 0.001, 5.0, 0.0, (0, 1), 10)

@@ -101,4 +101,7 @@ def simulate_rl(R, L, Vin, i0, t_span, num_points):
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"RL integration failed: {solution.message}")
+
     return solution.t, solution.y[0]

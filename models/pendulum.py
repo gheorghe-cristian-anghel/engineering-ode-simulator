@@ -137,4 +137,7 @@ def simulate_pendulum(
         atol=1e-11,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"pendulum integration failed: {solution.message}")
+
     return solution.t, solution.y[0], solution.y[1]

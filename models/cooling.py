@@ -64,4 +64,7 @@ def simulate_cooling(k, T_env, T0, t_span, num_points):
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"cooling integration failed: {solution.message}")
+
     return solution.t, solution.y[0]

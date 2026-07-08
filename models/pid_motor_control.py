@@ -194,6 +194,9 @@ def simulate_pi_motor_control(
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"PI motor control integration failed: {solution.message}")
+
     time = solution.t
     current = solution.y[0]
     omega = solution.y[1]

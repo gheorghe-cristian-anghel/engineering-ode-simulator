@@ -247,8 +247,9 @@ d(integral_error)/dt = error
 ```
 
 The controller voltage is saturated between `voltage_min` and `voltage_max`.
-The current implementation is PI-only; derivative action is reserved for a
-future PID extension.
+This continuous motor-speed example is PI-only. The separate
+`models/discrete_pid.py` implementation includes full discrete PID control with
+derivative action.
 
 State variables:
 

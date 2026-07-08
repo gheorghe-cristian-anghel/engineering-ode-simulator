@@ -166,6 +166,9 @@ def simulate_quadcopter_altitude(
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"quadcopter altitude integration failed: {solution.message}")
+
     thrust = np.array(
         [_validate_thrust(thrust_func(sample_time)) for sample_time in solution.t]
     )

@@ -158,6 +158,60 @@ def test_invalid_p_dimensions_raise_value_error():
         )
 
 
+def test_invalid_covariance_properties_raise_value_error():
+    """Covariances must be symmetric positive semidefinite."""
+    with pytest.raises(ValueError):
+        KalmanFilter(
+            A=np.eye(2),
+            B=[[0.0], [1.0]],
+            C=[[1.0, 0.0]],
+            Q=[[1.0, 2.0], [0.0, 1.0]],
+            R=[[1.0]],
+            x_hat=[0.0, 0.0],
+            P=np.eye(2),
+        )
+
+    with pytest.raises(ValueError):
+        KalmanFilter(
+            A=np.eye(2),
+            B=[[0.0], [1.0]],
+            C=[[1.0, 0.0]],
+            Q=np.eye(2),
+            R=[[-1.0]],
+            x_hat=[0.0, 0.0],
+            P=np.eye(2),
+        )
+
+    with pytest.raises(ValueError):
+        KalmanFilter(
+            A=np.eye(2),
+            B=[[0.0], [1.0]],
+            C=[[1.0, 0.0]],
+            Q=np.eye(2),
+            R=[[1.0]],
+            x_hat=[0.0, 0.0],
+            P=[[1.0, 0.0], [0.0, -1.0]],
+        )
+
+
+def test_update_uses_symmetric_covariance_form():
+    """Joseph-form updates should leave covariance symmetric."""
+    kalman_filter = KalmanFilter(
+        A=np.eye(2),
+        B=np.zeros((2, 1)),
+        C=np.array([[1.0, 1e-6]]),
+        Q=np.eye(2) * 1e-9,
+        R=np.array([[1e-6]]),
+        x_hat=np.array([0.0, 0.0]),
+        P=np.array([[1.0, 0.2], [0.2, 2.0]]),
+    )
+
+    kalman_filter.predict()
+    kalman_filter.update([1.0])
+
+    assert np.allclose(kalman_filter.P, kalman_filter.P.T)
+
+
 def test_discretize_state_space_returns_expected_shapes():
     """Discretization should preserve state and input dimensions."""
     A = np.array([[0.0, 1.0], [-2.0, -0.5]])

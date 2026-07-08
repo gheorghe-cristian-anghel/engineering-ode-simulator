@@ -49,7 +49,7 @@ The project is intentionally educational: it emphasizes readable equations, repr
 
 - 1D quadcopter altitude dynamics and PID altitude control.
 - Simplified roll, pitch, and yaw attitude dynamics with PID attitude control.
-- Full 6-DOF quadcopter rigid-body dynamics.
+- Simplified 6-DOF quadcopter rigid-body dynamics with direct thrust/torque commands.
 - Cascaded trajectory tracking for hover and circular references.
 - Waypoint following with smooth reference generation.
 - Static spherical obstacle avoidance using a local repulsive potential-field term.
@@ -288,7 +288,7 @@ See [ROADMAP.md](ROADMAP.md) for the current tracked roadmap.
 
 - Models are simplified and intended for learning, portfolio demonstration, and technical discussion.
 - Controllers are educational examples, not certified industrial or safety-critical control systems.
-- Quadcopter examples do not include rotor-level motor dynamics, real autopilot firmware, sensor fusion stacks, SLAM, or global path planning.
+- Quadcopter examples are educational/prototype models and are not flight-ready; they do not include high-fidelity rotor/motor allocation, rotor-level motor dynamics, real autopilot firmware, sensor fusion stacks, SLAM, or global path planning.
 - Obstacle avoidance is local and reactive around static spherical obstacles.
 - PDE solvers use explicit finite-difference methods with stability constraints, not high-performance production solvers.
 - FEM coverage is introductory and currently limited to a 1D axial bar example.

@@ -261,6 +261,11 @@ def simulate_attitude_pid_control(
             t_eval=[time[index + 1]],
         )
 
+        if not solution.success:
+            raise RuntimeError(
+                f"attitude PID integration failed: {solution.message}"
+            )
+
         states[index + 1] = solution.y[:, -1]
 
     errors_rad[-1] = target_angles_rad - states[-1, 0:3]

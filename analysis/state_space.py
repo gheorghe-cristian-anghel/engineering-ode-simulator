@@ -129,6 +129,9 @@ def simulate_state_space(A, B, C, D, u_func, x0, t_span, num_points=1000):
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"state-space integration failed: {solution.message}")
+
     x = solution.y.T
     y = np.zeros((len(solution.t), C.shape[0]))
 

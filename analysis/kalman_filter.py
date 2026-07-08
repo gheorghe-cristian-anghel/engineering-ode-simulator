@@ -38,6 +38,22 @@ def _as_vector(vector, name, expected_length):
     return vector_array
 
 
+def _validate_covariance_matrix(matrix, name, expected_shape):
+    """Validate a symmetric positive-semidefinite covariance matrix."""
+    matrix = _as_2d_matrix(matrix, name)
+
+    if matrix.shape != expected_shape:
+        raise ValueError(f"{name} shape must be {expected_shape}")
+
+    if not np.allclose(matrix, matrix.T):
+        raise ValueError(f"{name} must be symmetric")
+
+    if np.min(np.linalg.eigvalsh(matrix)) < -1e-10:
+        raise ValueError(f"{name} must be positive semidefinite")
+
+    return matrix
+
+
 def validate_kalman_matrices(A, B, C, Q, R, x_hat, P):
     """Validate discrete-time Kalman filter matrix dimensions."""
     A = _as_2d_matrix(A, "A")
@@ -59,14 +75,9 @@ def validate_kalman_matrices(A, B, C, Q, R, x_hat, P):
     if C.shape[1] != n_states:
         raise ValueError("C column count must match A state count")
 
-    if Q.shape != A.shape:
-        raise ValueError("Q shape must match A shape")
-
-    if R.shape != (n_measurements, n_measurements):
-        raise ValueError("R shape must be (number of measurements, number of measurements)")
-
-    if P.shape != A.shape:
-        raise ValueError("P shape must match A shape")
+    Q = _validate_covariance_matrix(Q, "Q", A.shape)
+    R = _validate_covariance_matrix(R, "R", (n_measurements, n_measurements))
+    P = _validate_covariance_matrix(P, "P", A.shape)
 
     x_hat = _as_vector(x_hat, "x_hat", n_states)
 
@@ -207,7 +218,12 @@ class KalmanFilter:
 
         self.x_hat = self.x_hat + kalman_gain @ innovation
         identity = np.eye(self.A.shape[0])
-        self.P = (identity - kalman_gain @ self.C) @ self.P
+        innovation_factor = identity - kalman_gain @ self.C
+        self.P = (
+            innovation_factor @ self.P @ innovation_factor.T
+            + kalman_gain @ self.R @ kalman_gain.T
+        )
+        self.P = 0.5 * (self.P + self.P.T)
         self.last_gain = kalman_gain
 
         return self.x_hat, kalman_gain

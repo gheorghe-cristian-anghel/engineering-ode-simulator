@@ -105,6 +105,9 @@ def simulate_first_order_system(
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"first-order integration failed: {solution.message}")
+
     return solution.t, solution.y[0]
 
 

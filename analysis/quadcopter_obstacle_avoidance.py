@@ -296,6 +296,11 @@ def simulate_quadcopter_obstacle_avoidance(
             t_eval=[time[index + 1]],
         )
 
+        if not solution.success:
+            raise RuntimeError(
+                f"quadcopter obstacle-avoidance integration failed: {solution.message}"
+            )
+
         states[index + 1] = solution.y[:, -1]
 
     final_reference = _reference_from_value(trajectory_func(time[-1]))

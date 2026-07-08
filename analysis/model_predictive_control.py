@@ -67,6 +67,28 @@ def _validate_horizon(horizon):
     return int(horizon)
 
 
+def _validate_symmetric(matrix, name):
+    """Validate that a matrix is symmetric within numerical tolerance."""
+    if not np.allclose(matrix, matrix.T):
+        raise ValueError(f"{name} must be symmetric")
+
+
+def _validate_positive_semidefinite(matrix, name):
+    """Validate that a symmetric matrix is positive semidefinite."""
+    eigenvalues = np.linalg.eigvalsh(matrix)
+
+    if np.min(eigenvalues) < -1e-10:
+        raise ValueError(f"{name} must be positive semidefinite")
+
+
+def _validate_positive_definite(matrix, name):
+    """Validate that a symmetric matrix is positive definite."""
+    try:
+        np.linalg.cholesky(matrix)
+    except np.linalg.LinAlgError as exc:
+        raise ValueError(f"{name} must be positive definite") from exc
+
+
 def discrete_double_integrator(dt=0.1):
     """Return discrete-time double-integrator matrices.
 
@@ -171,6 +193,11 @@ class LinearMPC:
 
         if R.shape != (n_inputs, n_inputs):
             raise ValueError("R shape must be (number of inputs, number of inputs)")
+
+        _validate_symmetric(Q, "Q")
+        _validate_symmetric(R, "R")
+        _validate_positive_semidefinite(Q, "Q")
+        _validate_positive_definite(R, "R")
 
         return A, B, Q, R
 
@@ -284,7 +311,11 @@ class LinearMPC:
         return trajectory
 
     def cost(self, u_sequence, x0, x_ref):
-        """Return the finite-horizon quadratic tracking cost."""
+        """Return the finite-horizon quadratic tracking cost.
+
+        The final predicted state is intentionally weighted once in the stage
+        loop and once as an additional terminal penalty using the same Q.
+        """
         inputs = self._input_sequence(u_sequence)
         trajectory = self.predict_trajectory(x0, inputs)
         reference = self._reference_trajectory(x_ref)
@@ -351,11 +382,20 @@ def simulate_mpc_tracking(mpc, x0, x_ref, num_steps=100):
         raise ValueError("num_steps must be a positive integer")
 
     state = _as_vector(x0, "x0", mpc.n_states)
-    reference = mpc._reference_trajectory(x_ref)[0]
+
+    if np.asarray(x_ref, dtype=float).ndim == 2:
+        reference_array = np.asarray(x_ref, dtype=float)
+        if reference_array.shape == (num_steps + 1, mpc.n_states):
+            references = reference_array.copy()
+        else:
+            references = mpc._reference_trajectory(x_ref)
+            references = np.tile(references[0], (num_steps + 1, 1))
+    else:
+        reference = mpc._reference_trajectory(x_ref)[0]
+        references = np.tile(reference, (num_steps + 1, 1))
 
     states = np.zeros((num_steps + 1, mpc.n_states))
     controls = np.zeros((num_steps, mpc.n_inputs))
-    references = np.tile(reference, (num_steps + 1, 1))
     costs = np.zeros(num_steps)
     success = np.zeros(num_steps, dtype=bool)
     predicted_trajectories = np.zeros(
@@ -365,7 +405,17 @@ def simulate_mpc_tracking(mpc, x0, x_ref, num_steps=100):
     states[0] = state
 
     for index in range(num_steps):
-        solution = mpc.solve(states[index], reference)
+        horizon_reference = references[index : index + mpc.horizon + 1]
+        if len(horizon_reference) < mpc.horizon + 1:
+            pad_count = mpc.horizon + 1 - len(horizon_reference)
+            horizon_reference = np.vstack(
+                [
+                    horizon_reference,
+                    np.tile(horizon_reference[-1], (pad_count, 1)),
+                ]
+            )
+
+        solution = mpc.solve(states[index], horizon_reference)
         controls[index] = solution.control
         costs[index] = solution.cost
         success[index] = solution.success

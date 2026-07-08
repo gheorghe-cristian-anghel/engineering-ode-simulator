@@ -75,6 +75,23 @@ def test_nonsymmetric_q_raises_value_error():
         lqr(np.eye(2), [[0.0], [1.0]], [[1.0, 2.0], [0.0, 1.0]], [[1.0]])
 
 
+def test_negative_semidefinite_q_raises_value_error():
+    """Q must be positive semidefinite."""
+    with pytest.raises(ValueError):
+        lqr(np.eye(2), [[0.0], [1.0]], [[1.0, 0.0], [0.0, -1.0]], [[1.0]])
+
+
+def test_nonsymmetric_r_raises_value_error():
+    """R must be symmetric."""
+    with pytest.raises(ValueError):
+        lqr(
+            np.eye(2),
+            np.eye(2),
+            np.eye(2),
+            [[1.0, 1.0], [0.0, 1.0]],
+        )
+
+
 def test_nonpositive_definite_r_raises_value_error():
     """R must be symmetric positive definite."""
     with pytest.raises(ValueError):

@@ -8,18 +8,33 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 
+def validate_mass_spring_damper_parameters(m, c, k):
+    """Validate mass, damping, and spring stiffness parameters."""
+    if m <= 0:
+        raise ValueError("m must be positive")
+
+    if c < 0:
+        raise ValueError("c must be nonnegative")
+
+    if k <= 0:
+        raise ValueError("k must be positive")
+
+
 def natural_frequency(m, k):
     """Return the undamped natural frequency in radians per second."""
+    validate_mass_spring_damper_parameters(m, 0.0, k)
     return np.sqrt(k / m)
 
 
 def damping_ratio(m, c, k):
     """Return the damping ratio for a mass-spring-damper system."""
+    validate_mass_spring_damper_parameters(m, c, k)
     return c / (2 * np.sqrt(m * k))
 
 
 def mechanical_energy(x, v, m, k):
     """Return total mechanical energy from displacement and velocity."""
+    validate_mass_spring_damper_parameters(m, 0.0, k)
     kinetic_energy = 0.5 * m * np.asarray(v) ** 2
     potential_energy = 0.5 * k * np.asarray(x) ** 2
     return kinetic_energy + potential_energy
@@ -95,8 +110,19 @@ def simulate_mass_spring_damper(
         ``(t, x, v)`` where ``t`` is time, ``x`` is displacement, and ``v`` is
         velocity.
     """
+    validate_mass_spring_damper_parameters(m, c, k)
+
+    if num_points <= 0:
+        raise ValueError("num_points must be positive")
+
+    if t_span[1] <= t_span[0]:
+        raise ValueError("t_span final time must be greater than initial time")
+
     if force_func is None:
         force_func = _zero_force
+
+    if not callable(force_func):
+        raise ValueError("force_func must be callable")
 
     t_eval = np.linspace(t_span[0], t_span[1], num_points)
 
@@ -107,5 +133,8 @@ def simulate_mass_spring_damper(
         args=(m, c, k, force_func),
         t_eval=t_eval,
     )
+
+    if not solution.success:
+        raise RuntimeError(f"mass-spring-damper integration failed: {solution.message}")
 
     return solution.t, solution.y[0], solution.y[1]

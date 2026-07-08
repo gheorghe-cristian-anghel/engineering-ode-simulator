@@ -177,6 +177,11 @@ def simulate_inverted_pendulum_lqr(
         atol=1e-11,
     )
 
+    if not solution.success:
+        raise RuntimeError(
+            f"inverted pendulum LQR integration failed: {solution.message}"
+        )
+
     states = solution.y.T
     control_force = np.array(
         [

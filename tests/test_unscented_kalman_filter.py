@@ -169,6 +169,42 @@ def test_invalid_r_shape_raises_value_error():
         )
 
 
+def test_invalid_covariance_properties_raise_value_error():
+    """UKF covariances must be symmetric positive semidefinite."""
+    with pytest.raises(ValueError):
+        UnscentedKalmanFilter(
+            x0=np.array([0.0, 0.0]),
+            P0=[[1.0, 2.0], [0.0, 1.0]],
+            Q=np.eye(2),
+            R=np.array([[0.1]]),
+            process_model=_identity_process_model,
+            measurement_model=_identity_measurement_model,
+            dt=0.1,
+        )
+
+    with pytest.raises(ValueError):
+        UnscentedKalmanFilter(
+            x0=np.array([0.0]),
+            P0=np.eye(1),
+            Q=[[-0.01]],
+            R=np.array([[0.1]]),
+            process_model=_identity_process_model,
+            measurement_model=_identity_measurement_model,
+            dt=0.1,
+        )
+
+    with pytest.raises(ValueError):
+        UnscentedKalmanFilter(
+            x0=np.array([0.0]),
+            P0=np.eye(1),
+            Q=np.eye(1),
+            R=[[-0.1]],
+            process_model=_identity_process_model,
+            measurement_model=_identity_measurement_model,
+            dt=0.1,
+        )
+
+
 def test_invalid_dt_raises_value_error():
     """Sample time must be positive."""
     with pytest.raises(ValueError):

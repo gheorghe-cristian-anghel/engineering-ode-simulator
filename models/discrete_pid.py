@@ -204,6 +204,9 @@ def simulate_discrete_pid_motor_control(
             t_eval=[t[index + 1]],
         )
 
+        if not solution.success:
+            raise RuntimeError(f"discrete PID integration failed: {solution.message}")
+
         current[index + 1] = solution.y[0, -1]
         speed[index + 1] = solution.y[1, -1]
 

@@ -169,6 +169,9 @@ def simulate_inverted_pendulum(
         atol=1e-11,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"inverted pendulum integration failed: {solution.message}")
+
     return solution.t, solution.y.T
 
 

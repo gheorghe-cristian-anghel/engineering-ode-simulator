@@ -369,6 +369,11 @@ def simulate_quadcopter_trajectory_tracking(
             t_eval=[time[index + 1]],
         )
 
+        if not solution.success:
+            raise RuntimeError(
+                f"quadcopter trajectory integration failed: {solution.message}"
+            )
+
         states[index + 1] = solution.y[:, -1]
 
     final_reference = _reference_from_value(trajectory_func(time[-1]))

@@ -150,6 +150,9 @@ def simulate_dc_motor(
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"DC motor integration failed: {solution.message}")
+
     return solution.t, solution.y[0], solution.y[1]
 
 

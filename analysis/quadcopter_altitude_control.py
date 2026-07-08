@@ -199,6 +199,11 @@ def simulate_altitude_pid_control(
             t_eval=[time[index + 1]],
         )
 
+        if not solution.success:
+            raise RuntimeError(
+                f"altitude PID integration failed: {solution.message}"
+            )
+
         altitude[index + 1] = solution.y[0, -1]
         velocity[index + 1] = solution.y[1, -1]
 

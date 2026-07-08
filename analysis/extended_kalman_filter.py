@@ -53,17 +53,27 @@ def _validate_dt(dt):
     return dt
 
 
+def _validate_covariance_matrix(matrix, name):
+    """Validate a square symmetric positive-semidefinite covariance matrix."""
+    matrix = _as_2d_matrix(matrix, name)
+
+    if matrix.shape[0] != matrix.shape[1]:
+        raise ValueError(f"{name} must be square")
+
+    if not np.allclose(matrix, matrix.T):
+        raise ValueError(f"{name} must be symmetric")
+
+    if np.min(np.linalg.eigvalsh(matrix)) < -1e-10:
+        raise ValueError(f"{name} must be positive semidefinite")
+
+    return matrix
+
+
 def validate_ekf_matrices(Q, R, x_hat, P):
     """Validate Extended Kalman Filter covariance and state dimensions."""
-    Q = _as_2d_matrix(Q, "Q")
-    R = _as_2d_matrix(R, "R")
-    P = _as_2d_matrix(P, "P")
-
-    if Q.shape[0] != Q.shape[1]:
-        raise ValueError("Q must be square")
-
-    if R.shape[0] != R.shape[1]:
-        raise ValueError("R must be square")
+    Q = _validate_covariance_matrix(Q, "Q")
+    R = _validate_covariance_matrix(R, "R")
+    P = _validate_covariance_matrix(P, "P")
 
     n_states = Q.shape[0]
     x_hat = _as_vector(x_hat, "x_hat", n_states)
@@ -112,6 +122,8 @@ class ExtendedKalmanFilter:
             self.x_hat,
             self.P,
         )
+        initial_measurement = _as_vector(self.h(self.x_hat), "h output", self.R.shape[0])
+        self._measurement_vector(initial_measurement, "h output")
         self.last_gain = np.zeros((len(self.x_hat), self.R.shape[0]))
 
     def _state_vector(self, state, name):
@@ -174,7 +186,12 @@ class ExtendedKalmanFilter:
 
         self.x_hat = self.x_hat + kalman_gain @ innovation
         identity = np.eye(len(self.x_hat))
-        self.P = (identity - kalman_gain @ H) @ self.P
+        innovation_factor = identity - kalman_gain @ H
+        self.P = (
+            innovation_factor @ self.P @ innovation_factor.T
+            + kalman_gain @ self.R @ kalman_gain.T
+        )
+        self.P = 0.5 * (self.P + self.P.T)
         self.last_gain = kalman_gain
 
         return self.x_hat, kalman_gain

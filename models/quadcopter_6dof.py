@@ -320,6 +320,9 @@ def simulate_quadcopter_6dof(
         t_eval=t_eval,
     )
 
+    if not solution.success:
+        raise RuntimeError(f"quadcopter 6-DOF integration failed: {solution.message}")
+
     controls = np.array(
         [_validate_control(control_func(sample_time)) for sample_time in solution.t]
     )

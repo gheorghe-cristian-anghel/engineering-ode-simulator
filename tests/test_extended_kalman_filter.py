@@ -117,6 +117,42 @@ def test_invalid_p_shape_raises_value_error():
         )
 
 
+def test_invalid_covariance_properties_raise_value_error():
+    """EKF covariances must be symmetric positive semidefinite."""
+    with pytest.raises(ValueError):
+        ExtendedKalmanFilter(
+            f=lambda x, u, dt: x,
+            h=lambda x: x,
+            F_jacobian=lambda x, u, dt: np.eye(2),
+            H_jacobian=lambda x: np.eye(2),
+            Q=[[1.0, 2.0], [0.0, 1.0]],
+            R=np.eye(2),
+            x_hat=np.array([0.0, 0.0]),
+            P=np.eye(2),
+        )
+
+    with pytest.raises(ValueError):
+        ExtendedKalmanFilter(
+            f=lambda x, u, dt: x,
+            h=lambda x: x,
+            F_jacobian=lambda x, u, dt: np.eye(2),
+            H_jacobian=lambda x: np.eye(2),
+            Q=np.eye(2),
+            R=np.eye(2),
+            x_hat=np.array([0.0, 0.0]),
+            P=[[1.0, 0.0], [0.0, -1.0]],
+        )
+
+
+def test_update_uses_symmetric_covariance_form():
+    """Joseph-form updates should leave EKF covariance symmetric."""
+    ekf = _simple_nonlinear_filter()
+    ekf.predict(dt=0.01)
+    ekf.update([0.5])
+
+    assert np.allclose(ekf.P, ekf.P.T)
+
+
 def test_pendulum_jacobian_helpers_return_expected_shapes():
     """Pendulum EKF helpers should return expected state and output dimensions."""
     state = np.array([0.1, 0.2])

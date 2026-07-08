@@ -69,6 +69,25 @@ def _symmetric_matrix(matrix):
     return 0.5 * (matrix + matrix.T)
 
 
+def _validate_covariance_matrix(matrix, name, expected_shape=None):
+    """Validate a square symmetric positive-semidefinite covariance matrix."""
+    matrix = _as_2d_matrix(matrix, name)
+
+    if matrix.shape[0] != matrix.shape[1]:
+        raise ValueError(f"{name} must be square")
+
+    if expected_shape is not None and matrix.shape != expected_shape:
+        raise ValueError(f"{name} shape must be {expected_shape}")
+
+    if not np.allclose(matrix, matrix.T):
+        raise ValueError(f"{name} must be symmetric")
+
+    if np.min(np.linalg.eigvalsh(matrix)) < -1e-10:
+        raise ValueError(f"{name} must be positive semidefinite")
+
+    return matrix
+
+
 def _cholesky_with_jitter(matrix):
     """Return a Cholesky factor, adding small diagonal jitter if needed."""
     matrix = _symmetric_matrix(matrix)
@@ -153,6 +172,18 @@ class UnscentedKalmanFilter:
 
         if self.R.shape[0] != self.R.shape[1]:
             raise ValueError("R must be square")
+
+        self.P = _validate_covariance_matrix(
+            self.P,
+            "P0",
+            expected_state_shape,
+        )
+        self.Q = _validate_covariance_matrix(
+            self.Q,
+            "Q",
+            expected_state_shape,
+        )
+        self.R = _validate_covariance_matrix(self.R, "R")
 
     def _validate_parameters(self):
         """Validate UKF scaling parameters."""

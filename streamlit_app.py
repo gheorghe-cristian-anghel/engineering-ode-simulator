@@ -360,7 +360,7 @@ def render_parameter_summary(parameters):
 def show_figure(figure, caption=None):
     """Display a Matplotlib figure in Streamlit, then close it."""
     finalize_streamlit_figure(figure)
-    st.pyplot(figure, use_container_width=True)
+    st.pyplot(figure, width="stretch")
     if caption is not None:
         st.caption(caption)
     plt.close(figure)
@@ -687,6 +687,15 @@ def plot_uav_tracking_response(result, title):
     return figure
 
 
+def place_uav_xy_legend(axis):
+    """Place UAV XY plot legends outside the data area."""
+    axis.legend(
+        loc="center left",
+        bbox_to_anchor=(1.02, 0.5),
+        frameon=True,
+    )
+
+
 def plot_uav_waypoint_response(result):
     """Plot waypoint-following path and position error."""
     figure = plot_uav_tracking_response(result, "Waypoint Following")
@@ -699,7 +708,7 @@ def plot_uav_waypoint_response(result):
         color="tab:orange",
         label="Waypoints",
     )
-    axis.legend()
+    place_uav_xy_legend(axis)
     return figure
 
 
@@ -746,6 +755,7 @@ def plot_uav_obstacle_response(result):
         ylabel="y (m)",
     )
     set_equal_2d_axes(axes[0])
+    place_uav_xy_legend(axes[0])
 
     axes[1].plot(time, clearances, color="tab:red", label="Nearest clearance")
     axes[1].axhline(0.0, color="black", linestyle=":", label="Obstacle surface")

@@ -79,7 +79,7 @@ The project is intentionally educational: it emphasizes readable equations, repr
 
 - Matplotlib plots for examples and selected saved screenshots.
 - Matplotlib animation helpers for inverted pendulum and quadcopter trajectories.
-- Streamlit browser UI for selected simulations across circuits, control, PDEs, numerical methods, and FEM.
+- Streamlit browser UI for selected simulations across circuits, control, state estimation, UAV/quadcopter, PDEs, numerical methods, and FEM.
 
 ## Gallery
 
@@ -182,10 +182,11 @@ The app currently includes selected demos for:
 
 - Home and About overview pages.
 - Control-system demos for RC/RLC circuits and DC motor PID control.
+- Interactive state-estimation demos for Kalman, Unscented Kalman, and optional Particle Filters.
+- Interactive UAV/quadcopter demos for altitude control, trajectory tracking, waypoint following, and obstacle avoidance.
 - PDE solver demos for 1D/2D heat equations and 1D/2D wave equations.
 - Numerical-methods demo for finite-difference convergence.
 - FEM basics demo for a 1D axial bar.
-- Portfolio overview pages for state-estimation and UAV/quadcopter examples.
 
 ## Testing
 

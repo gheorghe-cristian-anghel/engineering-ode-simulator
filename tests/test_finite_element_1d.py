@@ -100,6 +100,15 @@ def test_global_stiffness_matrix_is_symmetric():
     assert stiffness == pytest.approx(stiffness.T)
 
 
+def test_unconstrained_global_stiffness_row_sums_are_zero():
+    """Assembled stiffness should preserve rigid-body equilibrium before supports."""
+    nodes, elements = create_uniform_bar_mesh(length=1.0, num_elements=4)
+
+    stiffness = assemble_global_stiffness(nodes, elements, E=200.0, A=0.5)
+
+    assert np.sum(stiffness, axis=1) == pytest.approx(np.zeros(len(nodes)))
+
+
 def test_fixed_free_one_element_bar_matches_analytical_tip_displacement():
     """A one-element fixed-free bar should match the exact tip displacement."""
     length = 2.0

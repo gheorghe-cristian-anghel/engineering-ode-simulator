@@ -246,6 +246,20 @@ def test_nonzero_initial_velocity_changes_first_step_in_expected_direction():
     assert np.all(displacement[1, 1:-1] > displacement[0, 1:-1])
 
 
+def test_uniform_initial_velocity_first_step_matches_dt_for_flat_string():
+    """With zero curvature, the first wave step should advance by v0*dt."""
+    result = simulate_wave_equation_1d(
+        t_final=0.02,
+        num_points=21,
+        initial_displacement=lambda x: np.zeros_like(x),
+        initial_velocity=lambda x: np.full_like(x, 0.25),
+        boundary_values=(0.0, 0.0),
+    )
+    displacement = result["displacement"]
+
+    assert displacement[1, 1:-1] == pytest.approx(0.25 * result["dt"])
+
+
 def test_initial_displacement_wrong_shape_raises_value_error():
     """Initial displacement must provide one value per grid point."""
     with pytest.raises(ValueError):

@@ -6,6 +6,7 @@ from models.pendulum import (
     pendulum_energy,
     simulate_pendulum,
     small_angle_period,
+    validate_pendulum_parameters,
 )
 
 
@@ -95,3 +96,16 @@ def test_invalid_t_span_raises_value_error():
     """The final simulation time must be greater than the initial time."""
     with pytest.raises(ValueError):
         simulate_pendulum(1.0, 0.1, 0, (10, 0), 200)
+
+
+def test_invalid_pendulum_parameters_are_rejected_by_helpers():
+    """Pendulum helper formulas should reject unphysical L and g values."""
+    for length, gravity in [(0.0, 9.81), (-1.0, 9.81), (1.0, 0.0), (1.0, -9.81)]:
+        with pytest.raises(ValueError):
+            validate_pendulum_parameters(length, gravity)
+
+        with pytest.raises(ValueError):
+            natural_frequency(length, gravity)
+
+        with pytest.raises(ValueError):
+            small_angle_period(length, gravity)

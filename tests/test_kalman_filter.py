@@ -281,3 +281,4 @@ def test_filter_error_is_lower_than_raw_measurement_error():
     assert estimate_error < measurement_error
     assert np.all(np.isfinite(kalman_filter.P))
     assert np.allclose(kalman_filter.P, kalman_filter.P.T)
+    assert np.min(np.linalg.eigvalsh(kalman_filter.P)) >= -1e-12

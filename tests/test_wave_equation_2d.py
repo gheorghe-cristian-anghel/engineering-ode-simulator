@@ -324,3 +324,18 @@ def test_nonzero_initial_velocity_changes_first_step_in_expected_direction():
     displacement = result["displacement"]
 
     assert np.all(displacement[1, 1:-1, 1:-1] > displacement[0, 1:-1, 1:-1])
+
+
+def test_uniform_initial_velocity_first_step_matches_dt_for_flat_membrane():
+    """With zero curvature, the first membrane step should advance by v0*dt."""
+    result = simulate_wave_equation_2d(
+        t_final=0.02,
+        nx=21,
+        ny=19,
+        initial_displacement=lambda X, Y: np.zeros_like(X),
+        initial_velocity=lambda X, Y: np.full_like(X, 0.25),
+        boundary_values=0.0,
+    )
+    displacement = result["displacement"]
+
+    assert displacement[1, 1:-1, 1:-1] == pytest.approx(0.25 * result["dt"])

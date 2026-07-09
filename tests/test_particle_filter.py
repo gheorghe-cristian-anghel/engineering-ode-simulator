@@ -258,6 +258,7 @@ def test_particle_filter_outputs_remain_finite_and_smooth_noisy_measurements():
         assert np.all(np.isfinite(particle_filter.particles))
         assert np.all(np.isfinite(particle_filter.weights))
         assert np.sum(particle_filter.weights) == pytest.approx(1.0)
+        assert particle_filter.effective_sample_size() > 0.0
 
     estimate_error = np.mean(np.abs(true_value - np.array(estimates[-20:])))
     measurement_error = np.mean(np.abs(true_value - measurements[-20:]))

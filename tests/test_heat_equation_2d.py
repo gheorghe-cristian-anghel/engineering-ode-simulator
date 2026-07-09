@@ -190,6 +190,27 @@ def test_stable_solution_remains_finite_and_respects_rx_plus_ry_limit():
     assert np.all(np.isfinite(result["temperature"]))
 
 
+def test_stable_2d_heat_solution_satisfies_discrete_maximum_principle():
+    """Stable 2D diffusion with fixed boundaries should not create new extrema."""
+    result = simulate_heat_equation_2d(
+        t_final=0.05,
+        nx=21,
+        ny=19,
+        initial_condition=lambda X, Y: sine_initial_condition_2d(
+            X,
+            Y,
+            amplitude=1.0,
+            mode_x=1,
+            mode_y=1,
+        ),
+        boundary_values=0.0,
+    )
+    temperature = result["temperature"]
+
+    assert np.max(temperature) <= np.max(temperature[0]) + 1e-12
+    assert np.min(temperature) >= np.min(temperature[0]) - 1e-12
+
+
 def test_unstable_dt_raises_value_error_when_enforced():
     """The solver should reject unstable explicit time steps by default."""
     with pytest.raises(ValueError):

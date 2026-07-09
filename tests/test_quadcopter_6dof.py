@@ -27,6 +27,14 @@ def test_rotation_matrix_zero_angles_is_identity():
     assert_allclose(rotation, np.eye(3), atol=1e-12)
 
 
+def test_rotation_matrix_is_orthonormal():
+    """Body-to-inertial rotation should preserve vector lengths."""
+    rotation = rotation_matrix_body_to_inertial(0.3, -0.2, 0.4)
+
+    assert_allclose(rotation.T @ rotation, np.eye(3), atol=1e-12)
+    assert np.linalg.det(rotation) == pytest.approx(1.0)
+
+
 def test_euler_rate_matrix_returns_expected_shape():
     """Euler rate matrix should map three body rates to three angle rates."""
     rate_matrix = euler_rate_matrix(0.1, 0.2)

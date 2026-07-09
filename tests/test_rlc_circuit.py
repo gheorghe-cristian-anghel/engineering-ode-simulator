@@ -5,6 +5,7 @@ from models.rlc_circuit import (
     damping_ratio,
     natural_frequency,
     simulate_rlc,
+    validate_rlc_parameters,
 )
 
 
@@ -72,3 +73,25 @@ def test_invalid_zero_c_raises_value_error():
     for capacitance in [0.0, -0.25]:
         with pytest.raises(ValueError):
             simulate_rlc(2, 1, capacitance, 5, 0, 0, (0, 10), 200)
+
+
+def test_invalid_rlc_parameters_are_rejected_by_helpers():
+    """RLC helper formulas should reject negative R and nonpositive L/C."""
+    invalid_parameters = [
+        (-1.0, 1.0, 0.25),
+        (2.0, 0.0, 0.25),
+        (2.0, -1.0, 0.25),
+        (2.0, 1.0, 0.0),
+        (2.0, 1.0, -0.25),
+    ]
+
+    for R, L, C in invalid_parameters:
+        with pytest.raises(ValueError):
+            validate_rlc_parameters(R, L, C)
+
+        with pytest.raises(ValueError):
+            damping_ratio(R, L, C)
+
+    for L, C in [(0.0, 0.25), (-1.0, 0.25), (1.0, 0.0), (1.0, -0.25)]:
+        with pytest.raises(ValueError):
+            natural_frequency(L, C)

@@ -1,7 +1,7 @@
 import pytest
 
 import models.rc_circuit as rc_circuit
-from models.rc_circuit import simulate_rc
+from models.rc_circuit import analytical_rc, simulate_rc, validate_rc_parameters
 
 
 def test_initial_voltage_equals_v0():
@@ -54,6 +54,16 @@ def test_invalid_rc_parameters_raise_value_error():
     for R, C in invalid_parameters:
         with pytest.raises(ValueError):
             simulate_rc(R, C, 5.0, 0.0, (0, 1), 10)
+
+
+def test_invalid_rc_parameters_are_rejected_by_validation_and_analytical_model():
+    """Shared RC validation should protect both simulation and closed-form paths."""
+    for R, C in [(0.0, 1e-3), (1e3, 0.0), (-1.0, 1e-3), (1e3, -1e-3)]:
+        with pytest.raises(ValueError):
+            validate_rc_parameters(R, C)
+
+        with pytest.raises(ValueError):
+            analytical_rc([0.0, 1.0], R, C, Vin=5.0, V0=0.0)
 
 
 def test_solve_ivp_failure_raises_runtime_error(monkeypatch):

@@ -5,6 +5,7 @@ from models.mass_spring_damper import (
     mechanical_energy,
     natural_frequency,
     simulate_mass_spring_damper,
+    validate_mass_spring_damper_parameters,
 )
 
 
@@ -100,3 +101,28 @@ def test_invalid_physical_parameters_raise_value_error():
     for m, c, k in invalid_parameters:
         with pytest.raises(ValueError):
             simulate_mass_spring_damper(m, c, k, 1, 0, (0, 1), 10)
+
+
+def test_invalid_mass_spring_damper_parameters_are_rejected_by_helpers():
+    """Frequency, damping-ratio, and energy helpers should share validation."""
+    invalid_parameters = [
+        (0.0, 0.1, 4.0),
+        (-1.0, 0.1, 4.0),
+        (1.0, -0.1, 4.0),
+        (1.0, 0.1, 0.0),
+        (1.0, 0.1, -4.0),
+    ]
+
+    for m, c, k in invalid_parameters:
+        with pytest.raises(ValueError):
+            validate_mass_spring_damper_parameters(m, c, k)
+
+        with pytest.raises(ValueError):
+            damping_ratio(m, c, k)
+
+    for m, k in [(0.0, 4.0), (1.0, 0.0), (-1.0, 4.0), (1.0, -4.0)]:
+        with pytest.raises(ValueError):
+            natural_frequency(m, k)
+
+        with pytest.raises(ValueError):
+            mechanical_energy([0.0], [0.0], m, k)

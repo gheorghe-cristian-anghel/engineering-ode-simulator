@@ -201,5 +201,6 @@ def test_ekf_outputs_and_covariance_remain_finite_and_symmetric():
         assert np.all(np.isfinite(gain))
         assert np.all(np.isfinite(ekf.P))
         assert np.allclose(ekf.P, ekf.P.T)
+        assert np.min(np.linalg.eigvalsh(ekf.P)) >= -1e-12
 
     assert np.all(np.isfinite(estimates))

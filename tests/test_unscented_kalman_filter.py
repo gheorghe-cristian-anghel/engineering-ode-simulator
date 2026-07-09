@@ -285,6 +285,7 @@ def test_ukf_error_is_lower_than_raw_measurement_error_and_covariance_is_valid()
 
         assert np.all(np.isfinite(ukf.P))
         assert np.allclose(ukf.P, ukf.P.T)
+        assert np.min(np.linalg.eigvalsh(ukf.P)) >= -1e-12
 
     estimate_error = np.mean(np.abs(true_value - np.array(estimates[-40:])))
     measurement_error = np.mean(np.abs(true_value - measurements[-40:]))

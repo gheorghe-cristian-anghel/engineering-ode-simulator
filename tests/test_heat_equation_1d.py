@@ -164,6 +164,20 @@ def test_stable_solution_remains_finite_and_reports_stable_r():
     assert np.all(np.isfinite(result["temperature"]))
 
 
+def test_stable_dirichlet_heat_solution_satisfies_discrete_maximum_principle():
+    """Stable diffusion with fixed zero boundaries should not create new extrema."""
+    result = simulate_heat_equation_1d(
+        t_final=0.1,
+        num_points=41,
+        initial_condition=lambda x: np.sin(np.pi * x) + 0.2 * np.sin(3.0 * np.pi * x),
+        boundary_values=(0.0, 0.0),
+    )
+    temperature = result["temperature"]
+
+    assert np.max(temperature) <= np.max(temperature[0]) + 1e-12
+    assert np.min(temperature) >= np.min(temperature[0]) - 1e-12
+
+
 def test_invalid_length_raises_value_error():
     """Rod length must be positive."""
     with pytest.raises(ValueError):

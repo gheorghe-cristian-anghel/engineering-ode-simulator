@@ -6,6 +6,7 @@ from models.rl_circuit import (
     simulate_rl,
     steady_state_current,
     time_constant,
+    validate_rl_parameters,
 )
 
 
@@ -71,3 +72,23 @@ def test_invalid_l_raises_value_error():
     for inductance in [0.0, -1.0]:
         with pytest.raises(ValueError):
             simulate_rl(10, inductance, 5, 0, (0, 1.5), 100)
+
+
+def test_invalid_rl_parameters_are_rejected_by_helpers():
+    """RL helper formulas should reject unphysical circuit parameters."""
+    for R, L in [(0.0, 2.0), (-1.0, 2.0), (10.0, 0.0), (10.0, -1.0)]:
+        with pytest.raises(ValueError):
+            validate_rl_parameters(R, L)
+
+        with pytest.raises(ValueError):
+            time_constant(R, L)
+
+        with pytest.raises(ValueError):
+            analytical_rl([0.0, 0.1], R, L, Vin=5.0, i0=0.0)
+
+
+def test_invalid_resistance_is_rejected_by_steady_state_current():
+    """Steady-state current is only physical for positive resistance."""
+    for resistance in [0.0, -1.0]:
+        with pytest.raises(ValueError):
+            steady_state_current(resistance, Vin=5.0)

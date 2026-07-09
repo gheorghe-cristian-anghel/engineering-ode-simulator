@@ -59,6 +59,19 @@ def test_valid_lqr_weight_matrices_are_accepted():
     assert np.all(np.isfinite(closed_loop_eigenvalues))
 
 
+def test_lqr_riccati_solution_is_symmetric_positive_semidefinite():
+    """The returned Riccati matrix should be a valid quadratic cost-to-go."""
+    A = np.array([[0.0, 1.0], [-2.0, -0.5]])
+    B = np.array([[0.0], [1.0]])
+    Q = np.diag([4.0, 0.5])
+    R = np.array([[0.25]])
+
+    _, P, _ = lqr(A, B, Q, R)
+
+    assert np.allclose(P, P.T)
+    assert np.min(np.linalg.eigvalsh(P)) >= -1e-10
+
+
 def test_invalid_a_dimensions_raise_value_error():
     """A must be square."""
     with pytest.raises(ValueError):

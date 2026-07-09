@@ -272,7 +272,7 @@ def display_streamlit_figure(fig, caption=None):
     import streamlit as st
 
     finalize_streamlit_figure(fig)
-    st.pyplot(fig, use_container_width=True)
+    st.pyplot(fig, width="stretch")
     if caption is not None:
         st.caption(caption)
     plt.close(fig)

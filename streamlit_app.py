@@ -302,7 +302,7 @@ def inject_custom_css():
     )
 
 
-def render_header(section=None):
+def render_page_header(section=None):
     """Render the app-level title and subtitle."""
     eyebrow = "Portfolio engineering demo" if section is None else section
     st.markdown(
@@ -332,13 +332,18 @@ def render_feature_card(title, body, tag=None):
     )
 
 
-def render_metric_row(metrics):
+def render_metric_row(metrics, columns=None):
     """Render Streamlit metrics with consistent spacing."""
-    columns = st.columns(len(metrics))
-    for column, metric in zip(columns, metrics, strict=True):
+    metrics = tuple(metrics)
+    if not metrics:
+        return
+
+    column_count = columns or len(metrics)
+    metric_columns = st.columns(column_count)
+    for index, metric in enumerate(metrics):
         label, value = metric[:2]
         delta = metric[2] if len(metric) > 2 else None
-        column.metric(label, value, delta=delta)
+        metric_columns[index % column_count].metric(label, value, delta=delta)
 
 
 def render_section_divider():
@@ -359,10 +364,22 @@ def render_info_box(title, body):
     )
 
 
+def render_assumptions_expander(body, title="Limitations and assumptions"):
+    """Render a standard explanatory expander without changing copy."""
+    with st.expander(title):
+        st.write(body)
+
+
 def render_parameter_summary(parameters):
     """Render selected user inputs as a compact metric row."""
     st.caption("Selected setup")
     render_metric_row(parameters)
+
+
+def safe_display_dataframe(data, **kwargs):
+    """Display tabular data with current Streamlit stretch-width semantics."""
+    kwargs.setdefault("width", "stretch")
+    return st.dataframe(data, **kwargs)
 
 
 def show_figure(figure, caption=None):
@@ -473,11 +490,12 @@ def render_portfolio_examples(domain):
 
 def render_metric_grid(metrics, columns=2):
     """Render compact metrics inside a constrained column."""
-    metric_columns = st.columns(columns)
-    for index, metric in enumerate(metrics):
-        label, value = metric[:2]
-        delta = metric[2] if len(metric) > 2 else None
-        metric_columns[index % columns].metric(label, value, delta=delta)
+    render_metric_row(metrics, columns=columns)
+
+
+def render_inactive_simulation_hint(demo_name):
+    """Tell users why an inactive eager-rendered tab has no metrics yet."""
+    st.info(f"Select {demo_name} as the active simulation to run it.")
 
 
 def settling_time_label(settling_time):
@@ -845,7 +863,7 @@ def render_uav_altitude_tab(is_active):
     with metrics_column:
         st.caption("Metrics")
         if not is_active:
-            st.info("Select Altitude Control as the active simulation to run it.")
+            render_inactive_simulation_hint("Altitude Control")
             return
 
         result, metrics = run_uav_altitude_demo(
@@ -925,7 +943,7 @@ def render_uav_trajectory_tab(is_active):
     with metrics_column:
         st.caption("Metrics")
         if not is_active:
-            st.info("Select Trajectory Tracking as the active simulation to run it.")
+            render_inactive_simulation_hint("Trajectory Tracking")
             return
 
         result = run_uav_trajectory_demo(
@@ -994,7 +1012,7 @@ def render_uav_waypoint_tab(is_active):
     with metrics_column:
         st.caption("Metrics")
         if not is_active:
-            st.info("Select Waypoint Following as the active simulation to run it.")
+            render_inactive_simulation_hint("Waypoint Following")
             return
 
         result = run_uav_waypoint_demo(altitude, segment_time, smoothing, 0.05)
@@ -1085,7 +1103,7 @@ def render_uav_obstacle_tab(is_active):
     with metrics_column:
         st.caption("Metrics")
         if not is_active:
-            st.info("Select Obstacle Avoidance as the active simulation to run it.")
+            render_inactive_simulation_hint("Obstacle Avoidance")
             return
 
         result = run_uav_obstacle_demo(
@@ -1163,16 +1181,16 @@ def render_uav_quadcopter():
     with obstacle_tab:
         render_uav_obstacle_tab(active_demo == "Obstacle Avoidance")
 
-    with st.expander("Assumptions and limitations"):
-        st.write(
-            "The altitude demo uses the existing 1D vertical model and PID "
-            "controller. The trajectory, waypoint, and obstacle demos use the "
-            "repository's simplified 6-DOF model and cascaded educational "
-            "tracking controller. The obstacle helper is local reactive "
-            "avoidance around static spherical obstacles; it is not global path "
-            "planning, certified guidance, rotor-level motor mixing, hardware "
-            "validation, or real-world deployment software."
-        )
+    render_assumptions_expander(
+        "The altitude demo uses the existing 1D vertical model and PID "
+        "controller. The trajectory, waypoint, and obstacle demos use the "
+        "repository's simplified 6-DOF model and cascaded educational "
+        "tracking controller. The obstacle helper is local reactive "
+        "avoidance around static spherical obstacles; it is not global path "
+        "planning, certified guidance, rotor-level motor mixing, hardware "
+        "validation, or real-world deployment software.",
+        title="Assumptions and limitations",
+    )
 
 
 def _simulate_discrete_linear_system(A, B, x0, input_value, num_points):
@@ -1565,13 +1583,13 @@ def render_linear_kalman_filter_demo():
         "estimate both measured speed and hidden armature current.",
     )
 
-    with st.expander("Engineering interpretation"):
-        st.write(
-            "The measurement only observes motor speed. The Kalman Filter uses "
-            "the linear state-space model to infer current, while the process "
-            "and measurement noise settings tune how strongly it trusts the "
-            "model versus the sensor."
-        )
+    render_assumptions_expander(
+        "The measurement only observes motor speed. The Kalman Filter uses "
+        "the linear state-space model to infer current, while the process "
+        "and measurement noise settings tune how strongly it trusts the "
+        "model versus the sensor.",
+        title="Engineering interpretation",
+    )
 
 
 def render_ukf_pendulum_demo():
@@ -1699,13 +1717,13 @@ def render_ukf_pendulum_demo():
         "velocity internally from angle-only measurements.",
     )
 
-    with st.expander("Engineering interpretation"):
-        st.write(
-            "The pendulum measurement observes angle only. The Unscented Kalman "
-            "Filter propagates sigma points through the nonlinear pendulum "
-            "dynamics, so it can estimate angular velocity without requiring "
-            "a measured velocity signal."
-        )
+    render_assumptions_expander(
+        "The pendulum measurement observes angle only. The Unscented Kalman "
+        "Filter propagates sigma points through the nonlinear pendulum "
+        "dynamics, so it can estimate angular velocity without requiring "
+        "a measured velocity signal.",
+        title="Engineering interpretation",
+    )
 
 
 def render_particle_filter_pendulum_demo():
@@ -1849,12 +1867,12 @@ def render_particle_filter_pendulum_demo():
         "threshold.",
     )
 
-    with st.expander("Engineering interpretation"):
-        st.write(
-            "Particle Filters can represent non-Gaussian uncertainty, but they "
-            "trade that flexibility for compute cost. The particle cap and "
-            "short default simulation keep this page responsive."
-        )
+    render_assumptions_expander(
+        "Particle Filters can represent non-Gaussian uncertainty, but they "
+        "trade that flexibility for compute cost. The particle cap and "
+        "short default simulation keep this page responsive.",
+        title="Engineering interpretation",
+    )
 
 
 def render_state_estimation():
@@ -2278,12 +2296,12 @@ def render_heat_equation_1d():
     )
 
     if not show_stability_status("Explicit heat stability r", r, 0.5):
-        with st.expander("Why this was blocked"):
-            st.write(
-                "The explicit 1D heat scheme is stable only when "
-                "`r = alpha*dt/dx^2 <= 0.5`. Reducing `dt`, reducing `alpha`, "
-                "or using a coarser grid lowers the stability number."
-            )
+        render_assumptions_expander(
+            "The explicit 1D heat scheme is stable only when "
+            "`r = alpha*dt/dx^2 <= 0.5`. Reducing `dt`, reducing `alpha`, "
+            "or using a coarser grid lowers the stability number.",
+            title="Why this was blocked",
+        )
         return
 
     def initial_condition(x):
@@ -2354,13 +2372,12 @@ def render_heat_equation_1d():
         "toward cooler neighboring points. The peak temperature decays while "
         "the profile becomes smoother.",
     )
-    with st.expander("Limitations and assumptions"):
-        st.write(
-            "This page uses a constant thermal diffusivity, a uniform grid, and "
-            "an explicit finite-difference scheme with simple boundary handling. "
-            "The stability check only validates the implemented numerical "
-            "scheme; it is not a material-model fidelity check."
-        )
+    render_assumptions_expander(
+        "This page uses a constant thermal diffusivity, a uniform grid, and "
+        "an explicit finite-difference scheme with simple boundary handling. "
+        "The stability check only validates the implemented numerical "
+        "scheme; it is not a material-model fidelity check."
+    )
 
 
 def render_wave_equation_1d():
@@ -2404,12 +2421,12 @@ def render_wave_equation_1d():
     )
 
     if not show_stability_status("Wave CFL lambda", cfl, 1.0):
-        with st.expander("Why this was blocked"):
-            st.write(
-                "The explicit 1D wave scheme is stable only when "
-                "`lambda = c*dt/dx <= 1`. Reducing `dt`, reducing wave speed, "
-                "or using a coarser grid lowers the CFL number."
-            )
+        render_assumptions_expander(
+            "The explicit 1D wave scheme is stable only when "
+            "`lambda = c*dt/dx <= 1`. Reducing `dt`, reducing wave speed, "
+            "or using a coarser grid lowers the CFL number.",
+            title="Why this was blocked",
+        )
         return
 
     def initial_displacement(x):
@@ -2481,13 +2498,12 @@ def render_wave_equation_1d():
         "boundaries. Positive and negative displacement are shown symmetrically "
         "because oscillatory wave motion is centered around zero.",
     )
-    with st.expander("Limitations and assumptions"):
-        st.write(
-            "This page uses a constant wave speed, a uniform grid, zero initial "
-            "velocity, and an explicit finite-difference scheme. The CFL check "
-            "guards numerical stability; it does not model damping, forcing, or "
-            "material heterogeneity."
-        )
+    render_assumptions_expander(
+        "This page uses a constant wave speed, a uniform grid, zero initial "
+        "velocity, and an explicit finite-difference scheme. The CFL check "
+        "guards numerical stability; it does not model damping, forcing, or "
+        "material heterogeneity."
+    )
 
 
 def render_heat_equation_2d():
@@ -2539,17 +2555,18 @@ def render_heat_equation_2d():
     )
 
     if not show_stability_status("2D heat stability rx + ry", stability_sum, 0.5):
-        with st.expander("Why this was blocked"):
-            st.write(
-                "The explicit 2D heat scheme is stable only when "
-                "`rx + ry <= 0.5`, where `rx = alpha*dt/dx^2` and "
-                "`ry = alpha*dt/dy^2`. Lower `dt`, lower `alpha`, or a coarser "
-                "grid will reduce the stability sum."
-            )
+        render_assumptions_expander(
+            "The explicit 2D heat scheme is stable only when "
+            "`rx + ry <= 0.5`, where `rx = alpha*dt/dx^2` and "
+            "`ry = alpha*dt/dy^2`. Lower `dt`, lower `alpha`, or a coarser "
+            "grid will reduce the stability sum.",
+            title="Why this was blocked",
+        )
         return
 
     num_intervals = max(1, int(np.ceil(t_final / dt)))
     store_every = store_every_for_frame_cap(num_intervals)
+
     def initial_condition(X, Y):
         return gaussian_hotspot_2d(
             X,
@@ -2589,13 +2606,13 @@ def render_heat_equation_2d():
         "directions. The shared color scale makes the decay from the initial "
         "maximum to the final snapshot easy to compare.",
     )
-    with st.expander("Limitations, assumptions, and performance"):
-        st.write(
-            "This demo uses a square uniform grid, constant thermal diffusivity, "
-            "and an explicit finite-difference update. Stored frames are capped "
-            "so the Streamlit page remains responsive with the default 41 x 41 "
-            "grid."
-        )
+    render_assumptions_expander(
+        "This demo uses a square uniform grid, constant thermal diffusivity, "
+        "and an explicit finite-difference update. Stored frames are capped "
+        "so the Streamlit page remains responsive with the default 41 x 41 "
+        "grid.",
+        title="Limitations, assumptions, and performance",
+    )
 
 
 def render_wave_equation_2d():
@@ -2652,17 +2669,18 @@ def render_wave_equation_2d():
     )
 
     if not show_stability_status("2D wave stability rx + ry", stability_sum, 1.0):
-        with st.expander("Why this was blocked"):
-            st.write(
-                "The explicit 2D wave scheme is stable only when "
-                "`rx + ry <= 1`, where `rx = (c*dt/dx)^2` and "
-                "`ry = (c*dt/dy)^2`. Lower `dt`, lower wave speed, or a coarser "
-                "grid will reduce the stability sum."
-            )
+        render_assumptions_expander(
+            "The explicit 2D wave scheme is stable only when "
+            "`rx + ry <= 1`, where `rx = (c*dt/dx)^2` and "
+            "`ry = (c*dt/dy)^2`. Lower `dt`, lower wave speed, or a coarser "
+            "grid will reduce the stability sum.",
+            title="Why this was blocked",
+        )
         return
 
     num_intervals = max(1, int(np.ceil(t_final / dt)))
     store_every = store_every_for_frame_cap(num_intervals)
+
     def initial_displacement(X, Y):
         return gaussian_displacement_2d(
             X,
@@ -2704,12 +2722,12 @@ def render_wave_equation_2d():
         "The plot uses symmetric color limits around zero so positive and "
         "negative membrane motion have equal visual weight.",
     )
-    with st.expander("Limitations, assumptions, and performance"):
-        st.write(
-            "This demo uses a square uniform grid, constant wave speed, zero "
-            "initial velocity, fixed boundaries, and an explicit update. Stored "
-            "frames are capped to keep the default 41 x 41 simulation responsive."
-        )
+    render_assumptions_expander(
+        "This demo uses a square uniform grid, constant wave speed, zero "
+        "initial velocity, fixed boundaries, and an explicit update. Stored "
+        "frames are capped to keep the default 41 x 41 simulation responsive.",
+        title="Limitations, assumptions, and performance",
+    )
 
 
 def draw_2d_heat_plots(result):
@@ -2916,22 +2934,20 @@ def render_finite_difference_convergence():
         "and second-order central differences.",
     )
 
-    st.dataframe(
+    safe_display_dataframe(
         {
             "grid points": num_points_values,
             "dx": dx_values,
             "forward RMS error": forward_errors,
             "backward RMS error": backward_errors,
             "central RMS error": central_errors,
-        },
-        use_container_width=True,
+        }
     )
-    with st.expander("Limitations and assumptions"):
-        st.write(
-            "The convergence estimate uses smooth analytical data on uniform 1D "
-            "grids. Boundary effects are avoided by comparing derivative errors "
-            "on interior points only."
-        )
+    render_assumptions_expander(
+        "The convergence estimate uses smooth analytical data on uniform 1D "
+        "grids. Boundary effects are avoided by comparing derivative errors "
+        "on interior points only."
+    )
 
 
 def render_axial_bar_fem():
@@ -3057,12 +3073,11 @@ def render_axial_bar_fem():
         "load, the linear FEM solution matches the analytical linear "
         "displacement field up to numerical roundoff.",
     )
-    with st.expander("Limitations and assumptions"):
-        st.write(
-            "This is a small-displacement, linear-elastic, static 1D axial bar "
-            "model with constant `E` and `A`. It does not include beam bending, "
-            "2D trusses, nonlinear materials, buckling, dynamics, or contact."
-        )
+    render_assumptions_expander(
+        "This is a small-displacement, linear-elastic, static 1D axial bar "
+        "model with constant `E` and `A`. It does not include beam bending, "
+        "2D trusses, nonlinear materials, buckling, dynamics, or contact."
+    )
 
 
 def main():
@@ -3080,7 +3095,7 @@ def main():
     domain = st.sidebar.radio("Section", tuple(DOMAIN_DEMOS.keys()))
     demo = st.sidebar.selectbox("Demo", DOMAIN_DEMOS[domain])
 
-    render_header(domain)
+    render_page_header(domain)
 
     if domain == "Home":
         render_home()

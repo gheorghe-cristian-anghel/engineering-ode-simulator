@@ -252,6 +252,24 @@ def test_simulate_mpc_tracking_preserves_time_varying_reference():
     ][0, 1, 0]
 
 
+def test_simulate_mpc_tracking_repeats_short_time_varying_reference():
+    """A horizon-length reference should remain time-varying during simulation."""
+    mpc = _simple_mpc()
+    reference_positions = np.linspace(0.0, 1.0, mpc.horizon)
+    references = np.column_stack([reference_positions, np.zeros_like(reference_positions)])
+
+    result = simulate_mpc_tracking(
+        mpc=mpc,
+        x0=[0.0, 0.0],
+        x_ref=references,
+        num_steps=20,
+    )
+
+    assert np.allclose(result["references"][: mpc.horizon], references)
+    assert result["references"][mpc.horizon, 0] == pytest.approx(references[-1, 0])
+    assert result["references"][0, 0] != result["references"][1, 0]
+
+
 def test_mpc_moves_double_integrator_position_toward_target():
     """Closed-loop MPC should move the position closer to the reference."""
     mpc = _simple_mpc()

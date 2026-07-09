@@ -374,7 +374,12 @@ class LinearMPC:
 
 
 def simulate_mpc_tracking(mpc, x0, x_ref, num_steps=100):
-    """Run a receding-horizon MPC tracking simulation."""
+    """Run a receding-horizon MPC tracking simulation.
+
+    One-dimensional references are treated as constant targets. Two-dimensional
+    references are treated as educational/prototype reference trajectories; if
+    shorter than ``num_steps + 1``, the final provided reference is held.
+    """
     if not isinstance(mpc, LinearMPC):
         raise ValueError("mpc must be a LinearMPC instance")
 
@@ -388,8 +393,17 @@ def simulate_mpc_tracking(mpc, x0, x_ref, num_steps=100):
         if reference_array.shape == (num_steps + 1, mpc.n_states):
             references = reference_array.copy()
         else:
-            references = mpc._reference_trajectory(x_ref)
-            references = np.tile(references[0], (num_steps + 1, 1))
+            references = mpc._reference_trajectory(reference_array)
+            if len(references) < num_steps + 1:
+                pad_count = num_steps + 1 - len(references)
+                references = np.vstack(
+                    [
+                        references,
+                        np.tile(references[-1], (pad_count, 1)),
+                    ]
+                )
+            else:
+                references = references[: num_steps + 1]
     else:
         reference = mpc._reference_trajectory(x_ref)[0]
         references = np.tile(reference, (num_steps + 1, 1))

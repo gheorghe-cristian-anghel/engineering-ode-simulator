@@ -105,7 +105,8 @@ DOMAIN_DEMOS = {
     ),
     "Numerical Methods": ("Finite Difference Convergence",),
     "FEM Basics": ("1D Axial Bar FEM",),
-    "About": ("Project Scope",),
+    "Validation & Benchmarks": ("Quality Signals",),
+    "About / Portfolio": ("Project Scope",),
 }
 
 FEATURE_CARDS = (
@@ -338,12 +339,36 @@ def render_metric_row(metrics, columns=None):
     if not metrics:
         return
 
-    column_count = columns or len(metrics)
-    metric_columns = st.columns(column_count)
-    for index, metric in enumerate(metrics):
-        label, value = metric[:2]
-        delta = metric[2] if len(metric) > 2 else None
-        metric_columns[index % column_count].metric(label, value, delta=delta)
+    column_count = min(columns or len(metrics), 4)
+    for row_start in range(0, len(metrics), column_count):
+        metric_columns = st.columns(column_count)
+        for column, metric in zip(
+            metric_columns,
+            metrics[row_start : row_start + column_count],
+            strict=False,
+        ):
+            label, value = metric[:2]
+            delta = metric[2] if len(metric) > 2 else None
+            column.metric(label, value, delta=delta)
+
+
+def render_page_intro(title, summary):
+    """Render a consistent page title and concise explanation."""
+    st.header(title)
+    st.write(summary)
+
+
+def render_control_panel(title="Parameter controls"):
+    """Return a bordered container for local page controls."""
+    container = st.container(border=True)
+    container.markdown(f"**{title}**")
+    return container
+
+
+def render_metrics_section(metrics, title="Metrics", columns=None):
+    """Render a standard metrics section."""
+    st.subheader(title)
+    render_metric_row(metrics, columns=columns)
 
 
 def render_section_divider():
@@ -402,7 +427,12 @@ def show_stability_status(label, value, limit):
 
 def render_home():
     """Render the app overview page."""
-    st.header("Home / Overview")
+    render_page_intro(
+        "Home",
+        "A professional engineering analysis dashboard for exploring small, "
+        "tested simulations across controls, estimators, UAV dynamics, PDEs, "
+        "finite differences, and introductory FEM.",
+    )
     render_info_box(
         "What this toolkit is",
         "A portfolio-oriented Python engineering simulation project for "
@@ -455,6 +485,191 @@ def render_home():
         "2D grids default to modest sizes, stored frames are capped, and "
         "explicit PDE solvers are blocked when the selected time step violates "
         "the heat-equation stability limit or wave-equation CFL limit.",
+    )
+    st.success(
+        "Validation is represented through focused pytest coverage, analytical "
+        "checks where available, and explicit stability guards in the app.",
+        icon=":material/check_circle:",
+    )
+
+
+@st.cache_data(show_spinner=False)
+def compute_validation_snapshot():
+    """Compute lightweight validation signals for the dashboard page."""
+    fem_result = simulate_axial_bar_fem()
+
+    x, dx = uniform_grid_1d(0.0, 1.0, 321)
+    y = np.sin(2.0 * np.pi * x)
+    exact = 2.0 * np.pi * np.cos(2.0 * np.pi * x)
+    interior = slice(1, -1)
+    central_error = rms_error(central_difference(y, dx)[interior], exact[interior])
+
+    heat_1d_r = heat_stability_number(alpha=0.01, dt=0.003, dx=1.0 / 80.0)
+    wave_1d_cfl = wave_cfl_number(c=1.0, dt=0.006, dx=1.0 / 120.0)
+    heat_2d = heat_stability_numbers_2d(
+        alpha=0.01,
+        dt=0.008,
+        dx=1.0 / 40.0,
+        dy=1.0 / 40.0,
+    )
+    wave_2d = wave_stability_numbers_2d(
+        c=1.0,
+        dt=0.012,
+        dx=1.0 / 40.0,
+        dy=1.0 / 40.0,
+    )
+
+    return {
+        "fem_relative_error": fem_result["relative_tip_error"],
+        "central_difference_error": central_error,
+        "heat_1d_stability": heat_1d_r,
+        "wave_1d_cfl": wave_1d_cfl,
+        "heat_2d_stability": heat_2d[2],
+        "wave_2d_stability": wave_2d[4],
+    }
+
+
+def render_validation_benchmarks():
+    """Render lightweight quality and validation signals."""
+    render_page_intro(
+        "Validation & Benchmarks",
+        "A compact view of the numerical checks already represented in tests, "
+        "examples, and app guardrails. These are quality signals, not a formal "
+        "certification suite.",
+    )
+    st.info(
+        "The app keeps this page lightweight: it computes small analytical "
+        "checks and summarizes existing pytest coverage themes.",
+        icon=":material/info:",
+    )
+
+    snapshot = compute_validation_snapshot()
+    render_metrics_section(
+        (
+            ("FEM tip error", f"{snapshot['fem_relative_error']:.2e}"),
+            ("Central diff RMS", f"{snapshot['central_difference_error']:.2e}"),
+            ("1D heat r", format_value(snapshot["heat_1d_stability"], precision=3)),
+            ("1D wave CFL", format_value(snapshot["wave_1d_cfl"], precision=3)),
+        ),
+        columns=4,
+    )
+    render_metric_row(
+        (
+            ("2D heat rx + ry", format_value(snapshot["heat_2d_stability"], precision=3)),
+            ("2D wave rx + ry", format_value(snapshot["wave_2d_stability"], precision=3)),
+            ("Default PDE status", "Stable"),
+            ("Test runner", "pytest"),
+        ),
+        columns=4,
+    )
+
+    st.subheader("Validation themes")
+    validation_cards = (
+        (
+            "FEM analytical validation",
+            "The 1D axial bar demo compares FEM tip displacement and stress "
+            "against closed-form axial bar formulas.",
+            "Analytical check",
+        ),
+        (
+            "Heat and wave stability",
+            "Explicit schemes expose stability numbers and block runs when "
+            "selected parameters exceed the implemented limits.",
+            "Runtime guard",
+        ),
+        (
+            "Finite-difference convergence",
+            "Grid refinement shows first-order forward/backward differences "
+            "and second-order central differences for smooth data.",
+            "Convergence check",
+        ),
+        (
+            "MPC constraints",
+            "Existing tests cover constrained double-integrator MPC behavior "
+            "without running an expensive optimizer in the dashboard.",
+            "Test coverage",
+        ),
+        (
+            "Estimator error reduction",
+            "Kalman, UKF, and particle-filter examples report estimation "
+            "error metrics with fixed seeds for repeatable demos.",
+            "Interactive signal",
+        ),
+        (
+            "Portfolio examples",
+            "Saved example scripts and screenshots exercise the same modules "
+            "used by the Streamlit interface.",
+            "Regression signal",
+        ),
+    )
+    for row_start in range(0, len(validation_cards), 3):
+        columns = st.columns(3)
+        for column, card in zip(
+            columns,
+            validation_cards[row_start : row_start + 3],
+            strict=False,
+        ):
+            with column:
+                render_feature_card(*card)
+
+    st.subheader("Default stability margins")
+    figure, axis = create_streamlit_subplots(width=9, height=4.8)
+    labels = ["1D heat r", "1D wave CFL", "2D heat sum", "2D wave sum"]
+    values = [
+        snapshot["heat_1d_stability"] / 0.5,
+        snapshot["wave_1d_cfl"] / 1.0,
+        snapshot["heat_2d_stability"] / 0.5,
+        snapshot["wave_2d_stability"] / 1.0,
+    ]
+    axis.bar(labels, values, color=["#0072B2", "#009E73", "#56B4E9", "#E69F00"])
+    axis.axhline(1.0, color="tab:red", linestyle="--", label="Stability limit")
+    format_engineering_axes(
+        axis,
+        title="Default Explicit-Scheme Stability Usage",
+        xlabel="Demo",
+        ylabel="Fraction of stability limit",
+    )
+    axis.set_ylim(0.0, max(1.15, 1.1 * max(values)))
+    show_figure(
+        figure,
+        "Bars below one indicate default settings are inside the implemented "
+        "explicit-scheme stability limits.",
+    )
+
+    safe_display_dataframe(
+        {
+            "area": [
+                "FEM",
+                "Heat equation",
+                "Wave equation",
+                "Finite differences",
+                "MPC",
+                "State estimation",
+            ],
+            "signal": [
+                "Closed-form axial bar comparison",
+                "Stability numbers and finite-value tests",
+                "CFL checks and bounded stable modes",
+                "Observed convergence order",
+                "Constraint-aware optimizer tests",
+                "Estimator error metrics in demos/tests",
+            ],
+            "scope": [
+                "1D linear elastic bar",
+                "Explicit finite differences",
+                "Explicit finite differences",
+                "Smooth 1D derivative data",
+                "Small double-integrator example",
+                "Representative noisy systems",
+            ],
+        },
+        hide_index=True,
+    )
+    render_assumptions_expander(
+        "These checks are intentionally small and fast. They show numerical "
+        "sanity, reproducible examples, and regression coverage for portfolio "
+        "workflows, but they are not a substitute for domain-specific "
+        "certification, mesh studies, or hardware validation.",
     )
 
 
@@ -1144,14 +1359,15 @@ def render_uav_obstacle_tab(is_active):
 
 def render_uav_quadcopter():
     """Render interactive UAV and quadcopter demos."""
-    st.title("UAV / Quadcopter Simulation")
-    st.write(
+    render_page_intro(
+        "UAV / Quadcopter",
         "This section demonstrates dynamic simulation, control, trajectory "
-        "tracking, and obstacle avoidance for simplified quadcopter models."
+        "tracking, and obstacle avoidance for simplified quadcopter models.",
     )
     st.info(
         "These are simplified educational and prototype simulations, not "
-        "flight-ready UAV control software."
+        "flight-ready UAV control software.",
+        icon=":material/info:",
     )
 
     tab_names = (
@@ -1877,8 +2093,15 @@ def render_particle_filter_pendulum_demo():
 
 def render_state_estimation():
     """Render interactive state-estimation demos."""
-    st.header("State Estimation")
-    st.info("State estimation reconstructs hidden system states from noisy measurements.")
+    render_page_intro(
+        "State Estimation",
+        "State estimation reconstructs hidden system states from noisy "
+        "measurements using linear, nonlinear, and sample-based filters.",
+    )
+    st.info(
+        "Particle filtering is opt-in so routine page navigation stays quick.",
+        icon=":material/info:",
+    )
     render_info_box(
         "Interactive filters",
         "These demos reuse the repository's tested estimator classes and "
@@ -1902,7 +2125,11 @@ def render_state_estimation():
 
 def render_about():
     """Render project scope and implementation notes."""
-    st.header("About")
+    render_page_intro(
+        "About / Portfolio",
+        "A concise portfolio view of the project scope, implementation choices, "
+        "and intentional limits.",
+    )
     render_info_box(
         "Project scope",
         "Engineering Simulation Toolkit is an educational and portfolio-focused "
@@ -1944,39 +2171,47 @@ def render_about():
 
 def render_rc_circuit():
     """Render the RC circuit charging simulation."""
-    st.header("RC Circuit Charging")
-    st.write(
+    render_page_intro(
+        "RC Circuit Charging",
         "A resistor-capacitor circuit charges toward the input voltage with "
-        "time constant `tau = R*C`."
+        "time constant `tau = R*C`.",
     )
 
-    with st.sidebar:
-        st.subheader("RC Circuit Inputs")
-        resistance = st.number_input(
-            "Resistance R (ohms)",
-            min_value=1.0,
-            value=1000.0,
-            step=100.0,
-        )
-        capacitance = st.number_input(
-            "Capacitance C (F)",
-            min_value=0.000001,
-            value=0.001,
-            step=0.0001,
-            format="%.6f",
-        )
-        input_voltage = st.number_input("Input voltage Vin (V)", value=5.0, step=1.0)
-        initial_voltage = st.number_input(
-            "Initial capacitor voltage Vc0 (V)",
-            value=0.0,
-            step=0.5,
-        )
-        simulation_time = st.number_input(
-            "Simulation time (s)",
-            min_value=0.1,
-            value=5.0,
-            step=0.5,
-        )
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            resistance = st.number_input(
+                "Resistance R (ohms)",
+                min_value=1.0,
+                value=1000.0,
+                step=100.0,
+            )
+            capacitance = st.number_input(
+                "Capacitance C (F)",
+                min_value=0.000001,
+                value=0.001,
+                step=0.0001,
+                format="%.6f",
+            )
+        with col2:
+            input_voltage = st.number_input(
+                "Input voltage Vin (V)",
+                value=5.0,
+                step=1.0,
+            )
+            initial_voltage = st.number_input(
+                "Initial capacitor voltage Vc0 (V)",
+                value=0.0,
+                step=0.5,
+            )
+        with col3:
+            simulation_time = st.number_input(
+                "Simulation time (s)",
+                min_value=0.1,
+                value=5.0,
+                step=0.5,
+            )
+            st.caption("500 time samples keep the comparison responsive.")
 
     t, capacitor_voltage = simulate_rc(
         resistance,
@@ -1995,8 +2230,14 @@ def render_rc_circuit():
     )
 
     tau = resistance * capacitance
+    if simulation_time < 3.0 * tau:
+        st.warning(
+            "Simulation time is less than three time constants, so the final "
+            "voltage may still be far from steady state.",
+            icon=":material/warning:",
+        )
 
-    render_metric_row(
+    render_metrics_section(
         (
             ("Time constant", format_value(tau, "s")),
             ("Final capacitor voltage", format_value(capacitor_voltage[-1], "V")),
@@ -2018,55 +2259,72 @@ def render_rc_circuit():
         "first-order charging curve.",
     )
 
-    st.write("Equation: `dVc/dt = (Vin - Vc) / (R*C)`")
+    render_info_box(
+        "Engineering interpretation",
+        "The numerical and analytical curves should overlap for this linear "
+        "first-order circuit. A larger `R*C` slows the charge transient; a "
+        "longer simulation window shows more of the approach to `Vin`.",
+    )
+    render_assumptions_expander(
+        "Equation: `dVc/dt = (Vin - Vc) / (R*C)`. The model assumes ideal "
+        "lumped components, constant R and C, and no source resistance or "
+        "parasitics."
+    )
 
 
 def render_rlc_circuit():
     """Render the series RLC circuit step response simulation."""
-    st.header("RLC Circuit Step Response")
-    st.write(
+    render_page_intro(
+        "RLC Circuit Step Response",
         "A series resistor-inductor-capacitor circuit shows second-order "
-        "electrical dynamics, including damping, overshoot, and settling."
+        "electrical dynamics, including damping, overshoot, and settling.",
     )
 
-    with st.sidebar:
-        st.subheader("RLC Circuit Inputs")
-        resistance = st.number_input(
-            "Resistance R (ohms)",
-            min_value=0.0,
-            value=2.0,
-            step=0.5,
-        )
-        inductance = st.number_input(
-            "Inductance L (H)",
-            min_value=0.001,
-            value=1.0,
-            step=0.1,
-        )
-        capacitance = st.number_input(
-            "Capacitance C (F)",
-            min_value=0.000001,
-            value=0.25,
-            step=0.05,
-            format="%.6f",
-        )
-        input_voltage = st.number_input("Input voltage Vin (V)", value=5.0, step=1.0)
-        initial_voltage = st.number_input(
-            "Initial capacitor voltage (V)",
-            value=0.0,
-            step=0.5,
-        )
-        initial_current = st.number_input(
-            "Initial current (A)",
-            value=0.0,
-            step=0.1,
-        )
-        simulation_time = st.number_input(
-            "Simulation time (s)",
-            min_value=0.1,
-            value=10.0,
-            step=0.5,
-        )
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            resistance = st.number_input(
+                "Resistance R (ohms)",
+                min_value=0.0,
+                value=2.0,
+                step=0.5,
+            )
+            inductance = st.number_input(
+                "Inductance L (H)",
+                min_value=0.001,
+                value=1.0,
+                step=0.1,
+            )
+        with col2:
+            capacitance = st.number_input(
+                "Capacitance C (F)",
+                min_value=0.000001,
+                value=0.25,
+                step=0.05,
+                format="%.6f",
+            )
+            input_voltage = st.number_input(
+                "Input voltage Vin (V)",
+                value=5.0,
+                step=1.0,
+            )
+        with col3:
+            initial_voltage = st.number_input(
+                "Initial capacitor voltage (V)",
+                value=0.0,
+                step=0.5,
+            )
+            initial_current = st.number_input(
+                "Initial current (A)",
+                value=0.0,
+                step=0.1,
+            )
+            simulation_time = st.number_input(
+                "Simulation time (s)",
+                min_value=0.1,
+                value=10.0,
+                step=0.5,
+            )
 
     t, capacitor_voltage, current = simulate_rlc(
         resistance,
@@ -2081,8 +2339,14 @@ def render_rlc_circuit():
 
     omega_n = natural_frequency(inductance, capacitance)
     zeta = damping_ratio(resistance, inductance, capacitance)
+    if zeta < 0.15:
+        st.warning(
+            "Very low damping can produce large oscillatory transients. "
+            "Use the voltage and current plots to inspect actuator/current demand.",
+            icon=":material/warning:",
+        )
 
-    render_metric_row(
+    render_metrics_section(
         (
             ("Natural frequency", format_value(omega_n, "rad/s")),
             ("Damping ratio", format_value(zeta)),
@@ -2112,57 +2376,67 @@ def render_rlc_circuit():
         "series RLC circuit.",
     )
 
-    st.write(
+    render_info_box(
+        "Engineering interpretation",
         "The voltage plot shows how the capacitor approaches the DC input "
         "voltage. The current plot shows transient current decaying toward "
-        "zero at steady state."
+        "zero at steady state.",
+    )
+    render_assumptions_expander(
+        "The model assumes ideal lumped R, L, and C components in series with "
+        "constant parameters and no parasitic losses beyond the configured "
+        "resistance."
     )
 
 
 def render_dc_motor_pid_control():
     """Render the discrete PID DC motor speed-control simulation."""
-    st.header("DC Motor PID Control")
-    st.write(
+    render_page_intro(
+        "DC Motor PID Control",
         "A discrete PID controller updates a voltage command at a fixed sample "
-        "time and holds that command while the continuous motor plant evolves."
+        "time and holds that command while the continuous motor plant evolves.",
     )
 
-    with st.sidebar:
-        st.subheader("PID Control Inputs")
-        target_speed = st.number_input(
-            "Target speed (rad/s)",
-            min_value=1.0,
-            value=80.0,
-            step=5.0,
-        )
-        kp = st.number_input("Kp", min_value=0.0, value=0.16, step=0.01)
-        ki = st.number_input(
-            "Ki",
-            min_value=0.0,
-            value=0.018,
-            step=0.001,
-            format="%.3f",
-        )
-        kd = st.number_input("Kd", min_value=0.0, value=0.12, step=0.01)
-        simulation_time = st.number_input(
-            "Simulation time (s)",
-            min_value=0.1,
-            value=25.0,
-            step=1.0,
-        )
-        sample_time = st.number_input(
-            "Sample time dt (s)",
-            min_value=0.001,
-            value=0.01,
-            step=0.001,
-            format="%.3f",
-        )
-        voltage_limit = st.number_input(
-            "Voltage limit (V)",
-            min_value=1.0,
-            value=24.0,
-            step=1.0,
-        )
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            target_speed = st.number_input(
+                "Target speed (rad/s)",
+                min_value=1.0,
+                value=80.0,
+                step=5.0,
+            )
+            voltage_limit = st.number_input(
+                "Voltage limit (V)",
+                min_value=1.0,
+                value=24.0,
+                step=1.0,
+            )
+        with col2:
+            kp = st.number_input("Kp", min_value=0.0, value=0.16, step=0.01)
+            ki = st.number_input(
+                "Ki",
+                min_value=0.0,
+                value=0.018,
+                step=0.001,
+                format="%.3f",
+            )
+            kd = st.number_input("Kd", min_value=0.0, value=0.12, step=0.01)
+        with col3:
+            simulation_time = st.number_input(
+                "Simulation time (s)",
+                min_value=0.1,
+                value=25.0,
+                step=1.0,
+            )
+            sample_time = st.number_input(
+                "Sample time dt (s)",
+                min_value=0.001,
+                value=0.01,
+                step=0.001,
+                format="%.3f",
+            )
+            st.caption("Safe defaults keep the motor example fast and stable.")
 
     motor_params = {
         "R": 1.0,
@@ -2199,8 +2473,14 @@ def render_dc_motor_pid_control():
     final_error = target_speed - speed[-1]
     peak_speed = float(np.max(speed))
     overshoot = max(0.0, (peak_speed - target_speed) / target_speed * 100.0)
+    if np.max(voltage) >= 0.98 * voltage_limit:
+        st.warning(
+            "The controller is using the voltage limit. Tracking may be "
+            "actuator-limited for this target or gain set.",
+            icon=":material/warning:",
+        )
 
-    render_metric_row(
+    render_metrics_section(
         (
             ("Final speed", format_value(speed[-1], "rad/s")),
             ("Final error", format_value(final_error, "rad/s")),
@@ -2249,31 +2529,44 @@ def render_dc_motor_pid_control():
         "armature current show actuator effort.",
     )
 
-    st.write(
+    render_info_box(
+        "Engineering interpretation",
         "The controller compares target speed with measured speed, computes a "
         "voltage command from proportional, integral, and derivative terms, "
-        "then clips that command to the configured voltage limit."
+        "then clips that command to the configured voltage limit.",
+    )
+    render_assumptions_expander(
+        "The motor parameters are fixed for this dashboard demo. The controller "
+        "uses output saturation and anti-windup, but this page does not model "
+        "sensor delay, quantization, thermal limits, or actuator dynamics."
     )
 
 
 def render_heat_equation_1d():
     """Render the 1D heat equation simulation."""
-    st.header("1D Heat Equation")
+    render_page_intro(
+        "1D Heat Equation",
+        "Explore explicit finite-difference diffusion on a rod with live "
+        "stability feedback.",
+    )
     render_info_box(
         "Diffusion on a rod",
         "Heat diffusion smooths temperature gradients. A localized hot pulse "
         "spreads along the rod while its peak temperature decays over time.",
     )
 
-    with st.sidebar:
-        st.subheader("1D Heat Inputs")
-        length = st.slider("Rod length L (m)", 0.5, 2.0, 1.0, 0.1)
-        alpha = st.slider("Thermal diffusivity alpha", 0.002, 0.05, 0.01, 0.002)
-        num_points = st.slider("Grid points", 41, 151, 81, 10)
-        t_final = st.slider("Final time (s)", 0.2, 5.0, 2.0, 0.2)
-        dt = st.slider("Time step dt (s)", 0.0005, 0.02, 0.003, 0.0005)
-        pulse_width = st.slider("Initial pulse width", 0.03, 0.20, 0.08, 0.01)
-        amplitude = st.slider("Initial peak temperature", 0.2, 2.0, 1.0, 0.1)
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            length = st.slider("Rod length L (m)", 0.5, 2.0, 1.0, 0.1)
+            alpha = st.slider("Thermal diffusivity alpha", 0.002, 0.05, 0.01, 0.002)
+        with col2:
+            num_points = st.slider("Grid points", 41, 151, 81, 10)
+            dt = st.slider("Time step dt (s)", 0.0005, 0.02, 0.003, 0.0005)
+        with col3:
+            t_final = st.slider("Final time (s)", 0.2, 5.0, 2.0, 0.2)
+            pulse_width = st.slider("Initial pulse width", 0.03, 0.20, 0.08, 0.01)
+            amplitude = st.slider("Initial peak temperature", 0.2, 2.0, 1.0, 0.1)
 
     dx = length / (num_points - 1)
     r = heat_stability_number(alpha, dt, dx)
@@ -2285,14 +2578,14 @@ def render_heat_equation_1d():
             ("Final time", format_value(t_final, "s")),
         )
     )
-    st.subheader("Stability and numerical metrics")
-    render_metric_row(
+    render_metrics_section(
         (
             ("dx", format_value(dx, "m", 4)),
             ("Requested dt", format_value(dt, "s", 4)),
             ("Stability r", format_value(r, precision=4)),
             ("Limit", "<= 0.5000"),
-        )
+        ),
+        title="Stability and numerical metrics",
     )
 
     if not show_stability_status("Explicit heat stability r", r, 0.5):
@@ -2382,7 +2675,11 @@ def render_heat_equation_1d():
 
 def render_wave_equation_1d():
     """Render the 1D wave equation simulation."""
-    st.header("1D Wave Equation")
+    render_page_intro(
+        "1D Wave Equation",
+        "Explore explicit finite-difference wave propagation on a fixed string "
+        "with live CFL feedback.",
+    )
     render_info_box(
         "Propagation on a string",
         "A displacement pulse propagates through the domain, oscillates, and "
@@ -2390,15 +2687,18 @@ def render_wave_equation_1d():
         "the pulse travels and changes sign instead of simply smoothing out.",
     )
 
-    with st.sidebar:
-        st.subheader("1D Wave Inputs")
-        length = st.slider("String length L (m)", 0.5, 2.0, 1.0, 0.1)
-        c = st.slider("Wave speed c (m/s)", 0.2, 3.0, 1.0, 0.1)
-        num_points = st.slider("Grid points", 51, 201, 121, 10)
-        t_final = st.slider("Final time (s)", 0.2, 4.0, 2.0, 0.2)
-        dt = st.slider("Time step dt (s)", 0.001, 0.03, 0.006, 0.001)
-        pulse_width = st.slider("Initial pulse width", 0.03, 0.20, 0.08, 0.01)
-        amplitude = st.slider("Initial displacement amplitude", 0.2, 2.0, 1.0, 0.1)
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            length = st.slider("String length L (m)", 0.5, 2.0, 1.0, 0.1)
+            c = st.slider("Wave speed c (m/s)", 0.2, 3.0, 1.0, 0.1)
+        with col2:
+            num_points = st.slider("Grid points", 51, 201, 121, 10)
+            dt = st.slider("Time step dt (s)", 0.001, 0.03, 0.006, 0.001)
+        with col3:
+            t_final = st.slider("Final time (s)", 0.2, 4.0, 2.0, 0.2)
+            pulse_width = st.slider("Initial pulse width", 0.03, 0.20, 0.08, 0.01)
+            amplitude = st.slider("Initial displacement amplitude", 0.2, 2.0, 1.0, 0.1)
 
     dx = length / (num_points - 1)
     cfl = wave_cfl_number(c, dt, dx)
@@ -2410,14 +2710,14 @@ def render_wave_equation_1d():
             ("Final time", format_value(t_final, "s")),
         )
     )
-    st.subheader("CFL and numerical metrics")
-    render_metric_row(
+    render_metrics_section(
         (
             ("dx", format_value(dx, "m", 4)),
             ("Requested dt", format_value(dt, "s", 4)),
             ("CFL lambda", format_value(cfl, precision=4)),
             ("Limit", "<= 1.0000"),
-        )
+        ),
+        title="CFL and numerical metrics",
     )
 
     if not show_stability_status("Wave CFL lambda", cfl, 1.0):
@@ -2508,7 +2808,11 @@ def render_wave_equation_1d():
 
 def render_heat_equation_2d():
     """Render the 2D heat equation simulation."""
-    st.header("2D Heat Equation")
+    render_page_intro(
+        "2D Heat Equation",
+        "Explore explicit finite-difference diffusion on a plate with capped "
+        "stored frames for responsive plotting.",
+    )
     render_info_box(
         "Diffusion on a plate",
         "A hot spot diffuses across a rectangular plate. The peak temperature "
@@ -2516,15 +2820,18 @@ def render_heat_equation_2d():
         "localized source.",
     )
 
-    with st.sidebar:
-        st.subheader("2D Heat Inputs")
-        width = st.slider("Plate width (m)", 0.5, 2.0, 1.0, 0.1)
-        height = st.slider("Plate height (m)", 0.5, 2.0, 1.0, 0.1)
-        alpha = st.slider("Thermal diffusivity alpha", 0.002, 0.05, 0.01, 0.002)
-        grid_size = st.slider("Grid size nx = ny", 31, 61, 41, 10)
-        t_final = st.slider("Final time (s)", 0.2, 2.0, 0.8, 0.1)
-        dt = st.slider("Time step dt (s)", 0.001, 0.03, 0.008, 0.001)
-        hotspot_width = st.slider("Hot spot width", 0.04, 0.20, 0.08, 0.01)
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            width = st.slider("Plate width (m)", 0.5, 2.0, 1.0, 0.1)
+            height = st.slider("Plate height (m)", 0.5, 2.0, 1.0, 0.1)
+        with col2:
+            alpha = st.slider("Thermal diffusivity alpha", 0.002, 0.05, 0.01, 0.002)
+            grid_size = st.slider("Grid size nx = ny", 31, 61, 41, 10)
+        with col3:
+            t_final = st.slider("Final time (s)", 0.2, 2.0, 0.8, 0.1)
+            dt = st.slider("Time step dt (s)", 0.001, 0.03, 0.008, 0.001)
+            hotspot_width = st.slider("Hot spot width", 0.04, 0.20, 0.08, 0.01)
 
     dx = width / (grid_size - 1)
     dy = height / (grid_size - 1)
@@ -2537,14 +2844,14 @@ def render_heat_equation_2d():
             ("Final time", format_value(t_final, "s")),
         )
     )
-    st.subheader("Stability and numerical metrics")
-    render_metric_row(
+    render_metrics_section(
         (
             ("dx", format_value(dx, "m", 4)),
             ("dy", format_value(dy, "m", 4)),
             ("rx", format_value(rx, precision=4)),
             ("ry", format_value(ry, precision=4)),
-        )
+        ),
+        title="Stability and numerical metrics",
     )
     render_metric_row(
         (
@@ -2617,7 +2924,11 @@ def render_heat_equation_2d():
 
 def render_wave_equation_2d():
     """Render the 2D wave equation simulation."""
-    st.header("2D Wave Equation")
+    render_page_intro(
+        "2D Wave Equation",
+        "Explore explicit finite-difference membrane motion with capped stored "
+        "frames for responsive plotting.",
+    )
     render_info_box(
         "Propagation on a membrane",
         "A membrane displacement propagates outward, oscillates, and reflects "
@@ -2625,15 +2936,18 @@ def render_wave_equation_2d():
         "the domain and changes sign around zero.",
     )
 
-    with st.sidebar:
-        st.subheader("2D Wave Inputs")
-        width = st.slider("Membrane width (m)", 0.5, 2.0, 1.0, 0.1)
-        height = st.slider("Membrane height (m)", 0.5, 2.0, 1.0, 0.1)
-        c = st.slider("Wave speed c (m/s)", 0.2, 2.0, 1.0, 0.1)
-        grid_size = st.slider("Grid size nx = ny", 31, 61, 41, 10)
-        t_final = st.slider("Final time (s)", 0.2, 1.5, 0.8, 0.1)
-        dt = st.slider("Time step dt (s)", 0.001, 0.03, 0.012, 0.001)
-        pulse_width = st.slider("Initial pulse width", 0.04, 0.16, 0.07, 0.01)
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            width = st.slider("Membrane width (m)", 0.5, 2.0, 1.0, 0.1)
+            height = st.slider("Membrane height (m)", 0.5, 2.0, 1.0, 0.1)
+        with col2:
+            c = st.slider("Wave speed c (m/s)", 0.2, 2.0, 1.0, 0.1)
+            grid_size = st.slider("Grid size nx = ny", 31, 61, 41, 10)
+        with col3:
+            t_final = st.slider("Final time (s)", 0.2, 1.5, 0.8, 0.1)
+            dt = st.slider("Time step dt (s)", 0.001, 0.03, 0.012, 0.001)
+            pulse_width = st.slider("Initial pulse width", 0.04, 0.16, 0.07, 0.01)
 
     dx = width / (grid_size - 1)
     dy = height / (grid_size - 1)
@@ -2651,14 +2965,14 @@ def render_wave_equation_2d():
             ("Final time", format_value(t_final, "s")),
         )
     )
-    st.subheader("CFL and numerical metrics")
-    render_metric_row(
+    render_metrics_section(
         (
             ("lambda x", format_value(lambda_x, precision=4)),
             ("lambda y", format_value(lambda_y, precision=4)),
             ("rx", format_value(rx, precision=4)),
             ("ry", format_value(ry, precision=4)),
-        )
+        ),
+        title="CFL and numerical metrics",
     )
     render_metric_row(
         (
@@ -2842,7 +3156,11 @@ def draw_2d_wave_plots(result):
 
 def render_finite_difference_convergence():
     """Render finite-difference convergence analysis."""
-    st.header("Finite Difference Methods")
+    render_page_intro(
+        "Finite Difference Methods",
+        "Inspect derivative accuracy under grid refinement for a smooth "
+        "analytical signal.",
+    )
     render_info_box(
         "Grid refinement and derivative error",
         "This demo differentiates `f(x) = sin(2*pi*x)` on successively finer "
@@ -2850,10 +3168,13 @@ def render_finite_difference_convergence():
         "central differences are second-order in the interior.",
     )
 
-    with st.sidebar:
-        st.subheader("Convergence Inputs")
-        max_points = st.slider("Finest grid points", 81, 641, 321, 80)
-        frequency = st.slider("Sine frequency multiplier", 1, 4, 1, 1)
+    with render_control_panel():
+        col1, col2 = st.columns(2)
+        with col1:
+            max_points = st.slider("Finest grid points", 81, 641, 321, 80)
+        with col2:
+            frequency = st.slider("Sine frequency multiplier", 1, 4, 1, 1)
+            st.caption("Higher frequency raises derivative error at the same grid size.")
 
     render_parameter_summary(
         (
@@ -2888,13 +3209,13 @@ def render_finite_difference_convergence():
     backward_order = estimate_convergence_order(dx_values, backward_errors)
     central_order = estimate_convergence_order(dx_values, central_errors)
 
-    st.subheader("Estimated convergence order")
-    render_metric_row(
+    render_metrics_section(
         (
             ("Forward difference", format_value(forward_order)),
             ("Backward difference", format_value(backward_order)),
             ("Central difference", format_value(central_order)),
-        )
+        ),
+        title="Estimated convergence order",
     )
     st.info(
         "Central difference is usually more accurate for smooth interior points "
@@ -2952,7 +3273,11 @@ def render_finite_difference_convergence():
 
 def render_axial_bar_fem():
     """Render the 1D axial bar FEM demo."""
-    st.header("1D FEM Axial Bar")
+    render_page_intro(
+        "1D FEM Axial Bar",
+        "Solve a fixed-free linear elastic bar and compare the FEM result with "
+        "the analytical axial-displacement solution.",
+    )
     render_info_box(
         "Fixed-free axial bar",
         "A fixed-free axial bar is split into linear finite elements. The app "
@@ -2961,13 +3286,17 @@ def render_axial_bar_fem():
         "`F*L/(E*A)`.",
     )
 
-    with st.sidebar:
-        st.subheader("FEM Inputs")
-        length = st.slider("Bar length L (m)", 0.2, 5.0, 1.0, 0.1)
-        youngs_modulus_gpa = st.slider("Young's modulus E (GPa)", 1.0, 250.0, 200.0, 1.0)
-        area_mm2 = st.slider("Area A (mm^2)", 10.0, 1000.0, 100.0, 10.0)
-        force = st.slider("End force F (N)", 100.0, 10000.0, 1000.0, 100.0)
-        num_elements = st.slider("Number of elements", 1, 40, 8, 1)
+    with render_control_panel():
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            length = st.slider("Bar length L (m)", 0.2, 5.0, 1.0, 0.1)
+            num_elements = st.slider("Number of elements", 1, 40, 8, 1)
+        with col2:
+            youngs_modulus_gpa = st.slider("Young's modulus E (GPa)", 1.0, 250.0, 200.0, 1.0)
+            area_mm2 = st.slider("Area A (mm^2)", 10.0, 1000.0, 100.0, 10.0)
+        with col3:
+            force = st.slider("End force F (N)", 100.0, 10000.0, 1000.0, 100.0)
+            st.caption("Linear 1D elements are exact for this uniform axial load case.")
 
     render_parameter_summary(
         (
@@ -2997,8 +3326,7 @@ def render_axial_bar_fem():
     fixed_reaction = result["reactions"][0]
     average_stress = float(np.mean(stresses))
 
-    st.subheader("FEM solution metrics")
-    render_metric_row(
+    render_metrics_section(
         (
             (
                 "FEM tip displacement",
@@ -3011,7 +3339,8 @@ def render_axial_bar_fem():
             ("Relative error", f"{result['relative_tip_error']:.3e}"),
             ("Reaction force", format_value(fixed_reaction, "N")),
             ("Average stress", format_value(average_stress / 1e6, "MPa")),
-        )
+        ),
+        title="FEM solution metrics",
     )
 
     element_centers = 0.5 * (nodes[elements[:, 0]] + nodes[elements[:, 1]])
@@ -3103,7 +3432,9 @@ def main():
         render_state_estimation()
     elif domain == "UAV / Quadcopter":
         render_uav_quadcopter()
-    elif domain == "About":
+    elif domain == "Validation & Benchmarks":
+        render_validation_benchmarks()
+    elif domain == "About / Portfolio":
         render_about()
     elif demo == "RC Circuit":
         render_rc_circuit()

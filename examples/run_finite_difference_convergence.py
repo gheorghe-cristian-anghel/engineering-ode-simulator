@@ -17,7 +17,12 @@ from analysis.finite_difference import (
     rms_error,
     uniform_grid_1d,
 )
-from visualization.plot_style import apply_plot_style, format_axes, save_figure
+from visualization.plot_style import (
+    apply_plot_style,
+    format_axes,
+    place_legend_outside,
+    save_figure,
+)
 
 
 def _function(x):
@@ -59,6 +64,7 @@ def _draw_plot(dx_values, forward_errors, backward_errors, central_errors):
     )
     ax.grid(True, which="both", linestyle="--", linewidth=0.7, alpha=0.8)
     ax.invert_xaxis()
+    place_legend_outside(ax, location="right")
 
     figure.tight_layout()
     return figure

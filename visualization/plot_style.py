@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from cycler import cycler
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -9,6 +10,23 @@ STREAMLIT_LINE_FIGSIZE = (9, 5)
 STREAMLIT_HEATMAP_FIGSIZE = (8, 6)
 STREAMLIT_XY_FIGSIZE = (9, 6)
 STREAMLIT_MULTIPANEL_FIGSIZE = (10, 7)
+DEFAULT_LINE_WIDTH = 2.0
+DEFAULT_DPI = 200
+
+ENGINEERING_COLOR_CYCLE = (
+    "#0072B2",  # blue
+    "#D55E00",  # vermillion
+    "#009E73",  # bluish green
+    "#CC79A7",  # reddish purple
+    "#E69F00",  # orange
+    "#56B4E9",  # sky blue
+    "#F0E442",  # yellow
+    "#000000",  # black
+)
+THERMAL_COLORMAP = "inferno"
+WAVE_COLORMAP = "coolwarm"
+DIVERGING_COLORMAP = "coolwarm"
+WAVE_DIVERGING_COLORMAP = DIVERGING_COLORMAP
 
 
 def apply_plot_style():
@@ -16,11 +34,15 @@ def apply_plot_style():
     plt.rcParams.update(
         {
             "figure.dpi": 120,
-            "savefig.dpi": 200,
+            "savefig.dpi": DEFAULT_DPI,
+            "savefig.facecolor": "white",
             "font.size": 11,
+            "font.family": "sans-serif",
+            "font.sans-serif": ["DejaVu Sans", "Arial", "Helvetica", "sans-serif"],
             "axes.titlesize": 13,
             "axes.labelsize": 11,
             "axes.titleweight": "bold",
+            "axes.prop_cycle": cycler(color=ENGINEERING_COLOR_CYCLE),
             "axes.grid": False,
             "grid.color": "0.82",
             "grid.linestyle": "--",
@@ -56,7 +78,7 @@ def apply_engineering_plot_style():
             "legend.borderpad": 0.6,
             "legend.handlelength": 2.2,
             "legend.labelspacing": 0.45,
-            "lines.linewidth": 2.0,
+            "lines.linewidth": DEFAULT_LINE_WIDTH,
         }
     )
 
@@ -107,7 +129,7 @@ def format_heatmap_axes(ax, title=None, xlabel="x (m)", ylabel="y (m)"):
     )
 
 
-def save_figure(fig, path, dpi=200):
+def save_figure(fig, path, dpi=DEFAULT_DPI):
     """Save a figure at high DPI with tight layout and parent directories."""
     output_path = Path(path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -132,14 +154,6 @@ def set_equal_2d_axes(ax):
 
 def add_colorbar(fig, image, ax, label=None):
     """Add a consistently labeled colorbar for an image-like plot."""
-    colorbar = fig.colorbar(image, ax=ax)
-    if label is not None:
-        colorbar.set_label(label)
-    return colorbar
-
-
-def add_clean_colorbar(fig, image, ax, label=None):
-    """Add a compact, consistently styled colorbar for Streamlit figures."""
     colorbar = fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
     if label is not None:
         colorbar.set_label(label)
@@ -147,6 +161,21 @@ def add_clean_colorbar(fig, image, ax, label=None):
     colorbar.outline.set_edgecolor("0.65")
     colorbar.outline.set_linewidth(0.8)
     return colorbar
+
+
+def add_clean_colorbar(fig, image, ax, label=None):
+    """Add a compact, consistently styled colorbar for Streamlit figures."""
+    return add_colorbar(fig, image, ax, label=label)
+
+
+def symmetric_color_limits(values, minimum=1e-12):
+    """Return symmetric color limits around zero for oscillatory fields."""
+    finite_values = _finite_values(values)
+    if finite_values.size == 0:
+        limit = minimum
+    else:
+        limit = max(float(np.max(np.abs(finite_values))), minimum)
+    return -limit, limit
 
 
 def create_streamlit_figure(width=9, height=5, constrained=True):
@@ -206,8 +235,11 @@ def set_xy_plot_limits_with_margin(
     return ax
 
 
-def place_legend_outside(ax, location="right", ncol=1):
+def place_legend_outside(ax, location="right", ncol=1, frameon=True):
     """Place a legend outside an axes while reserving predictable figure space."""
+    if ax is None:
+        return None
+
     handles, labels = ax.get_legend_handles_labels()
     visible = [
         (handle, label)
@@ -231,21 +263,50 @@ def place_legend_outside(ax, location="right", ncol=1):
             loc="upper center",
             bbox_to_anchor=(0.5, -0.16),
             ncol=ncol,
-            frameon=True,
+            frameon=frameon,
         )
         fig.subplots_adjust(bottom=0.24)
+        return legend
+
+    if location == "right":
+        legend = ax.legend(
+            handles,
+            labels,
+            loc="center left",
+            bbox_to_anchor=(1.02, 0.5),
+            ncol=ncol,
+            frameon=frameon,
+        )
+        fig.subplots_adjust(right=0.78)
         return legend
 
     legend = ax.legend(
         handles,
         labels,
-        loc="center left",
-        bbox_to_anchor=(1.02, 0.5),
+        loc="best",
         ncol=ncol,
-        frameon=True,
+        frameon=frameon,
     )
-    fig.subplots_adjust(right=0.78)
     return legend
+
+
+def place_legends_outside(axes, location="right", ncol=1, frameon=True):
+    """Place legends outside one axes or an iterable of axes."""
+    if axes is None:
+        return []
+
+    axes_array = np.asarray(axes, dtype=object).ravel()
+    legends = []
+    for ax in axes_array:
+        legend = place_legend_outside(
+            ax,
+            location=location,
+            ncol=ncol,
+            frameon=frameon,
+        )
+        if legend is not None:
+            legends.append(legend)
+    return legends
 
 
 def ensure_readable_axes(ax):
@@ -262,6 +323,7 @@ def ensure_readable_axes(ax):
 def finalize_streamlit_figure(fig):
     """Apply final cleanup before showing a figure in Streamlit."""
     fig.patch.set_facecolor("white")
+    fig.set_dpi(120)
     for ax in fig.axes:
         ensure_readable_axes(ax)
     return fig

@@ -18,6 +18,7 @@ from analysis.model_predictive_control import (  # noqa: E402
 from visualization.plot_style import (  # noqa: E402
     apply_plot_style,
     format_axes,
+    place_legends_outside,
     save_figure,
 )
 
@@ -70,6 +71,7 @@ def _draw_plots(result, dt, u_min, u_max):
         xlabel="Time (s)",
         ylabel="Error (m)",
     )
+    place_legends_outside(axes, location="right")
 
     figure.tight_layout()
     return figure

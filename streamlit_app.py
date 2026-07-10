@@ -75,17 +75,7 @@ from models.wave_equation_2d import (
     wave_stability_numbers_2d,
     zero_initial_velocity_2d,
 )
-from visualization.plot_style import (
-    add_clean_colorbar,
-    apply_engineering_plot_style,
-    create_streamlit_subplots,
-    display_streamlit_figure,
-    format_engineering_axes,
-    format_heatmap_axes,
-    place_legend_outside,
-    set_equal_2d_axes,
-    set_xy_plot_limits_with_margin,
-)
+from visualization import plot_style as ps
 
 APP_TITLE = "Engineering Simulation Toolkit"
 APP_SUBTITLE = (
@@ -409,7 +399,7 @@ def safe_display_dataframe(data, **kwargs):
 
 def show_figure(figure, caption=None):
     """Display a Matplotlib figure in Streamlit, then close it."""
-    display_streamlit_figure(figure, caption=caption)
+    ps.display_streamlit_figure(figure, caption=caption)
 
 
 def show_stability_status(label, value, limit):
@@ -613,7 +603,7 @@ def render_validation_benchmarks():
                 render_feature_card(*card)
 
     st.subheader("Default stability margins")
-    figure, axis = create_streamlit_subplots(width=9, height=4.8)
+    figure, axis = ps.create_streamlit_subplots(width=9, height=4.8)
     labels = ["1D heat r", "1D wave CFL", "2D heat sum", "2D wave sum"]
     values = [
         snapshot["heat_1d_stability"] / 0.5,
@@ -623,13 +613,14 @@ def render_validation_benchmarks():
     ]
     axis.bar(labels, values, color=["#0072B2", "#009E73", "#56B4E9", "#E69F00"])
     axis.axhline(1.0, color="tab:red", linestyle="--", label="Stability limit")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axis,
         title="Default Explicit-Scheme Stability Usage",
         xlabel="Demo",
         ylabel="Fraction of stability limit",
     )
     axis.set_ylim(0.0, max(1.15, 1.1 * max(values)))
+    ps.place_legend_outside(axis, location="right")
     show_figure(
         figure,
         "Bars below one indicate default settings are inside the implemented "
@@ -851,10 +842,10 @@ def plot_uav_altitude_response(result):
     target = result["target_altitude"]
     hover_thrust_value = result["hover_thrust"]
 
-    figure, axes = create_streamlit_subplots(2, 1, width=9, height=6.8, sharex=True)
+    figure, axes = ps.create_streamlit_subplots(2, 1, width=9, height=6.8, sharex=True)
     axes[0].plot(time, altitude, label="Altitude")
     axes[0].axhline(target, color="tab:orange", linestyle="--", label="Target")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Altitude PID Tracking",
         ylabel="Altitude z (m)",
@@ -867,12 +858,13 @@ def plot_uav_altitude_response(result):
         linestyle=":",
         label="Hover thrust",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Control Effort",
         xlabel="Time (s)",
         ylabel="Thrust (N)",
     )
+    ps.place_legends_outside(axes, location="right")
     return figure
 
 
@@ -883,7 +875,7 @@ def plot_uav_tracking_response(result, title):
     references = result["reference_positions"]
     error_norm = result["tracking_error_norm"]
 
-    figure, axes = create_streamlit_subplots(2, 1, width=9, height=7.2)
+    figure, axes = ps.create_streamlit_subplots(2, 1, width=9, height=7.2)
     axes[0].plot(references[:, 0], references[:, 1], "--", label="Reference")
     axes[0].plot(positions[:, 0], positions[:, 1], label="Actual")
     axes[0].scatter(
@@ -902,13 +894,13 @@ def plot_uav_tracking_response(result, title):
         label="Final reference",
         zorder=3,
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title=f"{title} XY Path",
         xlabel="x (m)",
         ylabel="y (m)",
     )
-    set_xy_plot_limits_with_margin(
+    ps.set_xy_plot_limits_with_margin(
         axes[0],
         np.concatenate((references[:, 0], positions[:, 0])),
         np.concatenate((references[:, 1], positions[:, 1])),
@@ -924,18 +916,20 @@ def plot_uav_tracking_response(result, title):
         label="z error",
     )
     axes[1].axhline(0.0, color="gray", linestyle=":")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Tracking Error",
         xlabel="Time (s)",
         ylabel="Error (m)",
     )
+    place_uav_xy_legend(axes[0])
+    ps.place_legend_outside(axes[1], location="right")
     return figure
 
 
 def place_uav_xy_legend(axis):
     """Place UAV XY plot legends outside the data area."""
-    place_legend_outside(axis, location="bottom", ncol=3)
+    ps.place_legend_outside(axis, location="bottom", ncol=3)
 
 
 def plot_uav_waypoint_response(result):
@@ -952,7 +946,7 @@ def plot_uav_waypoint_response(result):
     )
     positions = result["states"][:, 0:3]
     references = result["reference_positions"]
-    set_xy_plot_limits_with_margin(
+    ps.set_xy_plot_limits_with_margin(
         axis,
         np.concatenate((references[:, 0], positions[:, 0], waypoints[:, 0])),
         np.concatenate((references[:, 1], positions[:, 1], waypoints[:, 1])),
@@ -972,7 +966,7 @@ def plot_uav_obstacle_response(result):
     obstacle = result["obstacles"][0]
     waypoints = result["waypoints"]
 
-    figure, axes = create_streamlit_subplots(3, 1, width=9.5, height=9.5)
+    figure, axes = ps.create_streamlit_subplots(3, 1, width=9.5, height=9.5)
     axes[0].plot(references[:, 0], references[:, 1], "--", label="Reference")
     axes[0].plot(positions[:, 0], positions[:, 1], label="Actual")
     axes[0].plot(
@@ -998,7 +992,7 @@ def plot_uav_obstacle_response(result):
     )
     axes[0].add_patch(influence_patch)
     axes[0].add_patch(obstacle_patch)
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Obstacle Avoidance XY Projection",
         xlabel="x (m)",
@@ -1016,7 +1010,7 @@ def plot_uav_obstacle_response(result):
             obstacle.center[1] + obstacle.influence_radius,
         ]
     )
-    set_xy_plot_limits_with_margin(
+    ps.set_xy_plot_limits_with_margin(
         axes[0],
         np.concatenate((references[:, 0], positions[:, 0], waypoints[:, 0], obstacle_x)),
         np.concatenate((references[:, 1], positions[:, 1], waypoints[:, 1], obstacle_y)),
@@ -1026,7 +1020,7 @@ def plot_uav_obstacle_response(result):
 
     axes[1].plot(time, clearances, color="tab:red", label="Nearest clearance")
     axes[1].axhline(0.0, color="black", linestyle=":", label="Obstacle surface")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Obstacle Clearance",
         ylabel="Clearance (m)",
@@ -1038,12 +1032,13 @@ def plot_uav_obstacle_response(result):
         color="tab:purple",
         label="Avoidance acceleration",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[2],
         title="Repulsive Avoidance Command",
         xlabel="Time (s)",
         ylabel="Acceleration (m/s^2)",
     )
+    ps.place_legends_outside(axes[1:], location="right")
     return figure
 
 
@@ -1755,7 +1750,7 @@ def render_linear_kalman_filter_demo():
         )
 
     time = result["time"]
-    figure, axes = create_streamlit_subplots(3, 1, sharex=True, width=9, height=8.4)
+    figure, axes = ps.create_streamlit_subplots(3, 1, sharex=True, width=9, height=8.4)
     axes[0].plot(time, result["true_speed"], label="True speed")
     axes[0].plot(
         time,
@@ -1765,7 +1760,7 @@ def render_linear_kalman_filter_demo():
         label="Noisy speed measurement",
     )
     axes[0].plot(time, result["estimated_speed"], "--", label="Kalman estimate")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Speed Estimate from Noisy Measurements",
         ylabel="Speed (rad/s)",
@@ -1778,7 +1773,7 @@ def render_linear_kalman_filter_demo():
         "--",
         label="Estimated hidden current",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Hidden Current Estimate",
         ylabel="Current (A)",
@@ -1787,12 +1782,13 @@ def render_linear_kalman_filter_demo():
     axes[2].plot(time, speed_error, label="Speed error")
     axes[2].plot(time, current_error, label="Current error")
     axes[2].axhline(0.0, color="gray", linestyle=":")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[2],
         title="Estimation Errors",
         xlabel="Time (s)",
         ylabel="True - estimate",
     )
+    ps.place_legends_outside(axes, location="right")
     show_figure(
         figure,
         "The filter combines the motor model with noisy speed measurements to "
@@ -1898,7 +1894,7 @@ def render_ukf_pendulum_demo():
         )
 
     time = result["time"]
-    figure, axes = create_streamlit_subplots(2, 1, sharex=True, width=9, height=6.5)
+    figure, axes = ps.create_streamlit_subplots(2, 1, sharex=True, width=9, height=6.5)
     axes[0].plot(time, np.degrees(result["true_theta"]), label="True angle")
     axes[0].plot(
         time,
@@ -1913,7 +1909,7 @@ def render_ukf_pendulum_demo():
         "--",
         label="UKF estimate",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Nonlinear Pendulum Angle Estimate",
         ylabel="Angle (deg)",
@@ -1921,12 +1917,13 @@ def render_ukf_pendulum_demo():
 
     axes[1].plot(time, angle_error_deg, label="Angle error")
     axes[1].axhline(0.0, color="gray", linestyle=":")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Angle Estimation Error",
         xlabel="Time (s)",
         ylabel="True - estimate (deg)",
     )
+    ps.place_legends_outside(axes, location="right")
     show_figure(
         figure,
         "The UKF tracks the nonlinear pendulum angle while estimating angular "
@@ -2034,7 +2031,7 @@ def render_particle_filter_pendulum_demo():
         )
 
     time = result["time"]
-    figure, axes = create_streamlit_subplots(3, 1, sharex=True, width=9, height=8.4)
+    figure, axes = ps.create_streamlit_subplots(3, 1, sharex=True, width=9, height=8.4)
     axes[0].plot(time, np.degrees(result["true_theta"]), label="True angle")
     axes[0].plot(
         time,
@@ -2049,7 +2046,7 @@ def render_particle_filter_pendulum_demo():
         "--",
         label="Particle estimate",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Particle Filter Angle Estimate",
         ylabel="Angle (deg)",
@@ -2057,7 +2054,7 @@ def render_particle_filter_pendulum_demo():
 
     axes[1].plot(time, angle_error_deg, label="Angle error")
     axes[1].axhline(0.0, color="gray", linestyle=":")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Angle Estimation Error",
         ylabel="True - estimate (deg)",
@@ -2070,12 +2067,13 @@ def render_particle_filter_pendulum_demo():
         linestyle=":",
         label="Resampling threshold",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[2],
         title="Particle Diversity",
         xlabel="Time (s)",
         ylabel="Particles",
     )
+    ps.place_legends_outside(axes, location="right")
     show_figure(
         figure,
         "Effective sample size drops when particle weights concentrate; "
@@ -2244,15 +2242,16 @@ def render_rc_circuit():
         )
     )
 
-    figure, axis = create_streamlit_subplots(width=9, height=5)
+    figure, axis = ps.create_streamlit_subplots(width=9, height=5)
     axis.plot(t, capacitor_voltage, label="Numerical solution")
     axis.plot(t, analytical_voltage, "--", label="Analytical solution")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axis,
         title="RC Circuit Charging",
         xlabel="Time (s)",
         ylabel="Capacitor voltage (V)",
     )
+    ps.place_legend_outside(axis, location="right")
     show_figure(
         figure,
         "Capacitor voltage approaches the input voltage with the expected "
@@ -2354,22 +2353,23 @@ def render_rlc_circuit():
         )
     )
 
-    figure, axes = create_streamlit_subplots(2, 1, sharex=True, width=9, height=6.5)
+    figure, axes = ps.create_streamlit_subplots(2, 1, sharex=True, width=9, height=6.5)
     axes[0].plot(t, capacitor_voltage, label="Capacitor voltage")
     axes[0].axhline(input_voltage, color="gray", linestyle=":", label="DC steady state")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="RLC Capacitor Voltage Step Response",
         ylabel="Voltage (V)",
     )
 
     axes[1].plot(t, current, color="tab:orange", label="Current")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="RLC Circuit Current",
         xlabel="Time (s)",
         ylabel="Current (A)",
     )
+    ps.place_legends_outside(axes, location="right")
     show_figure(
         figure,
         "Voltage and current show the second-order transient behavior of the "
@@ -2499,10 +2499,10 @@ def render_dc_motor_pid_control():
         )
     )
 
-    figure, axes = create_streamlit_subplots(3, 1, sharex=True, width=9, height=8)
+    figure, axes = ps.create_streamlit_subplots(3, 1, sharex=True, width=9, height=8)
     axes[0].plot(t, speed, label="Motor speed")
     axes[0].axhline(target_speed, color="gray", linestyle=":", label="Target speed")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Discrete PID DC Motor Speed Control",
         ylabel="Speed (rad/s)",
@@ -2510,19 +2510,20 @@ def render_dc_motor_pid_control():
 
     axes[1].plot(t, voltage, color="tab:orange", label="Control voltage")
     axes[1].axhline(voltage_limit, color="gray", linestyle=":", label="Voltage limit")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Held Voltage Command",
         ylabel="Voltage (V)",
     )
 
     axes[2].plot(t, current, color="tab:green", label="Armature current")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[2],
         title="Armature Current",
         xlabel="Time (s)",
         ylabel="Current (A)",
     )
+    ps.place_legends_outside(axes, location="right")
     show_figure(
         figure,
         "The PID controller tracks motor speed while the voltage command and "
@@ -2630,30 +2631,31 @@ def render_heat_equation_1d():
     st.subheader("Main plot")
     x = result["x"]
     t = result["t"]
-    figure, axes = create_streamlit_subplots(2, 1, width=9, height=7.4)
+    figure, axes = ps.create_streamlit_subplots(2, 1, width=9, height=7.4)
     for index in profile_indices(t, [0.0, 0.25, 0.5, 1.0]):
         axes[0].plot(x, temperature[index], label=f"t = {t[index]:.2f} s")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Temperature Profiles",
         xlabel="Position x (m)",
         ylabel="Temperature",
     )
+    ps.place_legend_outside(axes[0], location="right")
 
     heatmap = axes[1].imshow(
         temperature,
         aspect="auto",
         origin="lower",
         extent=[x[0], x[-1], t[0], t[-1]],
-        cmap="inferno",
+        cmap=ps.THERMAL_COLORMAP,
     )
-    format_heatmap_axes(
+    ps.format_heatmap_axes(
         axes[1],
         title="Temperature History",
         xlabel="Position x (m)",
         ylabel="Time (s)",
     )
-    add_clean_colorbar(figure, heatmap, axes[1], label="Temperature")
+    ps.add_clean_colorbar(figure, heatmap, axes[1], label="Temperature")
     show_figure(
         figure,
         "The upper plot compares temperature profiles over time; the heatmap "
@@ -2760,33 +2762,34 @@ def render_wave_equation_1d():
     st.subheader("Main plot")
     x = result["x"]
     t = result["t"]
-    figure, axes = create_streamlit_subplots(2, 1, width=9, height=7.4)
+    figure, axes = ps.create_streamlit_subplots(2, 1, width=9, height=7.4)
     for index in profile_indices(t, [0.0, 0.25, 0.5, 0.75, 1.0]):
         axes[0].plot(x, displacement[index], label=f"t = {t[index]:.2f} s")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Displacement Profiles",
         xlabel="Position x (m)",
         ylabel="Displacement",
     )
+    ps.place_legend_outside(axes[0], location="right")
 
-    color_limit = max(float(np.max(np.abs(displacement))), 1e-12)
+    color_min, color_max = ps.symmetric_color_limits(displacement)
     heatmap = axes[1].imshow(
         displacement,
         aspect="auto",
         origin="lower",
         extent=[x[0], x[-1], t[0], t[-1]],
-        cmap="coolwarm",
-        vmin=-color_limit,
-        vmax=color_limit,
+        cmap=ps.DIVERGING_COLORMAP,
+        vmin=color_min,
+        vmax=color_max,
     )
-    format_heatmap_axes(
+    ps.format_heatmap_axes(
         axes[1],
         title="Displacement History",
         xlabel="Position x (m)",
         ylabel="Time (s)",
     )
-    add_clean_colorbar(figure, heatmap, axes[1], label="Displacement")
+    ps.add_clean_colorbar(figure, heatmap, axes[1], label="Displacement")
     show_figure(
         figure,
         "The line profiles show wave motion at selected times; the diverging "
@@ -3052,7 +3055,7 @@ def draw_2d_heat_plots(result):
     temperature = result["temperature"]
     snapshot_indices = [0, int(round(0.5 * (len(t) - 1))), len(t) - 1]
 
-    figure, axes = create_streamlit_subplots(2, 2, width=12, height=8.8)
+    figure, axes = ps.create_streamlit_subplots(2, 2, width=12, height=8.8)
     flat_axes = axes.ravel()
     color_min = float(np.min(temperature))
     color_max = float(np.max(temperature))
@@ -3063,18 +3066,18 @@ def draw_2d_heat_plots(result):
             origin="lower",
             extent=[x[0], x[-1], y[0], y[-1]],
             aspect="auto",
-            cmap="inferno",
+            cmap=ps.THERMAL_COLORMAP,
             vmin=color_min,
             vmax=color_max,
         )
-        format_heatmap_axes(
+        ps.format_heatmap_axes(
             axis,
             title=f"Temperature at t = {t[index]:.2f} s",
             xlabel="x (m)",
             ylabel="y (m)",
         )
-        set_equal_2d_axes(axis)
-        add_clean_colorbar(figure, heatmap, axis, label="Temperature")
+        ps.set_equal_2d_axes(axis)
+        ps.add_clean_colorbar(figure, heatmap, axis, label="Temperature")
 
     centerline_axis = flat_axes[3]
     center_y_index = len(y) // 2
@@ -3084,12 +3087,13 @@ def draw_2d_heat_plots(result):
             temperature[index, center_y_index, :],
             label=f"t = {t[index]:.2f} s",
         )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         centerline_axis,
         title="Centerline Temperature",
         xlabel="x (m)",
         ylabel="Temperature",
     )
+    ps.place_legend_outside(centerline_axis, location="right")
     show_figure(
         figure,
         "Snapshots show the hot spot diffusing across the plate; the centerline "
@@ -3109,9 +3113,9 @@ def draw_2d_wave_plots(result):
         int(round(0.67 * (len(t) - 1))),
         len(t) - 1,
     ]
-    color_limit = max(float(np.max(np.abs(displacement))), 1e-12)
+    color_min, color_max = ps.symmetric_color_limits(displacement)
 
-    figure, axes = create_streamlit_subplots(2, 3, width=13.5, height=8.8)
+    figure, axes = ps.create_streamlit_subplots(2, 3, width=13.5, height=8.8)
     flat_axes = axes.ravel()
     for axis, index in zip(flat_axes[:4], snapshot_indices, strict=True):
         heatmap = axis.imshow(
@@ -3119,18 +3123,18 @@ def draw_2d_wave_plots(result):
             origin="lower",
             extent=[x[0], x[-1], y[0], y[-1]],
             aspect="auto",
-            cmap="coolwarm",
-            vmin=-color_limit,
-            vmax=color_limit,
+            cmap=ps.DIVERGING_COLORMAP,
+            vmin=color_min,
+            vmax=color_max,
         )
-        format_heatmap_axes(
+        ps.format_heatmap_axes(
             axis,
             title=f"Displacement at t = {t[index]:.2f} s",
             xlabel="x (m)",
             ylabel="y (m)",
         )
-        set_equal_2d_axes(axis)
-        add_clean_colorbar(figure, heatmap, axis, label="Displacement")
+        ps.set_equal_2d_axes(axis)
+        ps.add_clean_colorbar(figure, heatmap, axis, label="Displacement")
 
     centerline_axis = flat_axes[4]
     center_y_index = len(y) // 2
@@ -3140,12 +3144,13 @@ def draw_2d_wave_plots(result):
             displacement[index, center_y_index, :],
             label=f"t = {t[index]:.2f} s",
         )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         centerline_axis,
         title="Centerline Displacement",
         xlabel="x (m)",
         ylabel="Displacement",
     )
+    ps.place_legend_outside(centerline_axis, location="right")
     figure.delaxes(flat_axes[5])
     show_figure(
         figure,
@@ -3224,7 +3229,7 @@ def render_finite_difference_convergence():
     )
 
     st.subheader("Main plot")
-    figure, axis = create_streamlit_subplots(width=9, height=5.6)
+    figure, axis = ps.create_streamlit_subplots(width=9, height=5.6)
     axis.loglog(dx_values, forward_errors, "o-", label="Forward")
     axis.loglog(dx_values, backward_errors, "s-", label="Backward")
     axis.loglog(dx_values, central_errors, "^-", label="Central")
@@ -3241,7 +3246,7 @@ def render_finite_difference_convergence():
         "--",
         label="O(dx^2)",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axis,
         title="Finite Difference Error Convergence",
         xlabel="Grid spacing dx",
@@ -3249,6 +3254,7 @@ def render_finite_difference_convergence():
     )
     axis.grid(True, which="both", linestyle="--", linewidth=0.65, alpha=0.85)
     axis.invert_xaxis()
+    ps.place_legend_outside(axis, location="right")
     show_figure(
         figure,
         "Log-log error trends show first-order forward/backward differences "
@@ -3349,10 +3355,10 @@ def render_axial_bar_fem():
     deformed_nodes = nodes + scale * displacements
 
     st.subheader("Main plot")
-    figure, axes = create_streamlit_subplots(3, 1, width=9, height=9.4)
+    figure, axes = ps.create_streamlit_subplots(3, 1, width=9, height=9.4)
     axes[0].plot(nodes, displacements, "o-", label="FEM displacement")
     axes[0].plot(nodes, analytical, "--", label="Analytical displacement")
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[0],
         title="Nodal Displacement",
         xlabel="Position x (m)",
@@ -3366,7 +3372,7 @@ def render_axial_bar_fem():
         linestyle="--",
         label="Analytical stress",
     )
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[1],
         title="Element Stress",
         xlabel="Element center x (m)",
@@ -3381,13 +3387,14 @@ def render_axial_bar_fem():
         label=f"Deformed shape ({scale:.2e}x)",
     )
     axes[2].set_yticks([])
-    format_engineering_axes(
+    ps.format_engineering_axes(
         axes[2],
         title="Exaggerated Deformed Shape",
         xlabel="Position x (m)",
         ylabel=None,
     )
     axes[2].grid(True, axis="x", linestyle="--", linewidth=0.65, alpha=0.85)
+    ps.place_legends_outside(axes, location="right")
     show_figure(
         figure,
         "The FEM plots compare displacement with the analytical solution, show "
@@ -3416,7 +3423,7 @@ def main():
         page_icon=":gear:",
         layout="wide",
     )
-    apply_engineering_plot_style()
+    ps.apply_engineering_plot_style()
     inject_custom_css()
 
     st.sidebar.title(APP_TITLE)

@@ -1,6 +1,13 @@
 """Reusable visualization helpers for engineering simulations."""
 
 from visualization.plot_style import (
+    DEFAULT_DPI,
+    DEFAULT_LINE_WIDTH,
+    DIVERGING_COLORMAP,
+    ENGINEERING_COLOR_CYCLE,
+    THERMAL_COLORMAP,
+    WAVE_COLORMAP,
+    WAVE_DIVERGING_COLORMAP,
     add_clean_colorbar,
     add_colorbar,
     apply_engineering_plot_style,
@@ -13,13 +20,22 @@ from visualization.plot_style import (
     format_axes,
     format_engineering_axes,
     format_heatmap_axes,
+    place_legends_outside,
     place_legend_outside,
     save_figure,
     set_equal_2d_axes,
     set_xy_plot_limits_with_margin,
+    symmetric_color_limits,
 )
 
 __all__ = [
+    "DEFAULT_DPI",
+    "DEFAULT_LINE_WIDTH",
+    "DIVERGING_COLORMAP",
+    "ENGINEERING_COLOR_CYCLE",
+    "THERMAL_COLORMAP",
+    "WAVE_COLORMAP",
+    "WAVE_DIVERGING_COLORMAP",
     "add_colorbar",
     "add_clean_colorbar",
     "apply_engineering_plot_style",
@@ -32,8 +48,10 @@ __all__ = [
     "format_engineering_axes",
     "format_heatmap_axes",
     "finalize_streamlit_figure",
+    "place_legends_outside",
     "place_legend_outside",
     "save_figure",
     "set_equal_2d_axes",
     "set_xy_plot_limits_with_margin",
+    "symmetric_color_limits",
 ]

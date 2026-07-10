@@ -10,7 +10,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from analysis.unscented_kalman_filter import UnscentedKalmanFilter  # noqa: E402
-from visualization.plot_style import apply_plot_style, format_axes, save_figure  # noqa: E402
+from visualization.plot_style import (  # noqa: E402
+    apply_plot_style,
+    format_axes,
+    place_legends_outside,
+    save_figure,
+)
 
 
 def _pendulum_derivative(state, L, g, damping):
@@ -128,6 +133,7 @@ def _draw_plots(t, true_theta, true_omega, measured_theta, estimated_states):
         xlabel="Time (s)",
         ylabel="Error",
     )
+    place_legends_outside(axes, location="right")
 
     figure.tight_layout()
     return figure

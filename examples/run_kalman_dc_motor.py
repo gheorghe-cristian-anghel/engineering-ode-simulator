@@ -12,6 +12,12 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from analysis.kalman_filter import KalmanFilter, discretize_state_space
 from analysis.state_space import dc_motor_state_space
+from visualization.plot_style import (
+    apply_plot_style,
+    format_axes,
+    place_legends_outside,
+    save_figure,
+)
 
 
 def _simulate_discrete_system(A, B, x0, input_value, num_points):
@@ -55,35 +61,42 @@ def _run_filter(A, B, C, measurements, input_value):
 
 def _draw_plots(t, true_current, true_speed, measured_speed, estimated_states):
     """Draw DC motor Kalman filter plots."""
+    apply_plot_style()
+
     estimated_current = estimated_states[:, 0]
     estimated_speed = estimated_states[:, 1]
 
-    figure, axes = plt.subplots(3, 1, sharex=True)
+    figure, axes = plt.subplots(3, 1, figsize=(9, 8), sharex=True)
 
     axes[0].plot(t, true_speed, label="True speed")
     axes[0].plot(t, measured_speed, ".", alpha=0.25, label="Noisy speed measurement")
     axes[0].plot(t, estimated_speed, "--", label="Estimated speed")
-    axes[0].set_ylabel("Speed (rad/s)")
-    axes[0].set_title("DC Motor Speed Estimate from Noisy Measurements")
-    axes[0].grid(True)
-    axes[0].legend()
+    format_axes(
+        axes[0],
+        title="DC Motor Speed Estimate from Noisy Measurements",
+        ylabel="Speed (rad/s)",
+    )
 
     axes[1].plot(t, true_current, label="True current")
     axes[1].plot(t, estimated_current, "--", label="Estimated current")
-    axes[1].set_ylabel("Current (A)")
-    axes[1].set_title("Hidden Armature Current Estimate")
-    axes[1].grid(True)
-    axes[1].legend()
+    format_axes(
+        axes[1],
+        title="Hidden Armature Current Estimate",
+        ylabel="Current (A)",
+    )
 
     axes[2].plot(t, true_speed - estimated_speed, label="Speed error")
     axes[2].plot(t, true_current - estimated_current, label="Current error")
-    axes[2].set_xlabel("Time (s)")
-    axes[2].set_ylabel("Error")
-    axes[2].set_title("Estimation Errors")
-    axes[2].grid(True)
-    axes[2].legend()
+    format_axes(
+        axes[2],
+        title="Estimation Errors",
+        xlabel="Time (s)",
+        ylabel="True - estimate",
+    )
+    place_legends_outside(axes, location="right")
 
     figure.tight_layout()
+    return figure
 
 
 def _plot_response(t, true_current, true_speed, measured_speed, estimated_states):
@@ -91,14 +104,26 @@ def _plot_response(t, true_current, true_speed, measured_speed, estimated_states
     output_path = PROJECT_ROOT / "examples" / "kalman_dc_motor.png"
 
     try:
-        _draw_plots(t, true_current, true_speed, measured_speed, estimated_states)
-        plt.savefig(output_path, dpi=150)
+        figure = _draw_plots(
+            t,
+            true_current,
+            true_speed,
+            measured_speed,
+            estimated_states,
+        )
+        save_figure(figure, output_path)
         plt.show()
     except TclError:
         plt.switch_backend("Agg")
         plt.close("all")
-        _draw_plots(t, true_current, true_speed, measured_speed, estimated_states)
-        plt.savefig(output_path, dpi=150)
+        figure = _draw_plots(
+            t,
+            true_current,
+            true_speed,
+            measured_speed,
+            estimated_states,
+        )
+        save_figure(figure, output_path)
         print("Interactive Matplotlib window is unavailable in this environment.")
         print(f"Plot saved to: {output_path}")
 

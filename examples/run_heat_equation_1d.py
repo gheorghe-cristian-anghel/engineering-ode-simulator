@@ -14,9 +14,11 @@ from models.heat_equation_1d import (
     simulate_heat_equation_1d,
 )
 from visualization.plot_style import (
+    THERMAL_COLORMAP,
     add_colorbar,
     apply_plot_style,
     format_axes,
+    place_legend_outside,
     save_figure,
 )
 
@@ -50,13 +52,14 @@ def _draw_plots(result):
         xlabel="Position x (m)",
         ylabel="Temperature",
     )
+    place_legend_outside(axes[0], location="right")
 
     heatmap = axes[1].imshow(
         temperature,
         aspect="auto",
         origin="lower",
         extent=[x[0], x[-1], t[0], t[-1]],
-        cmap="inferno",
+        cmap=THERMAL_COLORMAP,
     )
     format_axes(
         axes[1],

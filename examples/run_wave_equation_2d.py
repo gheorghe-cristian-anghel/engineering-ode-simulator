@@ -15,11 +15,14 @@ from models.wave_equation_2d import (
     zero_initial_velocity_2d,
 )
 from visualization.plot_style import (
+    WAVE_DIVERGING_COLORMAP,
     add_colorbar,
     apply_plot_style,
     format_axes,
+    place_legend_outside,
     save_figure,
     set_equal_2d_axes,
+    symmetric_color_limits,
 )
 
 
@@ -51,8 +54,7 @@ def _draw_plots(result):
         len(t) - 1,
     ]
 
-    peak = float(np.max(np.abs(displacement)))
-    color_limit = peak if peak > 0 else 1.0
+    color_min, color_max = symmetric_color_limits(displacement)
 
     for axis, index in zip(heatmap_axes, snapshot_indices):
         heatmap = axis.imshow(
@@ -60,9 +62,9 @@ def _draw_plots(result):
             origin="lower",
             extent=[x[0], x[-1], y[0], y[-1]],
             aspect="auto",
-            cmap="coolwarm",
-            vmin=-color_limit,
-            vmax=color_limit,
+            cmap=WAVE_DIVERGING_COLORMAP,
+            vmin=color_min,
+            vmax=color_max,
         )
         format_axes(
             axis,
@@ -88,6 +90,7 @@ def _draw_plots(result):
         xlabel="x (m)",
         ylabel="Displacement",
     )
+    place_legend_outside(centerline_axis, location="right")
 
     figure.tight_layout()
     return figure

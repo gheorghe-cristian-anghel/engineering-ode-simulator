@@ -11,9 +11,11 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from models.heat_equation_2d import gaussian_hotspot_2d, simulate_heat_equation_2d
 from visualization.plot_style import (
+    THERMAL_COLORMAP,
     add_colorbar,
     apply_plot_style,
     format_axes,
+    place_legend_outside,
     save_figure,
     set_equal_2d_axes,
 )
@@ -51,7 +53,7 @@ def _draw_plots(result):
             origin="lower",
             extent=[x[0], x[-1], y[0], y[-1]],
             aspect="auto",
-            cmap="inferno",
+            cmap=THERMAL_COLORMAP,
             vmin=color_min,
             vmax=color_max,
         )
@@ -81,6 +83,7 @@ def _draw_plots(result):
         xlabel="x (m)",
         ylabel="Temperature",
     )
+    place_legend_outside(centerline_axis, location="right")
 
     figure.tight_layout()
     return figure

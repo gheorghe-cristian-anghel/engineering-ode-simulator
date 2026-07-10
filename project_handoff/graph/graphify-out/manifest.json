@@ -1,0 +1,832 @@
+{
+  "analysis/__init__.py": {
+    "mtime": 1782634817.6754227,
+    "ast_hash": "68b329da9893e34099c7d8ad5cb9c940",
+    "semantic_hash": "68b329da9893e34099c7d8ad5cb9c940"
+  },
+  "analysis/export_utils.py": {
+    "mtime": 1782661522.9041822,
+    "ast_hash": "94e7b969d2d22584b95a0008e2d40f6f",
+    "semantic_hash": "94e7b969d2d22584b95a0008e2d40f6f"
+  },
+  "analysis/extended_kalman_filter.py": {
+    "mtime": 1783514871.4138167,
+    "ast_hash": "c0b3ff8b37b175452a17b216e1b25ccf",
+    "semantic_hash": "c0b3ff8b37b175452a17b216e1b25ccf"
+  },
+  "analysis/finite_difference.py": {
+    "mtime": 1783005361.666768,
+    "ast_hash": "a1d0fb83cdfb1b0c71888e7f8e71beff",
+    "semantic_hash": "a1d0fb83cdfb1b0c71888e7f8e71beff"
+  },
+  "analysis/finite_element_1d.py": {
+    "mtime": 1783015260.04388,
+    "ast_hash": "bb4560cb8a7a4570d91e61f43eb28aef",
+    "semantic_hash": "bb4560cb8a7a4570d91e61f43eb28aef"
+  },
+  "analysis/frequency_response.py": {
+    "mtime": 1782804179.5755532,
+    "ast_hash": "8cba5f6e37c5715accdf7ec0310b57cd",
+    "semantic_hash": "8cba5f6e37c5715accdf7ec0310b57cd"
+  },
+  "analysis/kalman_filter.py": {
+    "mtime": 1783514855.3409002,
+    "ast_hash": "e8626e7074d277446ce9f7fa32c6008c",
+    "semantic_hash": "e8626e7074d277446ce9f7fa32c6008c"
+  },
+  "analysis/lqr.py": {
+    "mtime": 1783514821.7680466,
+    "ast_hash": "5ad92552475f0d3c3374fffb47752489",
+    "semantic_hash": "5ad92552475f0d3c3374fffb47752489"
+  },
+  "analysis/model_predictive_control.py": {
+    "mtime": 1783612907.2707598,
+    "ast_hash": "65ef3fd5f61e3e4718e324920dbc05b0",
+    "semantic_hash": "65ef3fd5f61e3e4718e324920dbc05b0"
+  },
+  "analysis/motor_disturbance.py": {
+    "mtime": 1782822142.1442213,
+    "ast_hash": "79394398055b12087fe2c5947d5c07d0",
+    "semantic_hash": "79394398055b12087fe2c5947d5c07d0"
+  },
+  "analysis/parameter_sweep.py": {
+    "mtime": 1782658297.3158798,
+    "ast_hash": "1e42fe46c22c9100f3a14fc1ec86071f",
+    "semantic_hash": "1e42fe46c22c9100f3a14fc1ec86071f"
+  },
+  "analysis/particle_filter.py": {
+    "mtime": 1782997832.0304446,
+    "ast_hash": "816b02cd3c8d64abf851c108c38c5fab",
+    "semantic_hash": "816b02cd3c8d64abf851c108c38c5fab"
+  },
+  "analysis/pid_tuning.py": {
+    "mtime": 1782806225.7395525,
+    "ast_hash": "037200f1a60d01d0310377ba517a20c2",
+    "semantic_hash": "037200f1a60d01d0310377ba517a20c2"
+  },
+  "analysis/quadcopter_altitude_control.py": {
+    "mtime": 1783514905.983953,
+    "ast_hash": "c7ffa374205c18d077125d897b7aa7ad",
+    "semantic_hash": "c7ffa374205c18d077125d897b7aa7ad"
+  },
+  "analysis/quadcopter_attitude_control.py": {
+    "mtime": 1783514911.0607896,
+    "ast_hash": "4cce4255646eef55d4b83e3093a6fa3b",
+    "semantic_hash": "4cce4255646eef55d4b83e3093a6fa3b"
+  },
+  "analysis/quadcopter_obstacle_avoidance.py": {
+    "mtime": 1783514921.611034,
+    "ast_hash": "53c823f6e8dd7964b450ff4079e75080",
+    "semantic_hash": "53c823f6e8dd7964b450ff4079e75080"
+  },
+  "analysis/quadcopter_trajectory_tracking.py": {
+    "mtime": 1783514916.3307948,
+    "ast_hash": "078035c66c50914bd2b6c0912b35f903",
+    "semantic_hash": "078035c66c50914bd2b6c0912b35f903"
+  },
+  "analysis/quadcopter_waypoint_following.py": {
+    "mtime": 1782854722.3359158,
+    "ast_hash": "47e7a1d321f0e37683f3ea56c9da0140",
+    "semantic_hash": "47e7a1d321f0e37683f3ea56c9da0140"
+  },
+  "analysis/rlc_sweep.py": {
+    "mtime": 1782820470.6910498,
+    "ast_hash": "130cf1227ad1cae01504d8cf6a613df5",
+    "semantic_hash": "130cf1227ad1cae01504d8cf6a613df5"
+  },
+  "analysis/state_space.py": {
+    "mtime": 1783514785.3431878,
+    "ast_hash": "6a58abeef6a5c4d26df49052d0271bc7",
+    "semantic_hash": "6a58abeef6a5c4d26df49052d0271bc7"
+  },
+  "analysis/step_response.py": {
+    "mtime": 1782635038.624115,
+    "ast_hash": "5386f1efd13f78b0e8c3e93361be415b",
+    "semantic_hash": "5386f1efd13f78b0e8c3e93361be415b"
+  },
+  "analysis/transfer_function.py": {
+    "mtime": 1782804108.7004597,
+    "ast_hash": "1fcfdb5dc930d02358c42f1542cc7446",
+    "semantic_hash": "1fcfdb5dc930d02358c42f1542cc7446"
+  },
+  "analysis/unscented_kalman_filter.py": {
+    "mtime": 1783514885.9321952,
+    "ast_hash": "ca97b1b63cdf29cb6ab4dfd7280fe655",
+    "semantic_hash": "ca97b1b63cdf29cb6ab4dfd7280fe655"
+  },
+  "examples/run_cooling.py": {
+    "mtime": 1782574012.4862144,
+    "ast_hash": "a4d5cfdc364257c7cd1c615b36b69a5f",
+    "semantic_hash": "a4d5cfdc364257c7cd1c615b36b69a5f"
+  },
+  "examples/run_dc_motor.py": {
+    "mtime": 1782642021.163249,
+    "ast_hash": "87ce33f4447d29b998b765582a4b558b",
+    "semantic_hash": "87ce33f4447d29b998b765582a4b558b"
+  },
+  "examples/run_dc_motor_disturbance_rejection_comparison.py": {
+    "mtime": 1782822268.3195055,
+    "ast_hash": "d678d6dabb9f3d2e985f41e778614126",
+    "semantic_hash": "d678d6dabb9f3d2e985f41e778614126"
+  },
+  "examples/run_dc_motor_open_loop_disturbance.py": {
+    "mtime": 1782822280.7669687,
+    "ast_hash": "f55068983d25de95ff560ee33edfbced",
+    "semantic_hash": "f55068983d25de95ff560ee33edfbced"
+  },
+  "examples/run_discrete_pid_disturbance_response.py": {
+    "mtime": 1782818611.4757204,
+    "ast_hash": "e30993e6bb12c70e5fe6987a5b7db162",
+    "semantic_hash": "e30993e6bb12c70e5fe6987a5b7db162"
+  },
+  "examples/run_discrete_pid_motor.py": {
+    "mtime": 1782753694.2946074,
+    "ast_hash": "adc681886b1ca9a673af686bd10a33a7",
+    "semantic_hash": "adc681886b1ca9a673af686bd10a33a7"
+  },
+  "examples/run_ekf_pendulum.py": {
+    "mtime": 1782839099.653602,
+    "ast_hash": "ec529a4a33e00a36c86c2222c9e7fcf3",
+    "semantic_hash": "ec529a4a33e00a36c86c2222c9e7fcf3"
+  },
+  "examples/run_fem_1d_bar.py": {
+    "mtime": 1783619603.0070927,
+    "ast_hash": "f4d2fc162a6911e7eea849fe2dd8c0f7",
+    "semantic_hash": "f4d2fc162a6911e7eea849fe2dd8c0f7"
+  },
+  "examples/run_finite_difference_convergence.py": {
+    "mtime": 1783619602.1186984,
+    "ast_hash": "9634fe0c117443b11886e00871fddde0",
+    "semantic_hash": "9634fe0c117443b11886e00871fddde0"
+  },
+  "examples/run_finite_difference_derivatives.py": {
+    "mtime": 1783021521.3463848,
+    "ast_hash": "1a143a5e28f7d47b1fb2f215c8e9f39e",
+    "semantic_hash": "1a143a5e28f7d47b1fb2f215c8e9f39e"
+  },
+  "examples/run_first_order_control.py": {
+    "mtime": 1782635046.9674573,
+    "ast_hash": "500ae1a09d3ea112577a26dab9f70a15",
+    "semantic_hash": "500ae1a09d3ea112577a26dab9f70a15"
+  },
+  "examples/run_frequency_response_first_order.py": {
+    "mtime": 1782757151.7777498,
+    "ast_hash": "2a638ce5f2a6795c25b212bdb7ab1689",
+    "semantic_hash": "2a638ce5f2a6795c25b212bdb7ab1689"
+  },
+  "examples/run_frequency_response_rlc.py": {
+    "mtime": 1782757189.433761,
+    "ast_hash": "b58a8b1bd11faaef6756cf837bb4379a",
+    "semantic_hash": "b58a8b1bd11faaef6756cf837bb4379a"
+  },
+  "examples/run_frequency_response_second_order.py": {
+    "mtime": 1782757168.9745915,
+    "ast_hash": "4fc7c683903d1245d69227158ce2daad",
+    "semantic_hash": "4fc7c683903d1245d69227158ce2daad"
+  },
+  "examples/run_heat_equation_1d.py": {
+    "mtime": 1783619580.1607306,
+    "ast_hash": "2b0a435557d5c3bf5300cd360dd2c61e",
+    "semantic_hash": "2b0a435557d5c3bf5300cd360dd2c61e"
+  },
+  "examples/run_heat_equation_2d.py": {
+    "mtime": 1783619581.0025308,
+    "ast_hash": "1cd5f6fcf30473967d9e85165c6952c9",
+    "semantic_hash": "1cd5f6fcf30473967d9e85165c6952c9"
+  },
+  "examples/run_inverted_pendulum_animation_lqr.py": {
+    "mtime": 1782828504.6458924,
+    "ast_hash": "d4b695fa60ce1cbb28b5f0260d4a1506",
+    "semantic_hash": "d4b695fa60ce1cbb28b5f0260d4a1506"
+  },
+  "examples/run_inverted_pendulum_animation_open_loop.py": {
+    "mtime": 1782828503.6773205,
+    "ast_hash": "f2a76702f1d33bd0dd85d7049f0d4138",
+    "semantic_hash": "f2a76702f1d33bd0dd85d7049f0d4138"
+  },
+  "examples/run_inverted_pendulum_linearized.py": {
+    "mtime": 1782824357.9913974,
+    "ast_hash": "d04f8dd099635b3dcf1ba724c3122a75",
+    "semantic_hash": "d04f8dd099635b3dcf1ba724c3122a75"
+  },
+  "examples/run_inverted_pendulum_lqr.py": {
+    "mtime": 1782826228.746719,
+    "ast_hash": "57f67ed859ce2ecd06efa16a7f785954",
+    "semantic_hash": "57f67ed859ce2ecd06efa16a7f785954"
+  },
+  "examples/run_inverted_pendulum_lqr_comparison.py": {
+    "mtime": 1782826266.4636426,
+    "ast_hash": "b899901199a4587cec7c950edb368522",
+    "semantic_hash": "b899901199a4587cec7c950edb368522"
+  },
+  "examples/run_inverted_pendulum_open_loop.py": {
+    "mtime": 1782824349.6869328,
+    "ast_hash": "fe382e200244da6384ea218f7fab9a03",
+    "semantic_hash": "fe382e200244da6384ea218f7fab9a03"
+  },
+  "examples/run_kalman_dc_motor.py": {
+    "mtime": 1783619626.9404407,
+    "ast_hash": "6894ace372dd44ababe8a9fc89e11d2e",
+    "semantic_hash": "6894ace372dd44ababe8a9fc89e11d2e"
+  },
+  "examples/run_kalman_rlc.py": {
+    "mtime": 1782827547.2296405,
+    "ast_hash": "9f1d4e35e75ef9875ca5f39c1d5e74c8",
+    "semantic_hash": "9f1d4e35e75ef9875ca5f39c1d5e74c8"
+  },
+  "examples/run_mass_spring_damper.py": {
+    "mtime": 1782590014.2131734,
+    "ast_hash": "70a5eb62564e93b0663e0b226d3a2d9e",
+    "semantic_hash": "70a5eb62564e93b0663e0b226d3a2d9e"
+  },
+  "examples/run_motor_load_disturbance.py": {
+    "mtime": 1782753695.1996415,
+    "ast_hash": "4b9d2a9163c6ec780146e296aa02f5a4",
+    "semantic_hash": "4b9d2a9163c6ec780146e296aa02f5a4"
+  },
+  "examples/run_mpc_double_integrator.py": {
+    "mtime": 1783619603.8213642,
+    "ast_hash": "991a6c370aeb9b93dd3534b74d419975",
+    "semantic_hash": "991a6c370aeb9b93dd3534b74d419975"
+  },
+  "examples/run_particle_filter_pendulum.py": {
+    "mtime": 1783021526.149316,
+    "ast_hash": "e77bae2a4a5cf76e049b84fc70dd4436",
+    "semantic_hash": "e77bae2a4a5cf76e049b84fc70dd4436"
+  },
+  "examples/run_pendulum.py": {
+    "mtime": 1782637955.5355175,
+    "ast_hash": "8f4567ca6ad9d5a3fd672db98acd58f0",
+    "semantic_hash": "8f4567ca6ad9d5a3fd672db98acd58f0"
+  },
+  "examples/run_pi_gain_sweep.py": {
+    "mtime": 1782753696.1012433,
+    "ast_hash": "8f13489cbf6a7e327555c565fe2b7de2",
+    "semantic_hash": "8f13489cbf6a7e327555c565fe2b7de2"
+  },
+  "examples/run_pid_kd_tuning.py": {
+    "mtime": 1782806326.5322256,
+    "ast_hash": "8e7a6f638ea210eab75142f5e7a4f12e",
+    "semantic_hash": "8e7a6f638ea210eab75142f5e7a4f12e"
+  },
+  "examples/run_pid_ki_tuning.py": {
+    "mtime": 1782806325.6874993,
+    "ast_hash": "48c6a4b078ea1196193d690fa37c6450",
+    "semantic_hash": "48c6a4b078ea1196193d690fa37c6450"
+  },
+  "examples/run_pid_kp_tuning.py": {
+    "mtime": 1782806324.4427578,
+    "ast_hash": "286f0049f8bb10c6ded4cea0a31a2e7b",
+    "semantic_hash": "286f0049f8bb10c6ded4cea0a31a2e7b"
+  },
+  "examples/run_pid_motor_control.py": {
+    "mtime": 1782643003.9641683,
+    "ast_hash": "dc3c0bb727c5b4d31bb53df08862feec",
+    "semantic_hash": "dc3c0bb727c5b4d31bb53df08862feec"
+  },
+  "examples/run_pid_p_pi_pid_comparison.py": {
+    "mtime": 1782806323.228232,
+    "ast_hash": "28829a5484560cd18cd37a93bbb1df50",
+    "semantic_hash": "28829a5484560cd18cd37a93bbb1df50"
+  },
+  "examples/run_quadcopter_6dof_hover.py": {
+    "mtime": 1782851800.743297,
+    "ast_hash": "55c2ef35297f6203c7f1556f8f5295fa",
+    "semantic_hash": "55c2ef35297f6203c7f1556f8f5295fa"
+  },
+  "examples/run_quadcopter_6dof_tilted_thrust.py": {
+    "mtime": 1782851801.6818943,
+    "ast_hash": "1797c21ce1251c061ca9392a9d72290b",
+    "semantic_hash": "1797c21ce1251c061ca9392a9d72290b"
+  },
+  "examples/run_quadcopter_6dof_torque_response.py": {
+    "mtime": 1782851802.6233158,
+    "ast_hash": "266fa87222c2175db2f579bf641cec9e",
+    "semantic_hash": "266fa87222c2175db2f579bf641cec9e"
+  },
+  "examples/run_quadcopter_altitude_open_loop.py": {
+    "mtime": 1782840165.112263,
+    "ast_hash": "641d03a0426ec51b145659ccd5105a42",
+    "semantic_hash": "641d03a0426ec51b145659ccd5105a42"
+  },
+  "examples/run_quadcopter_altitude_pid.py": {
+    "mtime": 1782841992.2420726,
+    "ast_hash": "dea6b4537341cf05dc5bd67a18308c00",
+    "semantic_hash": "dea6b4537341cf05dc5bd67a18308c00"
+  },
+  "examples/run_quadcopter_altitude_pid_disturbance.py": {
+    "mtime": 1782842020.0015266,
+    "ast_hash": "eb552a65ab9fe2a13286707e7dc15c79",
+    "semantic_hash": "eb552a65ab9fe2a13286707e7dc15c79"
+  },
+  "examples/run_quadcopter_altitude_thrust_step.py": {
+    "mtime": 1782840166.0971289,
+    "ast_hash": "803044fa4421072ba8fa5bcdba758c1f",
+    "semantic_hash": "803044fa4421072ba8fa5bcdba758c1f"
+  },
+  "examples/run_quadcopter_attitude_pid.py": {
+    "mtime": 1782847389.8216994,
+    "ast_hash": "a6104082da81258356f21336947ec0da",
+    "semantic_hash": "a6104082da81258356f21336947ec0da"
+  },
+  "examples/run_quadcopter_attitude_pid_disturbance.py": {
+    "mtime": 1782847582.0917816,
+    "ast_hash": "118052559d8f44ee33a99e73c4cc081c",
+    "semantic_hash": "118052559d8f44ee33a99e73c4cc081c"
+  },
+  "examples/run_quadcopter_attitude_roll_torque.py": {
+    "mtime": 1782840993.811031,
+    "ast_hash": "a1e63c3e67f6120344119c2bdae82e58",
+    "semantic_hash": "a1e63c3e67f6120344119c2bdae82e58"
+  },
+  "examples/run_quadcopter_attitude_torque_step.py": {
+    "mtime": 1782840999.875214,
+    "ast_hash": "cb367c54588f6b941eab5dbe0f3cf1e2",
+    "semantic_hash": "cb367c54588f6b941eab5dbe0f3cf1e2"
+  },
+  "examples/run_quadcopter_circle_animation.py": {
+    "mtime": 1782856839.4740968,
+    "ast_hash": "f2efad30f1b0ae5e589200eab36b51b7",
+    "semantic_hash": "f2efad30f1b0ae5e589200eab36b51b7"
+  },
+  "examples/run_quadcopter_obstacle_avoidance.py": {
+    "mtime": 1783021260.3042133,
+    "ast_hash": "9f9b1792b4a7790b9a1599303098acba",
+    "semantic_hash": "9f9b1792b4a7790b9a1599303098acba"
+  },
+  "examples/run_quadcopter_trajectory_circle_tracking.py": {
+    "mtime": 1783021527.9475124,
+    "ast_hash": "cb560dbe2ef798fa5cc37bf39eb06a69",
+    "semantic_hash": "cb560dbe2ef798fa5cc37bf39eb06a69"
+  },
+  "examples/run_quadcopter_trajectory_hover_tracking.py": {
+    "mtime": 1782853515.9787898,
+    "ast_hash": "3ff6ee83698f22508077bd0baea783f4",
+    "semantic_hash": "3ff6ee83698f22508077bd0baea783f4"
+  },
+  "examples/run_quadcopter_waypoint_animation.py": {
+    "mtime": 1782856838.6216877,
+    "ast_hash": "70cfde0b79e925f87e230aa5c57bb8fd",
+    "semantic_hash": "70cfde0b79e925f87e230aa5c57bb8fd"
+  },
+  "examples/run_quadcopter_waypoint_following.py": {
+    "mtime": 1783021529.5223148,
+    "ast_hash": "836486c20c9530f71cdb972a887d31c7",
+    "semantic_hash": "836486c20c9530f71cdb972a887d31c7"
+  },
+  "examples/run_rc_circuit.py": {
+    "mtime": 1782572546.0253396,
+    "ast_hash": "29b7d145c2719b75f1ae996ab475d90b",
+    "semantic_hash": "29b7d145c2719b75f1ae996ab475d90b"
+  },
+  "examples/run_rl_circuit.py": {
+    "mtime": 1782636714.2456152,
+    "ast_hash": "f2555e817b077e4f1c6cafcb745fce6d",
+    "semantic_hash": "f2555e817b077e4f1c6cafcb745fce6d"
+  },
+  "examples/run_rlc_capacitance_sweep.py": {
+    "mtime": 1782820531.1334262,
+    "ast_hash": "7971bbcf389ac0b551dd0939548b4f92",
+    "semantic_hash": "7971bbcf389ac0b551dd0939548b4f92"
+  },
+  "examples/run_rlc_circuit.py": {
+    "mtime": 1782753697.0321045,
+    "ast_hash": "ea4ff5d5490674be417d9fa3e9471893",
+    "semantic_hash": "ea4ff5d5490674be417d9fa3e9471893"
+  },
+  "examples/run_rlc_inductance_sweep.py": {
+    "mtime": 1782820549.9372714,
+    "ast_hash": "43c4f48787219ae5eba45c2404fd6121",
+    "semantic_hash": "43c4f48787219ae5eba45c2404fd6121"
+  },
+  "examples/run_rlc_resistance_sweep.py": {
+    "mtime": 1782820509.0901961,
+    "ast_hash": "1b7ae51e41f168982b0149ee5c7f2a27",
+    "semantic_hash": "1b7ae51e41f168982b0149ee5c7f2a27"
+  },
+  "examples/run_second_order_control.py": {
+    "mtime": 1782641392.8742852,
+    "ast_hash": "be5e6a97c13c82669659dc869ee5a175",
+    "semantic_hash": "be5e6a97c13c82669659dc869ee5a175"
+  },
+  "examples/run_state_space_dc_motor.py": {
+    "mtime": 1782758561.2479365,
+    "ast_hash": "055ca3e6b38b270519a4da9b9c461f02",
+    "semantic_hash": "055ca3e6b38b270519a4da9b9c461f02"
+  },
+  "examples/run_state_space_mass_spring_damper.py": {
+    "mtime": 1782758386.8942828,
+    "ast_hash": "d951c394fc407b866dbada5b4582b5c1",
+    "semantic_hash": "d951c394fc407b866dbada5b4582b5c1"
+  },
+  "examples/run_state_space_rlc.py": {
+    "mtime": 1782758406.8158374,
+    "ast_hash": "dd0a2e62eda5ddd4a55f1a9a24018012",
+    "semantic_hash": "dd0a2e62eda5ddd4a55f1a9a24018012"
+  },
+  "examples/run_transfer_function_comparison.py": {
+    "mtime": 1782804295.2144015,
+    "ast_hash": "d41ebaebe906c8d249b27894a06448c6",
+    "semantic_hash": "d41ebaebe906c8d249b27894a06448c6"
+  },
+  "examples/run_transfer_function_impulse_response.py": {
+    "mtime": 1782804294.2336287,
+    "ast_hash": "45f825a00817466f5135d6c409ac9d69",
+    "semantic_hash": "45f825a00817466f5135d6c409ac9d69"
+  },
+  "examples/run_transfer_function_step_response.py": {
+    "mtime": 1782804293.3449478,
+    "ast_hash": "a225d24a8948e739fb67d6f51923ff8b",
+    "semantic_hash": "a225d24a8948e739fb67d6f51923ff8b"
+  },
+  "examples/run_ukf_pendulum.py": {
+    "mtime": 1783619604.6526132,
+    "ast_hash": "14e04e1833a0d1564a0c86eda35e0a34",
+    "semantic_hash": "14e04e1833a0d1564a0c86eda35e0a34"
+  },
+  "examples/run_wave_equation_1d.py": {
+    "mtime": 1783619581.805894,
+    "ast_hash": "1a54b3f0c2451db6b9658d576d4d0175",
+    "semantic_hash": "1a54b3f0c2451db6b9658d576d4d0175"
+  },
+  "examples/run_wave_equation_2d.py": {
+    "mtime": 1783619582.6312292,
+    "ast_hash": "b8958840d3094e26bec418af5b85e910",
+    "semantic_hash": "b8958840d3094e26bec418af5b85e910"
+  },
+  "models/__init__.py": {
+    "mtime": 1782590795.311705,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "models/cooling.py": {
+    "mtime": 1783514935.7477539,
+    "ast_hash": "7171d192cd5576dd619f0dc04a0de2f0",
+    "semantic_hash": "7171d192cd5576dd619f0dc04a0de2f0"
+  },
+  "models/dc_motor.py": {
+    "mtime": 1783514766.7041647,
+    "ast_hash": "fbac8cff84ea2adeebf569df4fa93ef4",
+    "semantic_hash": "fbac8cff84ea2adeebf569df4fa93ef4"
+  },
+  "models/discrete_pid.py": {
+    "mtime": 1783514900.666682,
+    "ast_hash": "f81bf71ab973aa68f630746bcf339b1f",
+    "semantic_hash": "f81bf71ab973aa68f630746bcf339b1f"
+  },
+  "models/first_order_control.py": {
+    "mtime": 1783514771.5857348,
+    "ast_hash": "1a566502ebac68e5b748e20560779dbc",
+    "semantic_hash": "1a566502ebac68e5b748e20560779dbc"
+  },
+  "models/heat_equation_1d.py": {
+    "mtime": 1783002332.7089732,
+    "ast_hash": "d8fa3fb6057f3fcf70290a77de489f4e",
+    "semantic_hash": "d8fa3fb6057f3fcf70290a77de489f4e"
+  },
+  "models/heat_equation_2d.py": {
+    "mtime": 1783016619.2653813,
+    "ast_hash": "0ce903809f0f866726257dfe11a5c702",
+    "semantic_hash": "0ce903809f0f866726257dfe11a5c702"
+  },
+  "models/inverted_pendulum.py": {
+    "mtime": 1783514790.0390553,
+    "ast_hash": "2d80026796bb8a254e12e33ecb9895d0",
+    "semantic_hash": "2d80026796bb8a254e12e33ecb9895d0"
+  },
+  "models/inverted_pendulum_lqr.py": {
+    "mtime": 1783514795.433373,
+    "ast_hash": "596975c7bb1f6c481ae4448e034885a4",
+    "semantic_hash": "596975c7bb1f6c481ae4448e034885a4"
+  },
+  "models/mass_spring_damper.py": {
+    "mtime": 1783514755.3142347,
+    "ast_hash": "bc52e30c4f67d9d8f9e579a3260a99f0",
+    "semantic_hash": "bc52e30c4f67d9d8f9e579a3260a99f0"
+  },
+  "models/pendulum.py": {
+    "mtime": 1783514760.072118,
+    "ast_hash": "e777bf07e5ae65d1c2a393b5cfff7adc",
+    "semantic_hash": "e777bf07e5ae65d1c2a393b5cfff7adc"
+  },
+  "models/pid_motor_control.py": {
+    "mtime": 1783514894.342857,
+    "ast_hash": "7d083cc0f3e2b245b1a5e47cf211749d",
+    "semantic_hash": "7d083cc0f3e2b245b1a5e47cf211749d"
+  },
+  "models/quadcopter_6dof.py": {
+    "mtime": 1783514813.885653,
+    "ast_hash": "eb9fb091b87e9823b09440a810f2e1c1",
+    "semantic_hash": "eb9fb091b87e9823b09440a810f2e1c1"
+  },
+  "models/quadcopter_altitude.py": {
+    "mtime": 1783514800.8666663,
+    "ast_hash": "d80ce5c2bc69e39a7a1ce3c58c82bbb8",
+    "semantic_hash": "d80ce5c2bc69e39a7a1ce3c58c82bbb8"
+  },
+  "models/quadcopter_attitude.py": {
+    "mtime": 1783514807.820027,
+    "ast_hash": "d482f43233856b7e9a9ce8e41f6ab37f",
+    "semantic_hash": "d482f43233856b7e9a9ce8e41f6ab37f"
+  },
+  "models/rc_circuit.py": {
+    "mtime": 1783514731.5802712,
+    "ast_hash": "b0359478c8629702cc300727a01a65d3",
+    "semantic_hash": "b0359478c8629702cc300727a01a65d3"
+  },
+  "models/rl_circuit.py": {
+    "mtime": 1783514738.4147208,
+    "ast_hash": "782df3814dde87bc83012ecb611f8c18",
+    "semantic_hash": "782df3814dde87bc83012ecb611f8c18"
+  },
+  "models/rlc_circuit.py": {
+    "mtime": 1783514743.0541716,
+    "ast_hash": "134315fb965bddac14e5e9e68421417e",
+    "semantic_hash": "134315fb965bddac14e5e9e68421417e"
+  },
+  "models/second_order_control.py": {
+    "mtime": 1783514778.177152,
+    "ast_hash": "42570ad74082485071174272328eb7f5",
+    "semantic_hash": "42570ad74082485071174272328eb7f5"
+  },
+  "models/wave_equation_1d.py": {
+    "mtime": 1783003728.1125772,
+    "ast_hash": "2c26746ee8ed1f4a7c444ad03c16f739",
+    "semantic_hash": "2c26746ee8ed1f4a7c444ad03c16f739"
+  },
+  "models/wave_equation_2d.py": {
+    "mtime": 1783017990.559119,
+    "ast_hash": "61542686606032ae87b50c088a90326f",
+    "semantic_hash": "61542686606032ae87b50c088a90326f"
+  },
+  "pyproject.toml": {
+    "mtime": 1783066360.6641138,
+    "ast_hash": "00a33853498e0cce66145f76eaaa7075",
+    "semantic_hash": "00a33853498e0cce66145f76eaaa7075"
+  },
+  "streamlit_app.py": {
+    "mtime": 1783621724.8887076,
+    "ast_hash": "d26f38c810138827c1876be0047b8c0f",
+    "semantic_hash": "d26f38c810138827c1876be0047b8c0f"
+  },
+  "tests/test_cooling.py": {
+    "mtime": 1782574034.0019367,
+    "ast_hash": "b741fc52abaf04817a43314149668efb",
+    "semantic_hash": "b741fc52abaf04817a43314149668efb"
+  },
+  "tests/test_dc_motor.py": {
+    "mtime": 1782642022.2419305,
+    "ast_hash": "52d6d42af551a7dac09f5a10f93cf3fc",
+    "semantic_hash": "52d6d42af551a7dac09f5a10f93cf3fc"
+  },
+  "tests/test_discrete_pid.py": {
+    "mtime": 1782660176.4063506,
+    "ast_hash": "e34f7ee74eed7786c07667b621f985ce",
+    "semantic_hash": "e34f7ee74eed7786c07667b621f985ce"
+  },
+  "tests/test_discrete_pid_disturbance.py": {
+    "mtime": 1782818619.0865936,
+    "ast_hash": "e305ab2c4f6464d8601dafed1c347788",
+    "semantic_hash": "e305ab2c4f6464d8601dafed1c347788"
+  },
+  "tests/test_export_utils.py": {
+    "mtime": 1782661522.9041822,
+    "ast_hash": "a0bcf6a7e50acbe005d61c98d565bc6a",
+    "semantic_hash": "a0bcf6a7e50acbe005d61c98d565bc6a"
+  },
+  "tests/test_extended_kalman_filter.py": {
+    "mtime": 1783618334.6504896,
+    "ast_hash": "12f260856110c266a26c2a99f64f030c",
+    "semantic_hash": "12f260856110c266a26c2a99f64f030c"
+  },
+  "tests/test_finite_difference.py": {
+    "mtime": 1783516315.1685257,
+    "ast_hash": "858dd02766b971d641dd0e749949611e",
+    "semantic_hash": "858dd02766b971d641dd0e749949611e"
+  },
+  "tests/test_finite_element_1d.py": {
+    "mtime": 1783618332.2437804,
+    "ast_hash": "9495345fef985df461097e4a1605ced5",
+    "semantic_hash": "9495345fef985df461097e4a1605ced5"
+  },
+  "tests/test_first_order_control.py": {
+    "mtime": 1782592441.697224,
+    "ast_hash": "cf282355bf4d223310777807452bd97c",
+    "semantic_hash": "cf282355bf4d223310777807452bd97c"
+  },
+  "tests/test_frequency_response.py": {
+    "mtime": 1782757206.6229656,
+    "ast_hash": "7ecbf94726c99f11dd9fc5fd57e004c2",
+    "semantic_hash": "7ecbf94726c99f11dd9fc5fd57e004c2"
+  },
+  "tests/test_heat_equation_1d.py": {
+    "mtime": 1783618329.0225697,
+    "ast_hash": "8cebc49a0c078731542f24ae851bff80",
+    "semantic_hash": "8cebc49a0c078731542f24ae851bff80"
+  },
+  "tests/test_heat_equation_2d.py": {
+    "mtime": 1783618329.8245814,
+    "ast_hash": "b6f3494b1aaae12810532ee8e565d63b",
+    "semantic_hash": "b6f3494b1aaae12810532ee8e565d63b"
+  },
+  "tests/test_inverted_pendulum.py": {
+    "mtime": 1782823884.967232,
+    "ast_hash": "ba8bd665c98a41ad029ed8e3e87138a3",
+    "semantic_hash": "ba8bd665c98a41ad029ed8e3e87138a3"
+  },
+  "tests/test_inverted_pendulum_animation.py": {
+    "mtime": 1782828505.6878145,
+    "ast_hash": "8a79983a4c90e1a0ffec075784a3e743",
+    "semantic_hash": "8a79983a4c90e1a0ffec075784a3e743"
+  },
+  "tests/test_kalman_filter.py": {
+    "mtime": 1783618333.857627,
+    "ast_hash": "a17b57b492e363bd4dd069df1249f69e",
+    "semantic_hash": "a17b57b492e363bd4dd069df1249f69e"
+  },
+  "tests/test_lqr.py": {
+    "mtime": 1783618333.0571818,
+    "ast_hash": "cadc1bc619aadbcb6d3d37f759a3852d",
+    "semantic_hash": "cadc1bc619aadbcb6d3d37f759a3852d"
+  },
+  "tests/test_mass_spring_damper.py": {
+    "mtime": 1783618275.5912497,
+    "ast_hash": "3f38e12a12ba30d59a93b29588f5c567",
+    "semantic_hash": "3f38e12a12ba30d59a93b29588f5c567"
+  },
+  "tests/test_model_predictive_control.py": {
+    "mtime": 1783612873.0591834,
+    "ast_hash": "857262de9773d9116ad5c02b0d0da6a6",
+    "semantic_hash": "857262de9773d9116ad5c02b0d0da6a6"
+  },
+  "tests/test_motor_disturbance.py": {
+    "mtime": 1782822171.4428823,
+    "ast_hash": "d2c6ddb468dc4f980eadd57b5f9618cb",
+    "semantic_hash": "d2c6ddb468dc4f980eadd57b5f9618cb"
+  },
+  "tests/test_motor_load_disturbance.py": {
+    "mtime": 1782659495.1756947,
+    "ast_hash": "35699c3e79e4e754378d6905eae61179",
+    "semantic_hash": "35699c3e79e4e754378d6905eae61179"
+  },
+  "tests/test_parameter_sweep.py": {
+    "mtime": 1782658804.1319919,
+    "ast_hash": "ee11aa690843ef13cfa8bb03c7c0439e",
+    "semantic_hash": "ee11aa690843ef13cfa8bb03c7c0439e"
+  },
+  "tests/test_particle_filter.py": {
+    "mtime": 1783618336.264135,
+    "ast_hash": "ab0f2715e0736a64a0142cca5f8b6e4a",
+    "semantic_hash": "ab0f2715e0736a64a0142cca5f8b6e4a"
+  },
+  "tests/test_pendulum.py": {
+    "mtime": 1783618276.391463,
+    "ast_hash": "72918128e6d2390dd595f768bc86e853",
+    "semantic_hash": "72918128e6d2390dd595f768bc86e853"
+  },
+  "tests/test_pid_motor_control.py": {
+    "mtime": 1782658803.1634977,
+    "ast_hash": "5a638a812ba71a2b2150c38d57d53b0e",
+    "semantic_hash": "5a638a812ba71a2b2150c38d57d53b0e"
+  },
+  "tests/test_pid_tuning.py": {
+    "mtime": 1782806249.5398488,
+    "ast_hash": "69e98eff25b1c6e3dd4b3decac42254f",
+    "semantic_hash": "69e98eff25b1c6e3dd4b3decac42254f"
+  },
+  "tests/test_plot_style.py": {
+    "mtime": 1783622428.0964663,
+    "ast_hash": "aaa6b535ed80c8be3ddd4058e3ec79c0",
+    "semantic_hash": "aaa6b535ed80c8be3ddd4058e3ec79c0"
+  },
+  "tests/test_plot_style_imports.py": {
+    "mtime": 1783621752.0020697,
+    "ast_hash": "8235cb09113ffaafcabea6b7c631c4d9",
+    "semantic_hash": "8235cb09113ffaafcabea6b7c631c4d9"
+  },
+  "tests/test_plot_style_runtime.py": {
+    "mtime": 1783670012.33391,
+    "ast_hash": "fbd2fc9fae990d4962d360b5fd7cc84f",
+    "semantic_hash": "fbd2fc9fae990d4962d360b5fd7cc84f"
+  },
+  "tests/test_quadcopter_6dof.py": {
+    "mtime": 1783618337.0601192,
+    "ast_hash": "e1a8b300f4058cca1243ae4d39fedf4f",
+    "semantic_hash": "e1a8b300f4058cca1243ae4d39fedf4f"
+  },
+  "tests/test_quadcopter_altitude.py": {
+    "mtime": 1783516479.8675976,
+    "ast_hash": "cb807c0d167d8fde75f1b7955201e2ed",
+    "semantic_hash": "cb807c0d167d8fde75f1b7955201e2ed"
+  },
+  "tests/test_quadcopter_altitude_control.py": {
+    "mtime": 1782842049.3773873,
+    "ast_hash": "b145133ee44b107015453664f3841f37",
+    "semantic_hash": "b145133ee44b107015453664f3841f37"
+  },
+  "tests/test_quadcopter_animation.py": {
+    "mtime": 1782856677.9302187,
+    "ast_hash": "5147eb56536d31ecbca66e84c21745dd",
+    "semantic_hash": "5147eb56536d31ecbca66e84c21745dd"
+  },
+  "tests/test_quadcopter_attitude.py": {
+    "mtime": 1782840870.0424385,
+    "ast_hash": "9759a2b6dc81d1439877889599b16fd1",
+    "semantic_hash": "9759a2b6dc81d1439877889599b16fd1"
+  },
+  "tests/test_quadcopter_attitude_control.py": {
+    "mtime": 1782847268.998029,
+    "ast_hash": "81ea51882c70c7ed79aae100ec96af2e",
+    "semantic_hash": "81ea51882c70c7ed79aae100ec96af2e"
+  },
+  "tests/test_quadcopter_obstacle_avoidance.py": {
+    "mtime": 1783516517.2988625,
+    "ast_hash": "c0c849f4474c05e9e43a3e82d27b5d39",
+    "semantic_hash": "c0c849f4474c05e9e43a3e82d27b5d39"
+  },
+  "tests/test_quadcopter_trajectory_tracking.py": {
+    "mtime": 1783516502.6636243,
+    "ast_hash": "d0ca5bd8a6cf5bd498a31ae852303ece",
+    "semantic_hash": "d0ca5bd8a6cf5bd498a31ae852303ece"
+  },
+  "tests/test_quadcopter_waypoint_following.py": {
+    "mtime": 1782854504.2955039,
+    "ast_hash": "20837ff2eac99259e1e3d02d8d0191f7",
+    "semantic_hash": "20837ff2eac99259e1e3d02d8d0191f7"
+  },
+  "tests/test_rc_circuit.py": {
+    "mtime": 1783618273.2032533,
+    "ast_hash": "a589a9c0309fb5462da33f57f54e2a17",
+    "semantic_hash": "a589a9c0309fb5462da33f57f54e2a17"
+  },
+  "tests/test_rl_circuit.py": {
+    "mtime": 1783618274.0197215,
+    "ast_hash": "dd70109b0be5c6e5f7e002b0cb95933d",
+    "semantic_hash": "dd70109b0be5c6e5f7e002b0cb95933d"
+  },
+  "tests/test_rlc_circuit.py": {
+    "mtime": 1783618284.7496703,
+    "ast_hash": "ab3fbeb6a7ee0a2f9f3d6a96485c9725",
+    "semantic_hash": "ab3fbeb6a7ee0a2f9f3d6a96485c9725"
+  },
+  "tests/test_rlc_sweep.py": {
+    "mtime": 1782820487.4526312,
+    "ast_hash": "6b545b3fe6a170587fa15848d8529607",
+    "semantic_hash": "6b545b3fe6a170587fa15848d8529607"
+  },
+  "tests/test_second_order_control.py": {
+    "mtime": 1782641394.2698305,
+    "ast_hash": "3f6278cf6d3c14fee86fca7284b034f2",
+    "semantic_hash": "3f6278cf6d3c14fee86fca7284b034f2"
+  },
+  "tests/test_state_space.py": {
+    "mtime": 1782758465.4240746,
+    "ast_hash": "c225850da1569997550f54b8d045bfe2",
+    "semantic_hash": "c225850da1569997550f54b8d045bfe2"
+  },
+  "tests/test_step_response.py": {
+    "mtime": 1782634856.111914,
+    "ast_hash": "5acb8e4c952f396d81393d87cb014fd7",
+    "semantic_hash": "5acb8e4c952f396d81393d87cb014fd7"
+  },
+  "tests/test_transfer_function.py": {
+    "mtime": 1782804163.1805727,
+    "ast_hash": "00d5cba80802d416e97363ce86dd71b9",
+    "semantic_hash": "00d5cba80802d416e97363ce86dd71b9"
+  },
+  "tests/test_unscented_kalman_filter.py": {
+    "mtime": 1783618335.4532983,
+    "ast_hash": "28c850ed5df48a1a2ad767dbe0cdcf78",
+    "semantic_hash": "28c850ed5df48a1a2ad767dbe0cdcf78"
+  },
+  "tests/test_wave_equation_1d.py": {
+    "mtime": 1783618330.6314683,
+    "ast_hash": "d9c76ebb1ec28c9c1e59520b1b86993f",
+    "semantic_hash": "d9c76ebb1ec28c9c1e59520b1b86993f"
+  },
+  "tests/test_wave_equation_2d.py": {
+    "mtime": 1783618331.4251914,
+    "ast_hash": "4a0a5f73f3611da4b977456f6f2e08fe",
+    "semantic_hash": "4a0a5f73f3611da4b977456f6f2e08fe"
+  },
+  "visualization/__init__.py": {
+    "mtime": 1783621636.8493512,
+    "ast_hash": "c070ff38859cac9bfd79971f28d1e9a5",
+    "semantic_hash": "c070ff38859cac9bfd79971f28d1e9a5"
+  },
+  "visualization/inverted_pendulum_animation.py": {
+    "mtime": 1782829157.4390907,
+    "ast_hash": "f9a9bc988bd3a409a0c265f70cf326cd",
+    "semantic_hash": "f9a9bc988bd3a409a0c265f70cf326cd"
+  },
+  "visualization/plot_style.py": {
+    "mtime": 1783670041.48437,
+    "ast_hash": "82d4ae87a96ed1b132ef635a1bea36f9",
+    "semantic_hash": "82d4ae87a96ed1b132ef635a1bea36f9"
+  },
+  "visualization/quadcopter_animation.py": {
+    "mtime": 1782856582.9799502,
+    "ast_hash": "3b9c348949e764480b2e65ef03466203",
+    "semantic_hash": "3b9c348949e764480b2e65ef03466203"
+  }
+}

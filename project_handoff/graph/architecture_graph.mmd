@@ -1,0 +1,43 @@
+flowchart LR
+    streamlit["streamlit_app.py"]
+    models["models/<br/>ODE/PDE/control/UAV solvers"]
+    analysis["analysis/<br/>control, estimation, sweeps, utilities"]
+    visualization["visualization/<br/>plot_style + animations"]
+    examples["examples/<br/>scripted demos + saved figures"]
+    tests["tests/<br/>unit/integration coverage"]
+    docs["docs/<br/>method and architecture notes"]
+    pyproject["pyproject.toml / requirements.txt<br/>NumPy, SciPy, Matplotlib, Streamlit, pytest"]
+
+    streamlit -->|interactive UI imports| models
+    streamlit -->|interactive UI imports| analysis
+    streamlit -->|plot helpers ps.*| visualization
+    streamlit -->|imports demo helpers| examples
+
+    examples -->|run scripts exercise| models
+    examples -->|run scripts exercise| analysis
+    examples -->|style and save figures| visualization
+
+    tests -->|direct assertions| models
+    tests -->|direct assertions| analysis
+    tests -->|animation/style tests| visualization
+
+    analysis -->|uses plant/simulation models| models
+    analysis -->|shared analysis helpers| analysis
+    models -->|risk: LQR model imports analysis.lqr| analysis
+    visualization -->|quad animation rotation helper| models
+
+    docs -. describes .-> models
+    docs -. describes .-> analysis
+    docs -. describes .-> visualization
+    pyproject --> streamlit
+    pyproject --> models
+    pyproject --> analysis
+    pyproject --> visualization
+
+    classDef app fill:#f7f3d6,stroke:#8a742f,color:#222;
+    classDef core fill:#d9edf7,stroke:#276678,color:#222;
+    classDef support fill:#e2f0d9,stroke:#4f7f31,color:#222;
+    classDef risk fill:#f6d6d6,stroke:#9a3a3a,color:#222;
+    class streamlit app;
+    class models,analysis core;
+    class visualization,examples,tests,docs,pyproject support;

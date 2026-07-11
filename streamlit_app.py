@@ -76,6 +76,7 @@ from models.wave_equation_2d import (
     zero_initial_velocity_2d,
 )
 from visualization import plot_style as ps
+from visualization.airfoil_flow import plot_airfoil_flow_field
 
 APP_TITLE = "Engineering Simulation Toolkit"
 APP_SUBTITLE = (
@@ -95,6 +96,7 @@ DOMAIN_DEMOS = {
     ),
     "Numerical Methods": ("Finite Difference Convergence",),
     "FEM Basics": ("1D Axial Bar FEM",),
+    "Fluid Flow / Wind Tunnel": ("Airfoil Wind-Tunnel Visualization",),
     "Validation & Benchmarks": ("Quality Signals",),
     "About / Portfolio": ("Project Scope",),
 }
@@ -3416,6 +3418,113 @@ def render_axial_bar_fem():
     )
 
 
+def render_airfoil_wind_tunnel():
+    """Render the qualitative airfoil-flow visualization page."""
+    render_page_intro(
+        "Airfoil Wind-Tunnel Visualization",
+        "This is a CFD-inspired qualitative 2D flow visualization around an "
+        "airfoil, intended for educational and portfolio demonstration. It does "
+        "not solve full Navier-Stokes equations.",
+    )
+
+    grid_options = {
+        "120 x 60 (fast)": (60, 120),
+        "160 x 80 (recommended)": (80, 160),
+        "200 x 100": (100, 200),
+        "240 x 120 (maximum)": (120, 240),
+    }
+    controls = render_control_panel("Wind-tunnel controls")
+    with controls:
+        primary_controls, secondary_controls = st.columns(2)
+        with primary_controls:
+            airfoil_code = st.selectbox(
+                "Airfoil type",
+                ("NACA 2412", "NACA 0012"),
+            )
+            angle_of_attack = st.slider(
+                "Angle of attack (deg)",
+                min_value=-15,
+                max_value=20,
+                value=5,
+                step=1,
+            )
+            free_stream_velocity = st.slider(
+                "Free-stream velocity (arbitrary units)",
+                min_value=5.0,
+                max_value=100.0,
+                value=30.0,
+                step=5.0,
+            )
+        with secondary_controls:
+            circulation_strength = st.slider(
+                "Vortex / circulation strength",
+                min_value=-3.0,
+                max_value=3.0,
+                value=0.0,
+                step=0.1,
+            )
+            wake_strength = st.slider(
+                "Synthetic wake strength",
+                min_value=0.0,
+                max_value=1.5,
+                value=0.6,
+                step=0.1,
+            )
+            grid_label = st.selectbox(
+                "Grid resolution",
+                tuple(grid_options),
+                index=1,
+            )
+            streamline_density = st.slider(
+                "Streamline density",
+                min_value=0.6,
+                max_value=1.6,
+                value=1.1,
+                step=0.1,
+            )
+
+    grid_shape = grid_options[grid_label]
+    figure, flow_metrics = plot_airfoil_flow_field(
+        airfoil_code=airfoil_code,
+        angle_of_attack_deg=angle_of_attack,
+        free_stream_velocity=free_stream_velocity,
+        circulation_strength=circulation_strength,
+        wake_strength=wake_strength,
+        grid_shape=grid_shape,
+        streamline_density=streamline_density,
+    )
+
+    render_metrics_section(
+        (
+            ("Angle of attack", f"{angle_of_attack} deg"),
+            ("Free-stream velocity", format_value(free_stream_velocity)),
+            ("Maximum speed", format_value(flow_metrics.max_speed)),
+            ("Minimum speed", format_value(flow_metrics.min_speed)),
+            ("Estimated wake strength", format_value(flow_metrics.wake_strength)),
+            (
+                "Grid size",
+                f"{flow_metrics.grid_shape[1]} x {flow_metrics.grid_shape[0]}",
+            ),
+        ),
+        columns=3,
+    )
+    st.pyplot(figure, width="stretch")
+    plt.close(figure)
+    st.caption(
+        "Color indicates qualitative speed magnitude; streamlines show the "
+        "synthetic potential-flow and wake approximation around the selected airfoil."
+    )
+
+    render_assumptions_expander(
+        "- This is a qualitative visualization for visual intuition.\n"
+        "- It combines potential-flow-inspired circulation with a synthetic wake "
+        "approximation.\n"
+        "- It is not industrial CFD and does not solve the full Navier-Stokes equations.\n"
+        "- It is not a validated lift or drag prediction tool.",
+        title="Assumptions and limitations",
+    )
+
+
 def main():
     """Run the Streamlit application."""
     st.set_page_config(
@@ -3439,6 +3548,8 @@ def main():
         render_state_estimation()
     elif domain == "UAV / Quadcopter":
         render_uav_quadcopter()
+    elif domain == "Fluid Flow / Wind Tunnel":
+        render_airfoil_wind_tunnel()
     elif domain == "Validation & Benchmarks":
         render_validation_benchmarks()
     elif domain == "About / Portfolio":

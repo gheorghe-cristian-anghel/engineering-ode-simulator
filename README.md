@@ -184,6 +184,7 @@ The app currently includes selected demos for:
 - Control-system demos for RC/RLC circuits and DC motor PID control.
 - Interactive state-estimation demos for Kalman, Unscented Kalman, and optional Particle Filters.
 - Interactive UAV/quadcopter demos for altitude control, trajectory tracking, waypoint following, and obstacle avoidance.
+- A qualitative airfoil wind-tunnel visualization for educational flow intuition; it is not a full CFD or validated lift/drag prediction tool.
 - PDE solver demos for 1D/2D heat equations and 1D/2D wave equations.
 - Numerical-methods demo for finite-difference convergence.
 - FEM basics demo for a 1D axial bar.

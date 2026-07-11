@@ -76,7 +76,11 @@ from models.wave_equation_2d import (
     zero_initial_velocity_2d,
 )
 from visualization import plot_style as ps
-from visualization.airfoil_flow import plot_airfoil_flow_field
+from visualization.airfoil_flow import (
+    compute_airfoil_flow_field,
+    plot_airfoil_flow_field,
+)
+from visualization.fluid_flow_animations import animate_airfoil_particles
 
 APP_TITLE = "Engineering Simulation Toolkit"
 APP_SUBTITLE = (
@@ -3514,6 +3518,82 @@ def render_airfoil_wind_tunnel():
         "Color indicates qualitative speed magnitude; streamlines show the "
         "synthetic potential-flow and wake approximation around the selected airfoil."
     )
+
+    st.subheader("Optional particle animation")
+    show_animation = st.checkbox(
+        "Show animation",
+        help=(
+            "Animation is opt-in because encoding the self-contained particle "
+            "visualization is more expensive than the static plot."
+        ),
+    )
+    if show_animation:
+        st.caption(
+            "Particles qualitatively trace the frozen velocity field. Their wake and "
+            "vortex motion is illustrative, not time-accurate CFD."
+        )
+        animation_controls = render_control_panel("Animation controls")
+        with animation_controls:
+            animation_primary, animation_secondary = st.columns(2)
+            with animation_primary:
+                particle_count = st.slider(
+                    "Number of particles",
+                    min_value=80,
+                    max_value=800,
+                    value=220,
+                    step=20,
+                )
+                frame_count = st.slider(
+                    "Number of frames",
+                    min_value=20,
+                    max_value=120,
+                    value=24,
+                    step=4,
+                )
+            with animation_secondary:
+                particle_speed = st.slider(
+                    "Particle speed multiplier",
+                    min_value=0.5,
+                    max_value=2.0,
+                    value=1.0,
+                    step=0.1,
+                )
+                frame_skip = st.slider(
+                    "Frame skip",
+                    min_value=1,
+                    max_value=4,
+                    value=1,
+                    step=1,
+                )
+
+        st.caption(
+            "The default 24-frame loop favors a quick response. Higher frame or "
+            "particle counts are bounded but take longer to encode."
+        )
+
+        if st.button("Generate animation", type="primary"):
+            with st.spinner("Encoding qualitative particle animation..."):
+                flow_result = compute_airfoil_flow_field(
+                    airfoil_code=airfoil_code,
+                    angle_of_attack_deg=angle_of_attack,
+                    free_stream_velocity=free_stream_velocity,
+                    circulation_strength=circulation_strength,
+                    wake_strength=wake_strength,
+                    grid_shape=grid_shape,
+                )
+                animation_html = animate_airfoil_particles(
+                    flow_result,
+                    num_particles=particle_count,
+                    num_frames=frame_count,
+                    frame_skip=frame_skip,
+                    speed_scale=particle_speed,
+                    trail_length=8,
+                )
+            st.iframe(animation_html, height=530)
+            st.caption(
+                "Particle colors indicate local qualitative speed. The animation "
+                "visualizes a static synthetic field rather than a transient CFD solve."
+            )
 
     render_assumptions_expander(
         "- This is a qualitative visualization for visual intuition.\n"

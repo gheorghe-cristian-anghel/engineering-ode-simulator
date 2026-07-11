@@ -24,6 +24,26 @@ class AirfoilFlowMetrics:
     grid_shape: tuple[int, int]
 
 
+@dataclass(frozen=True)
+class AirfoilFlowResult:
+    """Numerical data for the qualitative airfoil flow visualization.
+
+    The arrays represent the same potential-flow-inspired field used by the
+    static plot. They are not a time-accurate CFD solution.
+    """
+
+    grid_x: np.ndarray
+    grid_y: np.ndarray
+    velocity_x: np.ndarray
+    velocity_y: np.ndarray
+    speed: np.ndarray
+    inside_airfoil: np.ndarray
+    airfoil_x: np.ndarray
+    airfoil_y: np.ndarray
+    wake_deficit: np.ndarray
+    metrics: AirfoilFlowMetrics
+
+
 def _normalize_airfoil_code(airfoil_code: str) -> str:
     normalized = airfoil_code.upper().strip()
     if not normalized.startswith("NACA"):
@@ -122,22 +142,21 @@ def _validate_inputs(
         raise ValueError("streamline_density must be between 0.5 and 2.0.")
 
 
-def plot_airfoil_flow_field(
+def compute_airfoil_flow_field(
     airfoil_code: str = "NACA 2412",
     angle_of_attack_deg: float = 5.0,
     free_stream_velocity: float = 30.0,
     circulation_strength: float = 0.0,
     wake_strength: float = 0.6,
     grid_shape: tuple[int, int] = (80, 160),
-    streamline_density: float = 1.1,
-) -> tuple[plt.Figure, AirfoilFlowMetrics]:
-    """Plot a qualitative 2D airfoil field with potential-flow-inspired effects.
+) -> AirfoilFlowResult:
+    """Return the qualitative field used by the static airfoil plot.
 
     This educational visualization uses a synthetic circulation and wake term. It
     is not a Navier-Stokes solution and must not be used for force prediction.
     """
     airfoil_code = _normalize_airfoil_code(airfoil_code)
-    _validate_inputs(free_stream_velocity, grid_shape, streamline_density)
+    _validate_inputs(free_stream_velocity, grid_shape, streamline_density=1.1)
 
     row_count, column_count = grid_shape
     x_values = np.linspace(-1.2, 3.0, column_count)
@@ -187,22 +206,66 @@ def plot_airfoil_flow_field(
         np.column_stack((grid_x.ravel(), grid_y.ravel()))
     ).reshape(grid_x.shape)
     masked_speed = np.ma.masked_where(inside_airfoil, speed)
-    masked_u = np.ma.masked_where(inside_airfoil, velocity_x)
-    masked_v = np.ma.masked_where(inside_airfoil, velocity_y)
+    metrics = AirfoilFlowMetrics(
+        max_speed=float(masked_speed.max()),
+        min_speed=float(masked_speed.min()),
+        wake_strength=float(np.max(wake_deficit)),
+        grid_shape=grid_shape,
+    )
+    return AirfoilFlowResult(
+        grid_x=grid_x,
+        grid_y=grid_y,
+        velocity_x=velocity_x,
+        velocity_y=velocity_y,
+        speed=speed,
+        inside_airfoil=inside_airfoil,
+        airfoil_x=airfoil_x,
+        airfoil_y=airfoil_y,
+        wake_deficit=wake_deficit,
+        metrics=metrics,
+    )
+
+
+def plot_airfoil_flow_field(
+    airfoil_code: str = "NACA 2412",
+    angle_of_attack_deg: float = 5.0,
+    free_stream_velocity: float = 30.0,
+    circulation_strength: float = 0.0,
+    wake_strength: float = 0.6,
+    grid_shape: tuple[int, int] = (80, 160),
+    streamline_density: float = 1.1,
+) -> tuple[plt.Figure, AirfoilFlowMetrics]:
+    """Plot a qualitative 2D airfoil field with potential-flow-inspired effects.
+
+    This educational visualization uses a synthetic circulation and wake term. It
+    is not a Navier-Stokes solution and must not be used for force prediction.
+    """
+    _validate_inputs(free_stream_velocity, grid_shape, streamline_density)
+    flow_result = compute_airfoil_flow_field(
+        airfoil_code=airfoil_code,
+        angle_of_attack_deg=angle_of_attack_deg,
+        free_stream_velocity=free_stream_velocity,
+        circulation_strength=circulation_strength,
+        wake_strength=wake_strength,
+        grid_shape=grid_shape,
+    )
+    masked_speed = np.ma.masked_where(flow_result.inside_airfoil, flow_result.speed)
+    masked_u = np.ma.masked_where(flow_result.inside_airfoil, flow_result.velocity_x)
+    masked_v = np.ma.masked_where(flow_result.inside_airfoil, flow_result.velocity_y)
 
     figure, axis = ps.create_streamlit_subplots(width=12, height=6.5)
     speed_levels = np.linspace(float(masked_speed.min()), float(masked_speed.max()), 32)
     speed_contours = axis.contourf(
-        grid_x,
-        grid_y,
+        flow_result.grid_x,
+        flow_result.grid_y,
         masked_speed,
         levels=speed_levels,
         cmap="viridis",
         extend="both",
     )
     axis.streamplot(
-        x_values,
-        y_values,
+        flow_result.grid_x[0],
+        flow_result.grid_y[:, 0],
         masked_u,
         masked_v,
         density=streamline_density,
@@ -210,7 +273,13 @@ def plot_airfoil_flow_field(
         linewidth=0.75,
         arrowsize=0.7,
     )
-    axis.fill(airfoil_x, airfoil_y, color="#202124", zorder=4, label=airfoil_code)
+    axis.fill(
+        flow_result.airfoil_x,
+        flow_result.airfoil_y,
+        color="#202124",
+        zorder=4,
+        label=_normalize_airfoil_code(airfoil_code),
+    )
     ps.add_clean_colorbar(figure, speed_contours, axis, label="Speed (arbitrary units)")
     ps.format_heatmap_axes(
         axis,
@@ -221,10 +290,4 @@ def plot_airfoil_flow_field(
     axis.set_aspect("equal", adjustable="box")
     axis.legend(loc="upper right", frameon=True)
 
-    metrics = AirfoilFlowMetrics(
-        max_speed=float(masked_speed.max()),
-        min_speed=float(masked_speed.min()),
-        wake_strength=float(np.max(wake_deficit)),
-        grid_shape=grid_shape,
-    )
-    return figure, metrics
+    return figure, flow_result.metrics

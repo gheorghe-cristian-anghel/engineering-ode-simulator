@@ -3534,13 +3534,13 @@ def render_airfoil_wind_tunnel():
         )
         animation_controls = render_control_panel("Animation controls")
         with animation_controls:
-            animation_primary, animation_secondary = st.columns(2)
+            animation_primary, animation_secondary, animation_visuals = st.columns(3)
             with animation_primary:
                 particle_count = st.slider(
                     "Number of particles",
                     min_value=80,
                     max_value=800,
-                    value=220,
+                    value=260,
                     step=20,
                 )
                 frame_count = st.slider(
@@ -3565,6 +3565,26 @@ def render_airfoil_wind_tunnel():
                     value=1,
                     step=1,
                 )
+            with animation_visuals:
+                vortex_emphasis = st.slider(
+                    "Vortex emphasis",
+                    min_value=0.0,
+                    max_value=3.0,
+                    value=1.2,
+                    step=0.1,
+                    help="Visual-only trailing-edge vortex strength.",
+                )
+                trail_length = st.slider(
+                    "Trail length",
+                    min_value=4,
+                    max_value=12,
+                    value=8,
+                    step=1,
+                )
+                visual_style_label = st.selectbox(
+                    "Visual style",
+                    ("Wind-tunnel glow", "Scientific field"),
+                )
 
         st.caption(
             "The default 24-frame loop favors a quick response. Higher frame or "
@@ -3587,7 +3607,12 @@ def render_airfoil_wind_tunnel():
                     num_frames=frame_count,
                     frame_skip=frame_skip,
                     speed_scale=particle_speed,
-                    trail_length=8,
+                    trail_length=trail_length,
+                    vortex_emphasis=vortex_emphasis,
+                    visual_style={
+                        "Wind-tunnel glow": "wind_tunnel_glow",
+                        "Scientific field": "scientific",
+                    }[visual_style_label],
                 )
             st.iframe(animation_html, height=530)
             st.caption(

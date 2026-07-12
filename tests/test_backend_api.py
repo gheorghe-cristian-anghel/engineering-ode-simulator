@@ -141,6 +141,40 @@ def test_uav_endpoint_returns_finite_paths_and_metrics():
     assert _all_finite(data["metrics"])
 
 
+def test_uav_endpoint_optionally_returns_aligned_visualization_series():
+    """The opt-in UAV payload exposes finite, time-aligned diagnostic series."""
+    response = client.post(
+        "/api/uav/obstacle-avoidance",
+        json={
+            "waypoints": [[0.0, 0.0, 1.0], [0.1, 0.0, 1.0]],
+            "segment_time": 0.1,
+            "t_final": 0.1,
+            "dt": 0.05,
+            "include_series": True,
+            "obstacles": [
+                {
+                    "center": [5.0, 0.0, 1.0],
+                    "radius": 0.2,
+                    "influence_radius": 1.0,
+                }
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert set(data["series"]) == {
+        "reference_altitude",
+        "actual_altitude",
+        "tracking_error",
+        "clearance",
+        "thrust",
+        "torque",
+    }
+    assert all(len(values) == len(data["time"]) for values in data["series"].values())
+    assert _all_finite(data["series"])
+
+
 def test_kalman_endpoint_returns_finite_deterministic_metrics():
     """A seeded DC motor scenario should be repeatable and numerically finite."""
     request = {"t_final": 0.04, "dt": 0.01, "random_seed": 7}

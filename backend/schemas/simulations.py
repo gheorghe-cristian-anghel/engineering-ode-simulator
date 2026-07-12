@@ -96,6 +96,7 @@ class UavRequest(BaseModel):
     smoothing: Literal["linear", "smoothstep"] = "smoothstep"
     avoidance_gain: FiniteFloat = Field(default=0.03, ge=0, le=10)
     max_avoidance_acceleration: FiniteFloat = Field(default=1.5, ge=0, le=10)
+    include_series: bool = False
 
     @model_validator(mode="after")
     def validate_sample_count(self):
@@ -154,6 +155,17 @@ class UavMetrics(BaseModel):
     max_abs_torque: FiniteFloat
 
 
+class UavSeries(BaseModel):
+    """Optional time-aligned diagnostic signals for scientific plotting."""
+
+    reference_altitude: list[FiniteFloat]
+    actual_altitude: list[FiniteFloat]
+    tracking_error: list[FiniteFloat]
+    clearance: list[FiniteFloat]
+    thrust: list[FiniteFloat]
+    torque: list[FiniteFloat]
+
+
 class UavResponse(BaseModel):
     """JSON contract returned by the UAV obstacle-avoidance endpoint."""
 
@@ -164,6 +176,7 @@ class UavResponse(BaseModel):
     obstacles: list[ObstacleRequest]
     metrics: UavMetrics
     units: dict[str, str]
+    series: UavSeries | None = None
 
 
 class KalmanMetrics(BaseModel):

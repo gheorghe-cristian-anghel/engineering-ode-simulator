@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useState } from 'react'
 
-const navigation = [{ to: '/', label: 'Overview', end: true }, { to: '/simulations/heat-2d', label: '2D Heat Equation', end: false }]
+const navigation = [{ to: '/', label: 'Overview', end: true }, { to: '/simulations/heat-2d', label: '2D Heat Equation', end: false }, { to: '/simulations/estimation/kalman', label: 'Kalman State Estimation', end: false }, { to: '/simulations/uav-path', label: 'UAV Path Planning', end: false }]
 
 export function AppShell() {
   const [isOpen, setIsOpen] = useState(false)

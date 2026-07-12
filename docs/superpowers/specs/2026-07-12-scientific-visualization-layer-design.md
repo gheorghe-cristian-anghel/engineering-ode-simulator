@@ -15,7 +15,7 @@ Use React with native Canvas and SVG. Canvas is used for raster scalar fields, w
 - `TimeSeriesPlot` consumes focused series definitions. It renders finite samples only, uses reference lines with a dashed convention, computes domains with padding, and limits rendered vertices for dense series without modifying input arrays.
 - `XYPathPlot` consumes x/y projections of path data. It calculates an equal-scale view box with margins, renders reference/actual paths, waypoints, start/end markers, and a circular obstacle plus influence radius. Its legend is outside the plotting area.
 - `StateEstimationView` composes time-series plots for true state, noisy measurements, estimates, and estimation error. It accepts covariance-derived bands only as an optional extension; the current API has no covariance.
-- API modules and feature hooks remain focused on their endpoint contracts. New UAV and Kalman pages consume the existing endpoints unchanged.
+- API modules and feature hooks remain focused on their endpoint contracts. The UAV response gains an additive optional series payload, sourced from arrays already produced by the existing simulation, so altitude, tracking error, clearance, thrust, and torque can be plotted without changing equations. Kalman consumes its existing endpoint unchanged.
 
 ## Scientific conventions
 
@@ -27,7 +27,7 @@ Use React with native Canvas and SVG. Canvas is used for raster scalar fields, w
 
 ## Performance and payload limits
 
-The heat API already caps fields at 65,536 cells; this remains the practical client-side limit for one canvas render. The UAV and Kalman APIs cap their time samples at 1,001 and 2,001 respectively. Transformations are memoized, canvas pixel buffers are generated without duplicating grid-sized structures, and line paths are bounded through index-based decimation when samples exceed the display budget. Animation and client-side storage of snapshots are out of scope.
+The heat API already caps fields at 65,536 cells; this remains the practical client-side limit for one canvas render. The UAV and Kalman APIs cap their time samples at 1,001 and 2,001 respectively. The UAV series payload is opt-in to avoid sending unused data. Transformations are memoized, canvas pixel buffers are generated without duplicating grid-sized structures, and line paths are bounded through index-based decimation when samples exceed the display budget. Animation and client-side storage of snapshots are out of scope.
 
 ## Validation
 

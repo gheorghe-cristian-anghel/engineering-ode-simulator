@@ -165,8 +165,7 @@ def run_uav_simulation(request: UavRequest):
         max_avoidance_acceleration=request.max_avoidance_acceleration,
     )
     metrics = result["obstacle_metrics"]
-    return to_jsonable(
-        {
+    response = {
             "time": result["time"],
             "reference_path": result["reference_positions"],
             "actual_path": result["states"][:, :3],
@@ -180,8 +179,17 @@ def run_uav_simulation(request: UavRequest):
                 "max_abs_torque": metrics["max_abs_torque"],
             },
             "units": {"position": "m", "time": "s", "thrust": "N", "torque": "N*m"},
+    }
+    if request.include_series:
+        response["series"] = {
+            "reference_altitude": result["reference_positions"][:, 2],
+            "actual_altitude": result["states"][:, 2],
+            "tracking_error": result["tracking_error_norm"],
+            "clearance": result["nearest_clearances"],
+            "thrust": result["controls"][:, 0],
+            "torque": np.max(np.abs(result["controls"][:, 1:4]), axis=1),
         }
-    )
+    return to_jsonable(response)
 
 
 def run_kalman_simulation(request: KalmanRequest):

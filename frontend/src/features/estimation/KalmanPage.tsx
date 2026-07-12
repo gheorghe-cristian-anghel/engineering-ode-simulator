@@ -1,0 +1,8 @@
+import { useState } from 'react'
+import type { KalmanRequest } from '../../api/kalman'
+import { AssumptionsPanel } from '../../components/AssumptionsPanel'
+import { StatusMessage } from '../../components/StatusMessage'
+import { StateEstimationView } from './StateEstimationView'
+import { useKalmanSimulation } from './useKalmanSimulation'
+const initialRequest: KalmanRequest = { voltage: 12, t_final: 5, dt: 0.01, measurement_noise_std: 2, random_seed: 0 }
+export function KalmanPage() { const [request] = useState(initialRequest); const { result, error, isLoading, run } = useKalmanSimulation(); return <div className="page"><header className="page-header"><span className="eyebrow">Estimation / DC motor</span><h1>Kalman State Estimation</h1><p>Compare the simulated motor state, noisy speed measurement, and linear Kalman estimate.</p></header><section className="results-panel"><button type="button" onClick={() => run(request)} disabled={isLoading}>{isLoading ? 'Estimating…' : 'Run Kalman simulation'}</button>{isLoading && <StatusMessage kind="loading" title="Estimating motor state">The backend is computing a bounded state estimate.</StatusMessage>}{error && <StatusMessage kind="error" title="Simulation could not run">{error}</StatusMessage>}{!result && !isLoading && !error && <StatusMessage kind="empty" title="Ready to estimate">Run the simulation to inspect state-estimation plots.</StatusMessage>}{result && <StateEstimationView result={result} />}</section><AssumptionsPanel>The displayed estimate uses the existing discrete-time DC motor model and measurement noise configuration; it is an educational simulation rather than a validated controller.</AssumptionsPanel></div> }

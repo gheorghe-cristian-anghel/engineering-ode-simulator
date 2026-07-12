@@ -8,8 +8,7 @@ describe('HeatmapCanvas', () => {
     render(<HeatmapCanvas field={[[0, 0.5], [1, 0.25]]} x={[0, 1]} y={[0, 1]} unit="arbitrary" />)
 
     expect(screen.getByRole('img', { name: /final heat field/i })).toBeInTheDocument()
-    expect(screen.getByText(/0.000/)).toBeInTheDocument()
-    expect(screen.getByText(/1.000/)).toBeInTheDocument()
+    expect(screen.getByLabelText(/Temperature range 0.000 to 1.000 arbitrary/)).toBeInTheDocument()
   })
 
   it('renders a constant field without a divide-by-zero color scale', () => {
@@ -22,7 +21,7 @@ describe('HeatmapCanvas', () => {
     vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null)
     render(<HeatmapCanvas field={[[2]]} x={[0]} y={[0]} unit="K" />)
 
-    expect(screen.getByRole('img', { name: /Temperature ranges from 2.000 to 2.000/i })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /Temperature range ranges from 2.000 to 2.000/i })).toBeInTheDocument()
   })
 
   it('draws low y values at the bottom, matching the solver coordinate system', () => {

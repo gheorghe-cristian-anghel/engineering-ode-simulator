@@ -1,0 +1,11 @@
+.state-estimation-view{display:grid;gap:18px}
+.state-estimation-view__note{margin:0;color:#9fb2be;font-size:.82rem}
+.scientific-timeseries{margin:0;display:grid;gap:10px}
+.scientific-timeseries__svg{width:100%;height:auto;min-height:250px;overflow:visible;touch-action:pan-y}
+.scientific-timeseries__svg text{fill:#aac0ca;font:.72rem ui-monospace,monospace}
+.scientific-timeseries__axis{stroke:#315062;stroke-width:1}
+.scientific-timeseries figcaption{min-height:1.3em;color:#b8cbd4;font:.75rem ui-monospace,monospace}
+.scientific-timeseries__legend{display:flex;flex-wrap:wrap;gap:8px 14px;margin:0;padding:0;list-style:none;color:#d4e4ea;font-size:.76rem}
+.scientific-timeseries__legend li{display:flex;gap:6px;align-items:center}
+.scientific-timeseries__legend i{display:block;width:18px;height:3px;border-radius:2px}
+@media(max-width:720px){.scientific-timeseries__svg{min-height:210px}}

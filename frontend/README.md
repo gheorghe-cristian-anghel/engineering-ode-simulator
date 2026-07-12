@@ -28,4 +28,4 @@ npm run test:coverage
 npm run build
 ```
 
-The 2D Heat page calls `POST /api/pde/heat-2d`. Its Canvas heatmap uses `ImageData`, which is lightweight for the API's bounded regular grids and avoids adding a large charting dependency.
+The visualization layer uses browser-native Canvas for scalar fields and SVG for line and path plots, avoiding a large charting dependency. The 2D Heat page calls `POST /api/pde/heat-2d`; its Canvas heatmap uses `ImageData` and is intended for bounded regular grids. Keep field payloads at or below roughly 250,000 cells (about a 500 × 500 grid), and time/path payloads at or below roughly 10,000 samples per series. The plotting components decimate rendered line vertices, but payload limits should still be enforced by the API as the application grows.

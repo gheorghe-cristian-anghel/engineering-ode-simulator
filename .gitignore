@@ -29,3 +29,6 @@ graphify-out/
 # Streamlit runtime logs
 .streamlit_stdout.log
 .streamlit_stderr.log
+
+# Graphify generated output
+graphify-out/

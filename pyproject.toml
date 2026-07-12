@@ -33,6 +33,9 @@ dev = [
     "pytest>=8",
     "ruff>=0.4",
 ]
+acceleration = [
+    "numba>=0.63,<0.65",
+]
 
 [tool.setuptools]
 packages = [

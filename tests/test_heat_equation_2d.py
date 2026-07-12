@@ -304,3 +304,42 @@ def test_neumann_boundaries_copy_nearest_interior_values():
     assert np.allclose(temperature[:, :, -1], temperature[:, :, -2])
     assert np.allclose(temperature[:, 0, :], temperature[:, 1, :])
     assert np.allclose(temperature[:, -1, :], temperature[:, -2, :])
+
+
+@pytest.mark.parametrize("boundary_type,boundary_values", [
+    ("dirichlet", (1.0, 2.0, 3.0, 4.0)),
+    ("neumann", 0.0),
+])
+def test_numba_heat_acceleration_matches_python_solver(
+    boundary_type, boundary_values
+):
+    """The optional native step kernel must preserve stored solver results."""
+    kwargs = {
+        "t_final": 0.02,
+        "nx": 17,
+        "ny": 13,
+        "boundary_type": boundary_type,
+        "boundary_values": boundary_values,
+        "store_every": 3,
+    }
+
+    python_result = simulate_heat_equation_2d(**kwargs, acceleration="python")
+    accelerated_result = simulate_heat_equation_2d(**kwargs, acceleration="numba")
+
+    assert np.array_equal(python_result["t"], accelerated_result["t"])
+    assert np.allclose(
+        python_result["temperature"], accelerated_result["temperature"], rtol=1e-12, atol=1e-12
+    )
+
+
+def test_numba_acceleration_request_falls_back_when_unavailable(monkeypatch):
+    """Explicit acceleration requests remain usable without the optional package."""
+    import models.heat_acceleration as heat_acceleration
+
+    monkeypatch.setattr(heat_acceleration, "NUMBA_AVAILABLE", False)
+    with pytest.warns(RuntimeWarning, match="Numba acceleration is unavailable"):
+        result = simulate_heat_equation_2d(
+            t_final=0.01, nx=11, ny=9, acceleration="numba"
+        )
+
+    assert result["acceleration"] == "python-fallback"

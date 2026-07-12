@@ -9,7 +9,11 @@ created with ``X, Y = np.meshgrid(x, y)``, so temperature fields have shape
 ``(ny, nx)``.
 """
 
+import warnings
+
 import numpy as np
+
+from models import heat_acceleration
 
 
 def heat_stability_numbers_2d(alpha, dt, dx, dy):
@@ -223,6 +227,7 @@ def simulate_heat_equation_2d(
     boundary_values=0.0,
     enforce_stability=True,
     store_every=1,
+    acceleration="auto",
 ):
     """Simulate the 2D heat equation using explicit finite differences."""
     alpha = float(alpha)
@@ -242,6 +247,7 @@ def simulate_heat_equation_2d(
         raise ValueError("alpha and t_final must be finite")
 
     boundary_type = _validate_boundary_type(boundary_type)
+    acceleration = _validate_acceleration(acceleration)
     x, y, X, Y, dx, dy = create_2d_grid(width, height, nx, ny)
     requested_dt = _choose_time_step(alpha, dx, dy, dt)
 
@@ -278,35 +284,38 @@ def simulate_heat_equation_2d(
     stored_temperatures = [initial_temperature.copy()]
     current = initial_temperature
 
-    for step_index in range(1, num_intervals + 1):
-        previous = current
-        next_temperature = previous.copy()
-
-        next_temperature[1:-1, 1:-1] = (
-            previous[1:-1, 1:-1]
-            + rx
-            * (
-                previous[1:-1, 2:]
-                - 2.0 * previous[1:-1, 1:-1]
-                + previous[1:-1, :-2]
-            )
-            + ry
-            * (
-                previous[2:, 1:-1]
-                - 2.0 * previous[1:-1, 1:-1]
-                + previous[:-2, 1:-1]
-            )
+    use_numba = acceleration == "numba" and heat_acceleration.NUMBA_AVAILABLE
+    if acceleration == "auto":
+        use_numba = heat_acceleration.NUMBA_AVAILABLE
+    acceleration_used = "numba" if use_numba else "python"
+    if acceleration == "numba" and not use_numba:
+        warnings.warn(
+            "Numba acceleration is unavailable; using the pure-Python heat solver.",
+            RuntimeWarning,
+            stacklevel=2,
         )
-        apply_2d_boundary_conditions(
-            next_temperature,
-            boundary_type,
-            boundary_values,
-        )
-        current = next_temperature
+        acceleration_used = "python-fallback"
 
-        if step_index % store_every == 0 or step_index == num_intervals:
-            stored_times.append(step_index * actual_dt)
-            stored_temperatures.append(current.copy())
+    for step_start in range(0, num_intervals, store_every):
+        steps = min(store_every, num_intervals - step_start)
+        if use_numba:
+            current = heat_acceleration.advance_heat_steps(
+                current,
+                rx,
+                ry,
+                steps,
+                boundary_type,
+                _validate_boundary_values(boundary_values)
+                if boundary_type == "dirichlet"
+                else boundary_values,
+            )
+        else:
+            current = _advance_heat_steps_python(
+                current, rx, ry, steps, boundary_type, boundary_values
+            )
+        step_index = step_start + steps
+        stored_times.append(step_index * actual_dt)
+        stored_temperatures.append(current.copy())
 
     return {
         "x": x,
@@ -325,6 +334,7 @@ def simulate_heat_equation_2d(
         "boundary_type": boundary_type,
         "boundary_values": boundary_values,
         "store_every": store_every,
+        "acceleration": acceleration_used,
     }
 
 
@@ -342,6 +352,39 @@ def _choose_time_step(alpha, dx, dy, dt):
         raise ValueError("dt must be finite")
 
     return dt
+
+
+def _validate_acceleration(acceleration):
+    """Return one supported optional heat-kernel acceleration mode."""
+    acceleration = str(acceleration).lower()
+    if acceleration not in {"auto", "python", "numba"}:
+        raise ValueError("acceleration must be 'auto', 'python', or 'numba'")
+    return acceleration
+
+
+def _advance_heat_steps_python(current, rx, ry, steps, boundary_type, boundary_values):
+    """Advance the original vectorized explicit scheme without optional extras."""
+    for _ in range(steps):
+        previous = current
+        next_temperature = previous.copy()
+        next_temperature[1:-1, 1:-1] = (
+            previous[1:-1, 1:-1]
+            + rx
+            * (
+                previous[1:-1, 2:]
+                - 2.0 * previous[1:-1, 1:-1]
+                + previous[1:-1, :-2]
+            )
+            + ry
+            * (
+                previous[2:, 1:-1]
+                - 2.0 * previous[1:-1, 1:-1]
+                + previous[:-2, 1:-1]
+            )
+        )
+        apply_2d_boundary_conditions(next_temperature, boundary_type, boundary_values)
+        current = next_temperature
+    return current
 
 
 def _initial_temperature_2d(X, Y, initial_condition, width, height):

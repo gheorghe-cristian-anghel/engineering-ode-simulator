@@ -17,3 +17,15 @@ docs/animations/*.mp4
 docs/animations/*.webm
 !docs/animations/.gitkeep
 .DS_Store
+
+# Test-generated temporary files
+.pytest_backend_tmp/
+.pytest_tmp*/
+.pytest_cache/
+
+# Graphify generated analysis and caches
+graphify-out/
+
+# Streamlit runtime logs
+.streamlit_stdout.log
+.streamlit_stderr.log

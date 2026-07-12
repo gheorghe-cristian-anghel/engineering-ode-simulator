@@ -9,6 +9,7 @@ description = "Educational engineering simulation toolkit for control, numerical
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "fastapi>=0.115,<1",
     "matplotlib>=3.7",
     "numpy>=1.24",
     "scipy>=1.10",
@@ -28,12 +29,22 @@ classifiers = [
 
 [project.optional-dependencies]
 dev = [
+    "httpx2>=0.1",
     "pytest>=8",
     "ruff>=0.4",
 ]
 
 [tool.setuptools]
-packages = ["analysis", "models", "visualization"]
+packages = [
+    "analysis",
+    "backend",
+    "backend.api",
+    "backend.core",
+    "backend.schemas",
+    "backend.services",
+    "models",
+    "visualization",
+]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

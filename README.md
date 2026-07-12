@@ -178,6 +178,37 @@ Run the browser UI with:
 streamlit run streamlit_app.py
 ```
 
+## FastAPI Backend
+
+The optional FastAPI backend exposes bounded JSON APIs over selected existing
+simulation modules. It does not replace the Streamlit interface.
+
+Install the project and development dependencies:
+
+```powershell
+python -m pip install -e ".[dev]"
+```
+
+Run the API in development mode:
+
+```powershell
+python -m uvicorn backend.main:app --reload
+```
+
+Open the generated API documentation at `http://127.0.0.1:8000/docs`, or use
+the health endpoint at `http://127.0.0.1:8000/api/health`.
+
+Available MVP endpoints:
+
+- `GET /api/health`
+- `POST /api/pde/heat-2d`
+- `POST /api/uav/obstacle-avoidance`
+- `POST /api/estimation/kalman-filter`
+
+The backend limits grid sizes, time steps, and response snapshots to keep local
+development requests safe. CORS is enabled only for local React development
+origins (`localhost:3000` and `127.0.0.1:3000`).
+
 The app currently includes selected demos for:
 
 - Home and About overview pages.
